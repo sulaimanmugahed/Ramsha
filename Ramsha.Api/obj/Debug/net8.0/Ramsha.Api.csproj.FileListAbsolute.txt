@@ -189,3 +189,4 @@ D:\GitHubProject\Ramsha\Ramsha.Api\obj\Debug\net8.0\refint\Ramsha.Api.dll
 D:\GitHubProject\Ramsha\Ramsha.Api\obj\Debug\net8.0\Ramsha.Api.pdb
 D:\GitHubProject\Ramsha\Ramsha.Api\obj\Debug\net8.0\Ramsha.Api.genruntimeconfig.cache
 D:\GitHubProject\Ramsha\Ramsha.Api\obj\Debug\net8.0\ref\Ramsha.Api.dll
+D:\GitHubProject\Ramsha\Ramsha.Api\obj\Debug\net8.0\Ramsha.Api.sourcelink.json

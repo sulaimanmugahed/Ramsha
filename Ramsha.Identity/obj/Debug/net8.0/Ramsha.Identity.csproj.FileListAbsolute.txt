@@ -17,3 +17,4 @@ D:\GitHubProject\Ramsha\Ramsha.Identity\obj\Debug\net8.0\refint\Ramsha.Identity.
 D:\GitHubProject\Ramsha\Ramsha.Identity\obj\Debug\net8.0\Ramsha.Identity.pdb
 D:\GitHubProject\Ramsha\Ramsha.Identity\obj\Debug\net8.0\Ramsha.Identity.genruntimeconfig.cache
 D:\GitHubProject\Ramsha\Ramsha.Identity\obj\Debug\net8.0\ref\Ramsha.Identity.dll
+D:\GitHubProject\Ramsha\Ramsha.Identity\obj\Debug\net8.0\Ramsha.Identity.sourcelink.json

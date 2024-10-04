@@ -15,3 +15,4 @@ D:\GitHubProject\Ramsha\Ramsha.Mail\obj\Debug\net8.0\Ramsha.Mail.dll
 D:\GitHubProject\Ramsha\Ramsha.Mail\obj\Debug\net8.0\refint\Ramsha.Mail.dll
 D:\GitHubProject\Ramsha\Ramsha.Mail\obj\Debug\net8.0\Ramsha.Mail.pdb
 D:\GitHubProject\Ramsha\Ramsha.Mail\obj\Debug\net8.0\ref\Ramsha.Mail.dll
+D:\GitHubProject\Ramsha\Ramsha.Mail\obj\Debug\net8.0\Ramsha.Mail.sourcelink.json

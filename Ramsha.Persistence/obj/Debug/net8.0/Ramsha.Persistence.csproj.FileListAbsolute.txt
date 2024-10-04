@@ -15,3 +15,4 @@ D:\GitHubProject\Ramsha\Ramsha.Persistence\obj\Debug\net8.0\Ramsha.Persistence.d
 D:\GitHubProject\Ramsha\Ramsha.Persistence\obj\Debug\net8.0\refint\Ramsha.Persistence.dll
 D:\GitHubProject\Ramsha\Ramsha.Persistence\obj\Debug\net8.0\Ramsha.Persistence.pdb
 D:\GitHubProject\Ramsha\Ramsha.Persistence\obj\Debug\net8.0\ref\Ramsha.Persistence.dll
+D:\GitHubProject\Ramsha\Ramsha.Persistence\obj\Debug\net8.0\Ramsha.Persistence.sourcelink.json

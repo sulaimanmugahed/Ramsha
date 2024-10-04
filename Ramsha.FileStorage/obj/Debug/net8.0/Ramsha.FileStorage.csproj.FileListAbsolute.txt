@@ -15,3 +15,4 @@ D:\GitHubProject\Ramsha\Ramsha.FileStorage\obj\Debug\net8.0\Ramsha.FileStorage.d
 D:\GitHubProject\Ramsha\Ramsha.FileStorage\obj\Debug\net8.0\refint\Ramsha.FileStorage.dll
 D:\GitHubProject\Ramsha\Ramsha.FileStorage\obj\Debug\net8.0\Ramsha.FileStorage.pdb
 D:\GitHubProject\Ramsha\Ramsha.FileStorage\obj\Debug\net8.0\ref\Ramsha.FileStorage.dll
+D:\GitHubProject\Ramsha\Ramsha.FileStorage\obj\Debug\net8.0\Ramsha.FileStorage.sourcelink.json

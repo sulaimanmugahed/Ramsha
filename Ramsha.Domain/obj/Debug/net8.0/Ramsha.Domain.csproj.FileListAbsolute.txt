@@ -9,3 +9,4 @@ D:\GitHubProject\Ramsha\Ramsha.Domain\obj\Debug\net8.0\Ramsha.Domain.dll
 D:\GitHubProject\Ramsha\Ramsha.Domain\obj\Debug\net8.0\refint\Ramsha.Domain.dll
 D:\GitHubProject\Ramsha\Ramsha.Domain\obj\Debug\net8.0\Ramsha.Domain.pdb
 D:\GitHubProject\Ramsha\Ramsha.Domain\obj\Debug\net8.0\ref\Ramsha.Domain.dll
+D:\GitHubProject\Ramsha\Ramsha.Domain\obj\Debug\net8.0\Ramsha.Domain.sourcelink.json
