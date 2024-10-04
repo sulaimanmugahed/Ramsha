@@ -1,0 +1,17 @@
+D:\GitHubProject\Ramsha\Ramsha.FileStorage\bin\Debug\net8.0\Ramsha.FileStorage.deps.json
+D:\GitHubProject\Ramsha\Ramsha.FileStorage\bin\Debug\net8.0\Ramsha.FileStorage.dll
+D:\GitHubProject\Ramsha\Ramsha.FileStorage\bin\Debug\net8.0\Ramsha.FileStorage.pdb
+D:\GitHubProject\Ramsha\Ramsha.FileStorage\bin\Debug\net8.0\Ramsha.Application.dll
+D:\GitHubProject\Ramsha\Ramsha.FileStorage\bin\Debug\net8.0\Ramsha.Domain.dll
+D:\GitHubProject\Ramsha\Ramsha.FileStorage\bin\Debug\net8.0\Ramsha.Application.pdb
+D:\GitHubProject\Ramsha\Ramsha.FileStorage\bin\Debug\net8.0\Ramsha.Domain.pdb
+D:\GitHubProject\Ramsha\Ramsha.FileStorage\obj\Debug\net8.0\Ramsha.FileStorage.csproj.AssemblyReference.cache
+D:\GitHubProject\Ramsha\Ramsha.FileStorage\obj\Debug\net8.0\Ramsha.FileStorage.GeneratedMSBuildEditorConfig.editorconfig
+D:\GitHubProject\Ramsha\Ramsha.FileStorage\obj\Debug\net8.0\Ramsha.FileStorage.AssemblyInfoInputs.cache
+D:\GitHubProject\Ramsha\Ramsha.FileStorage\obj\Debug\net8.0\Ramsha.FileStorage.AssemblyInfo.cs
+D:\GitHubProject\Ramsha\Ramsha.FileStorage\obj\Debug\net8.0\Ramsha.FileStorage.csproj.CoreCompileInputs.cache
+D:\GitHubProject\Ramsha\Ramsha.FileStorage\obj\Debug\net8.0\Ramsha.FileStorage.csproj.CopyComplete
+D:\GitHubProject\Ramsha\Ramsha.FileStorage\obj\Debug\net8.0\Ramsha.FileStorage.dll
+D:\GitHubProject\Ramsha\Ramsha.FileStorage\obj\Debug\net8.0\refint\Ramsha.FileStorage.dll
+D:\GitHubProject\Ramsha\Ramsha.FileStorage\obj\Debug\net8.0\Ramsha.FileStorage.pdb
+D:\GitHubProject\Ramsha\Ramsha.FileStorage\obj\Debug\net8.0\ref\Ramsha.FileStorage.dll

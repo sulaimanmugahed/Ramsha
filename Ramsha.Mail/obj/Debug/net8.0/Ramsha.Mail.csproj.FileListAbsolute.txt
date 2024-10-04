@@ -1,0 +1,17 @@
+D:\GitHubProject\Ramsha\Ramsha.Mail\bin\Debug\net8.0\Ramsha.Mail.deps.json
+D:\GitHubProject\Ramsha\Ramsha.Mail\bin\Debug\net8.0\Ramsha.Mail.dll
+D:\GitHubProject\Ramsha\Ramsha.Mail\bin\Debug\net8.0\Ramsha.Mail.pdb
+D:\GitHubProject\Ramsha\Ramsha.Mail\bin\Debug\net8.0\Ramsha.Application.dll
+D:\GitHubProject\Ramsha\Ramsha.Mail\bin\Debug\net8.0\Ramsha.Domain.dll
+D:\GitHubProject\Ramsha\Ramsha.Mail\bin\Debug\net8.0\Ramsha.Application.pdb
+D:\GitHubProject\Ramsha\Ramsha.Mail\bin\Debug\net8.0\Ramsha.Domain.pdb
+D:\GitHubProject\Ramsha\Ramsha.Mail\obj\Debug\net8.0\Ramsha.Mail.csproj.AssemblyReference.cache
+D:\GitHubProject\Ramsha\Ramsha.Mail\obj\Debug\net8.0\Ramsha.Mail.GeneratedMSBuildEditorConfig.editorconfig
+D:\GitHubProject\Ramsha\Ramsha.Mail\obj\Debug\net8.0\Ramsha.Mail.AssemblyInfoInputs.cache
+D:\GitHubProject\Ramsha\Ramsha.Mail\obj\Debug\net8.0\Ramsha.Mail.AssemblyInfo.cs
+D:\GitHubProject\Ramsha\Ramsha.Mail\obj\Debug\net8.0\Ramsha.Mail.csproj.CoreCompileInputs.cache
+D:\GitHubProject\Ramsha\Ramsha.Mail\obj\Debug\net8.0\Ramsha.Mail.csproj.CopyComplete
+D:\GitHubProject\Ramsha\Ramsha.Mail\obj\Debug\net8.0\Ramsha.Mail.dll
+D:\GitHubProject\Ramsha\Ramsha.Mail\obj\Debug\net8.0\refint\Ramsha.Mail.dll
+D:\GitHubProject\Ramsha\Ramsha.Mail\obj\Debug\net8.0\Ramsha.Mail.pdb
+D:\GitHubProject\Ramsha\Ramsha.Mail\obj\Debug\net8.0\ref\Ramsha.Mail.dll

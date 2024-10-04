@@ -1,0 +1,17 @@
+D:\GitHubProject\MatjerPlus\MatjerPlus.Persistence\bin\Debug\net8.0\MatjerPlus.Persistence.deps.json
+D:\GitHubProject\MatjerPlus\MatjerPlus.Persistence\bin\Debug\net8.0\MatjerPlus.Persistence.dll
+D:\GitHubProject\MatjerPlus\MatjerPlus.Persistence\bin\Debug\net8.0\MatjerPlus.Persistence.pdb
+D:\GitHubProject\MatjerPlus\MatjerPlus.Persistence\bin\Debug\net8.0\MatjerPlus.Application.dll
+D:\GitHubProject\MatjerPlus\MatjerPlus.Persistence\bin\Debug\net8.0\MatjerPlus.Domain.dll
+D:\GitHubProject\MatjerPlus\MatjerPlus.Persistence\bin\Debug\net8.0\MatjerPlus.Application.pdb
+D:\GitHubProject\MatjerPlus\MatjerPlus.Persistence\bin\Debug\net8.0\MatjerPlus.Domain.pdb
+D:\GitHubProject\MatjerPlus\MatjerPlus.Persistence\obj\Debug\net8.0\MatjerPlus.Persistence.csproj.AssemblyReference.cache
+D:\GitHubProject\MatjerPlus\MatjerPlus.Persistence\obj\Debug\net8.0\MatjerPlus.Persistence.GeneratedMSBuildEditorConfig.editorconfig
+D:\GitHubProject\MatjerPlus\MatjerPlus.Persistence\obj\Debug\net8.0\MatjerPlus.Persistence.AssemblyInfoInputs.cache
+D:\GitHubProject\MatjerPlus\MatjerPlus.Persistence\obj\Debug\net8.0\MatjerPlus.Persistence.AssemblyInfo.cs
+D:\GitHubProject\MatjerPlus\MatjerPlus.Persistence\obj\Debug\net8.0\MatjerPlus.Persistence.csproj.CoreCompileInputs.cache
+D:\GitHubProject\MatjerPlus\MatjerPlus.Persistence\obj\Debug\net8.0\MatjerPlus.Persistence.csproj.CopyComplete
+D:\GitHubProject\MatjerPlus\MatjerPlus.Persistence\obj\Debug\net8.0\MatjerPlus.Persistence.dll
+D:\GitHubProject\MatjerPlus\MatjerPlus.Persistence\obj\Debug\net8.0\refint\MatjerPlus.Persistence.dll
+D:\GitHubProject\MatjerPlus\MatjerPlus.Persistence\obj\Debug\net8.0\MatjerPlus.Persistence.pdb
+D:\GitHubProject\MatjerPlus\MatjerPlus.Persistence\obj\Debug\net8.0\ref\MatjerPlus.Persistence.dll

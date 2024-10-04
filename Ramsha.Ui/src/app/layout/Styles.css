@@ -1,0 +1,68 @@
+*::-webkit-scrollbar {
+  /* width: .6rem; */
+  width: 0;
+  border-radius: .5rem;
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: .5rem;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: gainsboro;
+}
+
+@keyframes wave {
+  0% {
+      transform: translateY(0);
+      opacity: 1;
+  }
+  100% {
+      transform: translateY(-10px); /* Adjust height of the wave */
+      opacity: 0.5;
+  }
+}
+
+
+
+.table-actions {
+  display: flex;
+  gap: 1rem;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.table-actions.slide-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.table-actions.slide-out {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+/* Optional: Add transition to individual buttons */
+.action-button {
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+
+/* .table-actions {
+  display: flex;
+  gap: 1rem;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.table-actions.slide-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.table-actions.slide-out {
+  opacity: 0;
+  transform: translateY(20px);
+} */

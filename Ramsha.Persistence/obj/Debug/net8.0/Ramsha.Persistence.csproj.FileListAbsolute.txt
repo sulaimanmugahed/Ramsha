@@ -1,0 +1,17 @@
+D:\GitHubProject\Ramsha\Ramsha.Persistence\bin\Debug\net8.0\Ramsha.Persistence.deps.json
+D:\GitHubProject\Ramsha\Ramsha.Persistence\bin\Debug\net8.0\Ramsha.Persistence.dll
+D:\GitHubProject\Ramsha\Ramsha.Persistence\bin\Debug\net8.0\Ramsha.Persistence.pdb
+D:\GitHubProject\Ramsha\Ramsha.Persistence\bin\Debug\net8.0\Ramsha.Application.dll
+D:\GitHubProject\Ramsha\Ramsha.Persistence\bin\Debug\net8.0\Ramsha.Domain.dll
+D:\GitHubProject\Ramsha\Ramsha.Persistence\bin\Debug\net8.0\Ramsha.Application.pdb
+D:\GitHubProject\Ramsha\Ramsha.Persistence\bin\Debug\net8.0\Ramsha.Domain.pdb
+D:\GitHubProject\Ramsha\Ramsha.Persistence\obj\Debug\net8.0\Ramsha.Persistence.csproj.AssemblyReference.cache
+D:\GitHubProject\Ramsha\Ramsha.Persistence\obj\Debug\net8.0\Ramsha.Persistence.GeneratedMSBuildEditorConfig.editorconfig
+D:\GitHubProject\Ramsha\Ramsha.Persistence\obj\Debug\net8.0\Ramsha.Persistence.AssemblyInfoInputs.cache
+D:\GitHubProject\Ramsha\Ramsha.Persistence\obj\Debug\net8.0\Ramsha.Persistence.AssemblyInfo.cs
+D:\GitHubProject\Ramsha\Ramsha.Persistence\obj\Debug\net8.0\Ramsha.Persistence.csproj.CoreCompileInputs.cache
+D:\GitHubProject\Ramsha\Ramsha.Persistence\obj\Debug\net8.0\Ramsha.Persistence.csproj.CopyComplete
+D:\GitHubProject\Ramsha\Ramsha.Persistence\obj\Debug\net8.0\Ramsha.Persistence.dll
+D:\GitHubProject\Ramsha\Ramsha.Persistence\obj\Debug\net8.0\refint\Ramsha.Persistence.dll
+D:\GitHubProject\Ramsha\Ramsha.Persistence\obj\Debug\net8.0\Ramsha.Persistence.pdb
+D:\GitHubProject\Ramsha\Ramsha.Persistence\obj\Debug\net8.0\ref\Ramsha.Persistence.dll
