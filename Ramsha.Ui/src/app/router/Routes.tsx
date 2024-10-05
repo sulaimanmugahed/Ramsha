@@ -20,6 +20,7 @@ import CreateProductPage from "../../features/products/CreateProductPage";
 import ProductVariantsPage from "../../features/admin/products/ProductVariantsPage";
 import CreateVariantPage from "../../features/products/variants/CreateVariantPage";
 import EditVariantPage from "../../features/products/variants/EditVariantPage";
+import ProductDetailsPage from "../../features/products/ProductDetailsPage";
 //import AdminProductPage from "../../features/admin/products/AdminProductPage";
 
 export const router = createBrowserRouter([
@@ -91,6 +92,10 @@ export const router = createBrowserRouter([
                                 element: <AdminProductPage />,
                                 path: 'products',
                                 children: [
+                                    {
+                                        path: ':productId/detail',
+                                        element: <ProductDetailsPage />
+                                    },
                                     {
                                         path: 'create',
                                         element: <CreateProductPage />

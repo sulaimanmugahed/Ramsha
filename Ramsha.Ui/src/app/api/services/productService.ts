@@ -17,6 +17,14 @@ const getProductsPaged = (params: PagedParams) =>
         data: params
     })
 
+const getProductDetail = (productId: string) =>
+    request({
+        url: `${BASE_URL}/${productId}/detail`,
+        method: 'GET',
+    })
+
+
+
 
 
 const createProduct = async (data: any) => {
@@ -115,6 +123,7 @@ export const productService = {
     getProduct,
     createProduct,
     editProduct,
+    getProductDetail,
     getProductsPaged,
     addVariants,
     addVariant,

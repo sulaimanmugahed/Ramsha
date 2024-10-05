@@ -5,16 +5,16 @@ import AddVariantCard from './AddVariantCard';
 import { ProductVariantDto } from '../../../app/models/products/product';
 
 interface ProductVariantListProps {
-    variants: PreviewVariantType[] | ProductVariantDto[];
-    onAddVariant?: () => void; 
-    onUpdateVariant?: (variant: PreviewVariantType|ProductVariantDto, index: number) => void;
-    onDeleteVariant?: (variant: PreviewVariantType|ProductVariantDto, index: number) => void;
-    cardPerRow?:number
+    variants: (PreviewVariantType | ProductVariantDto)[]
+    onAddVariant?: () => void;
+    onUpdateVariant?: (variant: PreviewVariantType | ProductVariantDto, index: number) => void;
+    onDeleteVariant?: (variant: PreviewVariantType | ProductVariantDto, index: number) => void;
+    cardPerRow?: number
 }
 
 const ProductVariantList: React.FC<ProductVariantListProps> = ({
     variants,
-    cardPerRow,
+    cardPerRow = 4,
     onAddVariant,
     onUpdateVariant,
     onDeleteVariant,
@@ -24,14 +24,14 @@ const ProductVariantList: React.FC<ProductVariantListProps> = ({
         <>
             <Grid container spacing={2}>
                 {variants.map((variant, index) => (
-                    <Grid item xs={12} sm={cardPerRow || 4} key={variant.id || index}>
+                    <Grid item xs={12} sm={cardPerRow} key={variant.id || index}>
                         <VariantCard
                             variant={variant}
                             onEdit={() => {
                                 onUpdateVariant && onUpdateVariant(variant, index);
                             }}
-                            onDelete={() => onDeleteVariant && onDeleteVariant(variant, index)} 
-                         
+                            onDelete={() => onDeleteVariant && onDeleteVariant(variant, index)}
+
                         />
                     </Grid>
                 ))}

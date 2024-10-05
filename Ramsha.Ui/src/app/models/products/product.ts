@@ -32,6 +32,18 @@ export interface ProductVariantDto {
     variantImages: ProductImageDto[];
 }
 
+export type ProductImageDto = {
+    url: string;
+    isHome: boolean;
+};
+
+export type VariantValuesDto = {
+    optionId: string;
+    optionValueId: string;
+    optionName?: string;
+    valueName?: string;
+};
+
 export type SeoSettings = {
     metaTitle: string;
     urlSlug: string;
@@ -43,7 +55,7 @@ export type ProductDetail = {
     name: string;
     description: string;
     basePrice: number;
-    status:string;
+    status: string;
     category: CategoryDto;
     brand: BrandDto;
     imageUrl: string;
@@ -61,12 +73,7 @@ export type VariantDetailDto = {
 };
 
 
-export type VariantValuesDto = {
-    optionId: string;
-    optionValueId: string;
-    optionName?: string;
-    valueName?: string;
-};
+
 
 export type ProductDetailsDto = {
     id: string;
@@ -88,10 +95,7 @@ export type CategoryDto = {
     children: CategoryDto[];
 };
 
-export type ProductImageDto = {
-    url: string;
-    isHome: boolean;
-};
+
 
 
 // enums.ts

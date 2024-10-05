@@ -3,18 +3,17 @@ import { useAddVariant, useDeleteVariant, useProductVariants } from "../../../ap
 import { Close } from "@mui/icons-material";
 import { Dialog, DialogTitle, IconButton, DialogContent } from "@mui/material";
 import ProductVariantList from "../../products/variants/ProductVariantList";
-import {  VariantScheme } from "../../products/productFormValidations";
+import { VariantScheme } from "../../products/productFormValidations";
 
 import { PreviewVariantType, UploadResponse } from "../../../app/models/common/commonModels";
 import { ProductVariantDto } from "../../../app/models/products/product";
+import VariantSlider from "../../products/variants/VariantSlider";
 export type variantFormType = {
     variant: VariantScheme
 }
 
 
 const ProductVariantsPage = () => {
-
-
 
     const { productId } = useParams()
     if (!productId) return null;
@@ -57,6 +56,11 @@ const ProductVariantsPage = () => {
                         onAddVariant={handleAdd}
                         onUpdateVariant={handleUpdate}
                         cardPerRow={3} variants={variants} />
+                    {/* <VariantSlider
+                        variants={variants}
+                        onDelete={(variant) => deleteVariant({ productId, variantId: variant.id! })}
+                        onEdit={handleUpdate}
+                    /> */}
                 </DialogContent>
             </Dialog>
             <Outlet />

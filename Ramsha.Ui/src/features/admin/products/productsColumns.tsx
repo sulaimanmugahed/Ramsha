@@ -14,9 +14,9 @@ export const getProductsColumns = (
     onRowSelectionChange: (row: any) => (event: React.ChangeEvent<HTMLInputElement>) => void,
     onEditButtonClick: (product: ProductDto) => void,
     handleImageClick: (imageUrl: string) => void,
-    onViewButtonClick: (product: ProductDto) => void,  
+    onViewButtonClick: (product: ProductDto) => void,
     onDeleteButtonClick: (product: ProductDto) => void,
-    onShowVariants: (product: ProductDto) => void 
+    onShowVariants: (product: ProductDto) => void
 ) => [
         columnHelper.accessor('id', {
             meta: {
@@ -101,19 +101,19 @@ export const getProductsColumns = (
             header: "Image",
             cell: props => (
                 <Box
-                    onClick={() => handleImageClick(props.row.original.imageUrl)} 
+                    onClick={() => handleImageClick(props.row.original.imageUrl)}
                     sx={{
                         cursor: 'pointer',
                         width: '50px',
                         height: '50px',
                         overflow: 'hidden',
-                        borderRadius: '50%', 
+                        borderRadius: '50%',
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        position: 'relative',  
+                        position: 'relative',
                     }}
-                    
+
                 >
                     <img
                         src={props.row.original.imageUrl}
@@ -122,14 +122,14 @@ export const getProductsColumns = (
                             width: '100%',
                             height: '100%',
                             objectFit: 'cover',
-                            borderRadius: '50%', 
-                            filter: 'blur(10px)', 
+                            borderRadius: '50%',
+                            filter: 'blur(10px)',
                             transition: 'filter 0.5s ease',
-                            position: 'absolute', 
+                            position: 'absolute',
                             top: 0,
                             left: 0,
                         }}
-                        onLoad={(e) => (e.currentTarget.style.filter = 'none')}  
+                        onLoad={(e) => (e.currentTarget.style.filter = 'none')}
                         loading="lazy"
                     />
                 </Box>
@@ -146,17 +146,17 @@ export const getProductsColumns = (
                 menuItems={[
                     {
                         label: 'View',
-                        icon: <VisibilityIcon fontSize="small" />,
+                        //  icon: <VisibilityIcon fontSize="small" />,
                         action: onViewButtonClick
                     },
                     {
                         label: 'Edit',
-                        icon: <EditIcon fontSize="small" />,
+                        // icon: <EditIcon fontSize="small" />,
                         action: onEditButtonClick
                     },
                     {
                         label: 'Delete',
-                        icon: <DeleteIcon fontSize="small" />,
+                        // icon: <DeleteIcon fontSize="small" />,
                         action: onDeleteButtonClick
                     },
                     {

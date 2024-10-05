@@ -52,6 +52,8 @@ const AdminProductPage = () => {
 
     const { deleteProducts, isDeleteProductsPending } = useDeleteProducts()
 
+
+
     const { onAllRowsSelectionChange,
         onRowSelectionChange,
         selectedRows } = useTableRowSelection<ProductDto>()
@@ -59,7 +61,7 @@ const AdminProductPage = () => {
     const handleEdit = (product: ProductDto) => {
     }
     const handleShow = (product: ProductDto) => {
-        console.log('show: ', product)
+        navigate(`${product.id}/detail`)
     }
 
     const handleDelete = (product: ProductDto) => {
@@ -71,7 +73,7 @@ const AdminProductPage = () => {
 
     const handleImageClick = (imageUrl?: string) => {
         if (!imageUrl) return;
-        setSelectedImage(imageUrl); 
+        setSelectedImage(imageUrl);
         setOpenImageModal(true);
     };
 

@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { productService } from "../api/services/productService"
-import { BrandDto, ProductDto, ProductTag, ProductVariantDto } from "../models/products/product"
+import { BrandDto, ProductDetail, ProductDetailsDto, ProductDto, ProductTag, ProductVariantDto } from "../models/products/product"
 import { toast } from "sonner"
 import { BRANDS_QUERY_KEY, PRODUCT_TAGS_QUERY_KEY, PRODUCTS_QUERY_KEY, PRODUCT_VARIANTS_QUERY_KEY } from "../constants/queriesKey"
 import { PagedParams, PaginationResponse } from "../models/common/commonModels"
@@ -23,6 +23,20 @@ export const useProducts = (params: PagedParams) => {
         metaData: data.metaData,
         isProductsLoading: isLoading,
         isProductsError: isError
+    }
+}
+
+
+export const useProductDetails = (productId: string) => {
+    const { data, isLoading, isError } = useQuery<ProductDetail, Error>({
+        queryKey: [PRODUCTS_QUERY_KEY, productId],
+        queryFn: () => productService.getProductDetail(productId),
+    })
+
+    return {
+        productDetails: data,
+        isProductDetailsLoading: isLoading,
+        isProductDetailsError: isError
     }
 }
 

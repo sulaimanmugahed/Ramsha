@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Ramsha.FileStorage")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d07320cb81aba6608c6e206aae14803c34bafad5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+672006d8607f317bec4e7df3275ad62038bc088a")]
 [assembly: System.Reflection.AssemblyProductAttribute("Ramsha.FileStorage")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Ramsha.FileStorage")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
