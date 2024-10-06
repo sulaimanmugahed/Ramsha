@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { productService } from "../api/services/productService"
-import { BrandDto, ProductDetail, ProductDetailsDto, ProductDto, ProductTag, ProductVariantDto } from "../models/products/product"
+import { BrandDto, ProductDetail, ProductDetailsDto, ProductDto, ProductStatus, ProductTag, ProductVariantDto } from "../models/products/product"
 import { toast } from "sonner"
 import { BRANDS_QUERY_KEY, PRODUCT_TAGS_QUERY_KEY, PRODUCTS_QUERY_KEY, PRODUCT_VARIANTS_QUERY_KEY } from "../constants/queriesKey"
 import { PagedParams, PaginationResponse } from "../models/common/commonModels"
@@ -123,6 +123,25 @@ export const useUpdateVariant = (productId: string, variantId: string) => {
 
     return {
         updateVariant: mutateAsync,
+    }
+}
+
+export const useUpdateProduct = (productId: string) => {
+
+    const queryClient = useQueryClient()
+
+
+    const { mutateAsync: updateStatus, isPending: isStatusPending } = useMutation({
+        mutationFn: async (status: ProductStatus) =>
+            await productService.changeProductStatus(productId, status),
+        onSuccess:  (_, status) => {
+             queryClient.setQueryData([PRODUCTS_QUERY_KEY, productId], (oldData: ProductDetail) => ({ ...oldData, status }))
+        }
+    })
+
+    return {
+        updateStatus,
+        isStatusPending
     }
 }
 

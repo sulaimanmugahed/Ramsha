@@ -115,8 +115,6 @@ public class CreateProductCommandHandler(
             }
         }
 
-        product.SetStatus(request.Status);
-
         await productRepository.AddAsync(product);
 
         await unitOfWork.SaveChangesAsync();

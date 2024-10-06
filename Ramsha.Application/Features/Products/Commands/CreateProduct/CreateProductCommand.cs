@@ -14,7 +14,6 @@ public class CreateProductCommand : IRequest<BaseResult<string?>>
     public string Description { get; set; }
     public Guid Category { get; set; }
     public Guid Brand { get; set; }
-    public ProductStatus Status { get; set; }
     public List<string>? Tags { get; set; }
     public string? ImageUrl { get; set; }
     public SeoSettings? SeoSettings { get; set; }

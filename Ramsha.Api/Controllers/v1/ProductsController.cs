@@ -19,6 +19,7 @@ using Ramsha.Application.Features.Products.Queries.GetTags;
 using Ramsha.Application.Features.Products.Queries.GetVariantDetails;
 using Ramsha.Application.Wrappers;
 using Microsoft.AspNetCore.Mvc;
+using Ramsha.Domain.Products.Enums;
 
 namespace Ramsha.Api.Controllers.v1;
 
@@ -119,11 +120,16 @@ public class ProductsController : BaseApiController
     }
 
     [HttpPut("{productId}/variants/{variantId}")]
-    public async Task<BaseResult> UpdateVariant(Guid productId, Guid variantId,UpdateProductVariantCommand command)
+    public async Task<BaseResult> UpdateVariant(Guid productId, Guid variantId, UpdateProductVariantCommand command)
     {
         command.VariantId = variantId;
         command.ProductId = productId;
         return await Mediator.Send(command);
     }
+
+    [HttpPut("{productId}/status")]
+
+    public async Task<BaseResult> ChangeProductStatus([FromRoute] Guid productId, [FromQuery] ProductStatus statusValue)
+    => await Mediator.Send(new ChangeProductStatusCommand{ProductId= productId,Status = statusValue});
 
 }

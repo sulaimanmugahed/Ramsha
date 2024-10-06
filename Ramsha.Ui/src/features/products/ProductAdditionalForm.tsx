@@ -5,8 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { ProductStatus, ProductTag } from '../../app/models/products/product'; // Adjust this import based on your actual path
 import AppTagSelector from '../../app/components/AppTagSelector'; // Assuming you have a component to select tags
 import AppSelector from '../../app/components/AppSelector';
-import { PRODUCT_STATUS } from '../../app/constants/data';
-import AppDivider from '../../app/components/AppDivider';
+
 
 type SeoSettingsFormProps = {
     tags: ProductTag[]; // Replace with actual type of ProductTag
@@ -18,15 +17,7 @@ const ProductAdditionalForm = ({ tags }: SeoSettingsFormProps) => {
 
     return (
         <Grid container spacing={2} alignItems="flex-start">
-             <Grid item xs={4}>
-                <AppSelector
-                 control={control} 
-                 name='status'
-                 label={t('Status')}
-                 options={[ProductStatus.Active,ProductStatus.InActive].map(s=> ({id:s,name:s}))}
-                  />
-            </Grid>
-            <Grid item xs={8}>
+            <Grid item xs={12}>
                 <AppTagSelector
                  control={control}
                  name='tags' 

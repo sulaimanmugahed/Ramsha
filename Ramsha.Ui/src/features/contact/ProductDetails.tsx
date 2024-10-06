@@ -22,7 +22,8 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CloseIcon from "@mui/icons-material/Close";
 import { styled, useTheme } from "@mui/material/styles";
 import VariantSlider from "../products/variants/VariantSlider";
-import { ProductDetail } from "../../app/models/products/product";
+import { ProductDetail, ProductStatus } from "../../app/models/products/product";
+import { useUpdateProduct } from "../../app/hooks/productHooks";
 
 // Styled Dialog with larger border radius and shadow
 const StyledDialog = styled(Dialog)(({ theme }) => ({
@@ -65,6 +66,8 @@ const StyledCard = styled(Card)(({ theme }) => ({
 
 const ProductDetails = ({ product, onClose }: { product: ProductDetail, onClose: () => void }) => {
   const [open, setOpen] = useState(true);
+
+  const {updateStatus,isStatusPending}=useUpdateProduct(product.id)
 
   const theme = useTheme()
 
@@ -167,8 +170,10 @@ const ProductDetails = ({ product, onClose }: { product: ProductDetail, onClose:
               ${product.basePrice.toFixed(2)}
             </Typography>
             <StyledChip
-              label={product.status === "Active" ? "Active" : "Inactive"}
-              color={product.status === "Active" ? "success" : "warning"}
+            sx={{opacity:isStatusPending ? 0.5:1}}
+            onClick={async()=>await updateStatus(product.status === ProductStatus.Active ? ProductStatus.InActive : ProductStatus.Active)}
+              label={product.status === ProductStatus.Active ? "Active" : "Inactive"}
+              color={product.status === ProductStatus.Active  ? "success" : "warning"}
             />
           </Box>
 

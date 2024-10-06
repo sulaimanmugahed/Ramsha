@@ -55,7 +55,7 @@ export type ProductDetail = {
     name: string;
     description: string;
     basePrice: number;
-    status: string;
+    status: ProductStatus;
     category: CategoryDto;
     brand: BrandDto;
     imageUrl: string;

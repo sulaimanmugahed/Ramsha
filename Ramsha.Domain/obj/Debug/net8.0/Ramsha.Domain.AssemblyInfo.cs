@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Ramsha.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+672006d8607f317bec4e7df3275ad62038bc088a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+748b71582ef7c3d21d0c1c4909da34a259bd47ed")]
 [assembly: System.Reflection.AssemblyProductAttribute("Ramsha.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Ramsha.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

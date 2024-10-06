@@ -118,6 +118,14 @@ const updateVariant = async ({ productId, variantId, data }: { productId: string
 }
 
 
+const changeProductStatus =async (productId:string,status:string) => {
+    return await request({
+        url: `${BASE_URL}/${productId}/status?statusValue=${status}`,
+        method: 'PUT',
+    })
+}
+
+
 
 export const productService = {
     getProduct,
@@ -133,5 +141,6 @@ export const productService = {
     getProductVariants,
     removeVariant,
     getProductVariant,
-    updateVariant
+    updateVariant,
+    changeProductStatus
 }
