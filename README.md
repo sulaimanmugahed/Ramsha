@@ -7,11 +7,6 @@ Welcome to Ramsha, a comprehensive e-commerce platform designed to emulate real-
 - [Key Features](#key-features)
 - [API Overview](#api-overview)
 - [Frontend Overview](#frontend-overview)
-- [Getting Started](#getting-started)
-- [Prerequisites](#prerequisites)
-- [Running the API](#running-the-api)
-- [Running the React UI](#running-the-react-ui)
-- [Folder Structure](#folder-structure)
 - [Contributing](#contributing)
 
 ## Overview
@@ -35,20 +30,6 @@ The backend API, developed with ASP.NET Core, acts as the cornerstone for execut
 ## Frontend Overview
 The frontend UI, crafted with React, presents users with an intuitive interface for interacting with the API, facilitating seamless navigation through products, order placement, cart management, and more.
 
-## Getting Started
-Embark on your journey with the Ramsha e-commerce platform by following these steps:
-
-### Prerequisites
-- Ensure that ASP.NET Core and Node.js are installed on your system.
-
-### Running the API
-- Navigate to the API folder and initiate the ASP.NET Core project.
-
-### Running the React UI
-- Head to the UI folder and launch the React project.
-
-## Folder Structure
-The project is meticulously organized into API and UI folders, housing the backend and frontend codebases, respectively.
 
 ## Contributing
 Contributions are encouraged! If you wish to contribute to the Ramsha e-commerce platform, please adhere to the standard guidelines for contributing to open-source projects. Your input is valuable in enhancing the platform for the community.
