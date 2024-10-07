@@ -8,7 +8,7 @@ using MediatR;
 
 namespace Ramsha.Application.Features.Products.Queries.GetTags;
 
-public class GetTagsQuery : IRequest<BaseResult<List<TagDto>>>
+public class GetTagsQuery : IRequest<BaseResult<List<string>>>
 {
 
 }

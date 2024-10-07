@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { productService } from "../api/services/productService"
-import { BrandDto, ProductDetail, ProductDetailsDto, ProductDto, ProductStatus, ProductTag, ProductVariantDto } from "../models/products/product"
+import { BrandDto, ProductDetail, ProductDto, ProductStatus, ProductTag, ProductVariantDto } from "../models/products/product"
 import { toast } from "sonner"
 import { BRANDS_QUERY_KEY, PRODUCT_TAGS_QUERY_KEY, PRODUCTS_QUERY_KEY, PRODUCT_VARIANTS_QUERY_KEY } from "../constants/queriesKey"
 import { PagedParams, PaginationResponse } from "../models/common/commonModels"
@@ -31,6 +31,7 @@ export const useProductDetails = (productId: string) => {
     const { data, isLoading, isError } = useQuery<ProductDetail, Error>({
         queryKey: [PRODUCTS_QUERY_KEY, productId],
         queryFn: () => productService.getProductDetail(productId),
+        staleTime: 1000 * 60 * 5
     })
 
     return {
@@ -40,10 +41,10 @@ export const useProductDetails = (productId: string) => {
     }
 }
 
-const initialTags: ProductTag[] = []
+const initialTags: string[] = []
 
 export const useProductTags = () => {
-    const { data, isLoading, isError } = useQuery<ProductTag[], Error>({
+    const { data, isLoading, isError } = useQuery<string[], Error>({
         queryKey: [PRODUCT_TAGS_QUERY_KEY],
         queryFn: async () => await productService.getTags(),
         initialData: initialTags
@@ -64,7 +65,8 @@ export const useProductBrands = () => {
     const { data, isLoading, isError } = useQuery<BrandDto[], Error>({
         queryKey: [BRANDS_QUERY_KEY],
         queryFn: async () => await productService.getBrands(),
-        initialData: initialBrands
+        initialData: initialBrands,
+
     })
 
     return {
@@ -130,13 +132,13 @@ export const useUpdateProduct = (productId: string) => {
 
     const queryClient = useQueryClient()
 
-
     const { mutateAsync: updateStatus, isPending: isStatusPending } = useMutation({
         mutationFn: async (status: ProductStatus) =>
             await productService.changeProductStatus(productId, status),
-        onSuccess:  (_, status) => {
-             queryClient.setQueryData([PRODUCTS_QUERY_KEY, productId], (oldData: ProductDetail) => ({ ...oldData, status }))
+        onSuccess: (_, status) => {
+            queryClient.setQueryData([PRODUCTS_QUERY_KEY, productId], (oldData: ProductDetail) => ({ ...oldData, status }))
         }
+
     })
 
     return {
@@ -166,6 +168,7 @@ export const useCreateProduct = () => {
         isPending
     }
 }
+
 
 export const useDeleteProducts = () => {
 

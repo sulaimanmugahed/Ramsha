@@ -27,7 +27,8 @@ BrandDto Brand,
 string? ImageUrl,
 string Status,
 SeoSettings SeoSettings,
-List<ProductVariantDto> Variants
+List<ProductVariantDto> Variants,
+List<string> Tags
 );
 
 

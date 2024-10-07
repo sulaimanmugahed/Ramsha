@@ -49,22 +49,25 @@ const TagsSchema = z
     });
 
 
-const additionalInfoScheme = z.object({
+export const additionalInfoScheme = z.object({
     tags: TagsSchema,
-    status: z.enum([ProductStatus.Active, ProductStatus.InActive]),
     seoSettings: seoSettingsScheme.nullable()
 
 })
 
-const basicInfoSchema = z.object({
+export const basicInfoSchema = z.object({
     name: z.string(),
     description: z.string(),
+    brand:z.string().min(10),
+    basePrice: z.string(),
     category: z.string().min(10),
     file: z.object({
         file: z.any(),
         preview: z.string().url({ message: "Invalid file format." }).nullable(),
     }).nullable(),
 });
+
+
 
 
 const variantsSchema = z.object({
@@ -75,6 +78,7 @@ const variantsSchema = z.object({
                 message: 'Duplicate Variants are not allowed',
             })
 });
+
 
 export const ProductFormValidations = [
     basicInfoSchema,
@@ -90,8 +94,8 @@ export type VariantScheme = z.infer<typeof variantSchema>;
 
 
 
-type BasicInfoSchema = z.infer<typeof basicInfoSchema>;
-type AdditionalInfoScheme = z.infer<typeof additionalInfoScheme>;
+export type BasicInfoSchema = z.infer<typeof basicInfoSchema>;
+export type AdditionalInfoScheme = z.infer<typeof additionalInfoScheme>;
 
 export type ProductFormScheme = VariantsScheme & BasicInfoSchema & AdditionalInfoScheme;
 

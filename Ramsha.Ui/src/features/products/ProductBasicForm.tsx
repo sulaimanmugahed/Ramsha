@@ -2,25 +2,24 @@ import { Box, Grid, InputAdornment } from '@mui/material';
 import { useFormContext } from 'react-hook-form';
 import AppTextInput from '../../app/components/AppTextInput';
 import { useTranslation } from 'react-i18next';
-import { BrandDto, CategoryDto, ProductDto } from '../../app/models/products/product';
 import AppDropzone from '../../app/components/AppDropzone';
 import AppControlCategorySelector from '../categories/AppControlCategorySelector';
 import AppSelector from '../../app/components/AppSelector';
-import { AppDollarIcon } from '../../app/components/icons/AppDollarIcon';
 import { AttachMoney } from '@mui/icons-material';
+import { useCategories } from '../../app/hooks/categoryHooks';
+import { useProductBrands } from '../../app/hooks/productHooks';
+import LoadingButton from '@mui/lab/LoadingButton';
 
-type ProductBasicFormProps = {
-    product?: ProductDto;
-    categories: CategoryDto[];
-    brands: BrandDto[]
-};
 
-const ProductBasicForm = ({ categories, product, brands }: ProductBasicFormProps) => {
-    const { control } = useFormContext();
+
+const ProductBasicForm = ({ onSubmit }: { onSubmit?: (data: any) => void }) => {
+    const { categories } = useCategories()
+    const { brands } = useProductBrands()
+    const { control, handleSubmit, formState: { isSubmitting } } = useFormContext();
     const { t } = useTranslation();
 
     return (
-        <Grid container spacing={4}>
+        <Grid container component={'form'} onSubmit={onSubmit ? handleSubmit(onSubmit) : undefined} spacing={4}>
             <Grid item xs={12} md={6}>
                 <Grid container spacing={3.5}>
                     <Grid item xs={12}>
@@ -46,7 +45,7 @@ const ProductBasicForm = ({ categories, product, brands }: ProductBasicFormProps
                             control={control}
                             name="basePrice"
                             label={t('BasePrice')}
-                             type='number'
+                            type='number'
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
@@ -62,7 +61,7 @@ const ProductBasicForm = ({ categories, product, brands }: ProductBasicFormProps
                         <AppControlCategorySelector
                             name="category"
                             control={control}
-                            categories={categories}
+                            categories={categories!}
                         />
                     </Grid>
                     <Grid item xs={12}>
@@ -81,10 +80,16 @@ const ProductBasicForm = ({ categories, product, brands }: ProductBasicFormProps
                             multiline
                             inputStyle={{ borderRadius: 2 }}
                             minRows={7}
+                            maxRows={7}
                             fullWidth
                         />
                     </Grid>
                 </Grid>
+                {
+                    onSubmit &&
+                    <LoadingButton type='submit' loading={isSubmitting}>Submit</LoadingButton>
+                }
+
             </Grid>
         </Grid>
     );

@@ -1,27 +1,22 @@
-import { useAddVariants, useCreateProduct, useProductBrands, useProductTags } from '../../app/hooks/productHooks'
-import { CategoryDto, ProductDetailsDto, ProductDto, ProductStatus } from '../../app/models/products/product'
-import { FieldValues, FormProvider, useForm } from 'react-hook-form'
+import { useCreateProduct } from '../../app/hooks/productHooks'
+import { FormProvider, useForm } from 'react-hook-form'
 import { Box, Button, Dialog, DialogContent, DialogTitle, Fade, Grid, IconButton, LinearProgress, Step, StepIcon, StepLabel, Stepper, Typography, useTheme } from '@mui/material'
 import { useTranslation } from 'react-i18next'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ProductFormScheme, ProductFormValidations, VariantScheme, VariantsScheme } from './productFormValidations'
-
+import { ProductFormScheme, ProductFormValidations, VariantScheme } from './productFormValidations'
 import ProductBasicForm from './ProductBasicForm'
 import { AppStepper } from '../../app/components/AppStepper'
 import { Close, KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material'
-import { useCategories } from '../../app/hooks/categoryHooks'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { useUploadFile, useUploadFiles } from '../../app/hooks/storageHooks'
 import ProductVariantListForm from './variants/ProductVariantListForm'
 import useFormPersist from 'react-hook-form-persist'
-
 import ProductAdditionalForm from './ProductAdditionalForm'
-import { useQuery } from '@tanstack/react-query'
 import AppLoadingWaves from '../../app/components/AppLoadingWaves'
-import { UploadRangeRequest, UploadResponse } from '../../app/models/common/commonModels'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { UploadResponse } from '../../app/models/common/commonModels'
+import { useNavigate } from 'react-router-dom'
 
 
 
@@ -42,7 +37,6 @@ const CreateProductPage = ({ }: Props) => {
     const { t } = useTranslation()
     const theme = useTheme()
 
-    const { categories } = useCategories()
 
 
     const { submitProductBasic, isPending } = useCreateProduct()
@@ -61,7 +55,6 @@ const CreateProductPage = ({ }: Props) => {
             file: null,
             variants: [],
             seoSettings: null,
-            status: ProductStatus.InActive,
             tags: []
         },
         resolver: activeStep !== ProductFormValidations.length ? zodResolver(ProductFormValidations[activeStep]) : undefined,
@@ -77,7 +70,6 @@ const CreateProductPage = ({ }: Props) => {
         { key: 'product', isLoading: isPending, message: 'Just A moment ..', progress: 100 },
     ];
 
-    //////////////////////
 
 
     useFormPersist("product", {
@@ -87,10 +79,6 @@ const CreateProductPage = ({ }: Props) => {
         // exclude: ['variantImages']
     });
 
-    const { tags } = useProductTags()
-
-    const { brands } = useProductBrands()
-
     const commandSteps = [
 
 
@@ -98,14 +86,14 @@ const CreateProductPage = ({ }: Props) => {
             id: 'basic',
             label: 'Basic Info',
             content: (
-                <ProductBasicForm brands={brands} categories={categories} />
+                <ProductBasicForm />
             )
         },
         {
             id: 'additional',
             label: 'Additional Info',
             content: (
-                <ProductAdditionalForm tags={tags} />
+                <ProductAdditionalForm />
             )
         },
         {
@@ -208,7 +196,7 @@ const CreateProductPage = ({ }: Props) => {
     const onSubmit = async (data: ProductFormScheme) => {
         switch (commandSteps[activeStep].id) {
             case 'submit':
-                const productId = await handleProductSubmission(data);
+                await handleProductSubmission(data);
                 break;
             default: return;
         }
@@ -305,17 +293,8 @@ const CreateProductPage = ({ }: Props) => {
         </Dialog>
 
 
-
     )
 }
 
 export default CreateProductPage
 
-
-
-
-
-
-
-
-//export default ProgressBasedLoading;

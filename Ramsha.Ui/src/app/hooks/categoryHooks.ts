@@ -9,7 +9,7 @@ export const useCategories = () => {
     const { data, isLoading, isError } = useQuery<CategoryDto[], Error>({
         queryKey: [CATEGORIES_QUERY_KEY],
         queryFn: async () => await categoryService.getCategories(),
-        initialData
+        staleTime: Infinity
     })
 
 

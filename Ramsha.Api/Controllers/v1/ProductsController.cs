@@ -99,7 +99,7 @@ public class ProductsController : BaseApiController
     => await Mediator.Send(new GetBrandsQuery());
 
     [HttpGet("tags")]
-    public async Task<BaseResult<List<TagDto>>> GetTags()
+    public async Task<BaseResult<List<string>>> GetTags()
     => await Mediator.Send(new GetTagsQuery());
 
     // [HttpGet("{productId}/variants/{variantId/details}")]

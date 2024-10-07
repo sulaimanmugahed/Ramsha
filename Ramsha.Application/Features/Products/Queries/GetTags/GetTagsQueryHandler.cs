@@ -12,11 +12,11 @@ namespace Ramsha.Application.Features.Products.Queries.GetTags;
 
 public class GetTagsQueryHandler(
     ITagRepository tagRepository
-) : IRequestHandler<GetTagsQuery, BaseResult<List<TagDto>>>
+) : IRequestHandler<GetTagsQuery, BaseResult<List<string>>>
 {
-    public async Task<BaseResult<List<TagDto>>> Handle(GetTagsQuery request, CancellationToken cancellationToken)
+    public async Task<BaseResult<List<string>>> Handle(GetTagsQuery request, CancellationToken cancellationToken)
     {
         var result = await tagRepository.GetAllAsync();
-        return result.Select(t => t.AsDto()).ToList();
+        return result.Select(t => t.Name).ToList();
     }
 }

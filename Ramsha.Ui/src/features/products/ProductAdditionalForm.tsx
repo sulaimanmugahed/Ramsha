@@ -2,21 +2,21 @@ import { Box, Grid, Typography } from '@mui/material';
 import { useFormContext } from 'react-hook-form';
 import AppTextInput from '../../app/components/AppTextInput';
 import { useTranslation } from 'react-i18next';
-import { ProductStatus, ProductTag } from '../../app/models/products/product'; // Adjust this import based on your actual path
 import AppTagSelector from '../../app/components/AppTagSelector'; // Assuming you have a component to select tags
-import AppSelector from '../../app/components/AppSelector';
+import { useProductTags } from '../../app/hooks/productHooks';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 
-type SeoSettingsFormProps = {
-    tags: ProductTag[]; // Replace with actual type of ProductTag
-};
 
-const ProductAdditionalForm = ({ tags }: SeoSettingsFormProps) => {
-    const { control } = useFormContext();
+
+const ProductAdditionalForm = ({onSubmit}:{onSubmit?:(data:any)=> void}) => {
+    const { control,handleSubmit,formState:{isSubmitting} } = useFormContext();
+    const { tags } = useProductTags()
+
     const { t } = useTranslation();
 
     return (
-        <Grid container spacing={2} alignItems="flex-start">
+        <Grid container component={'form'} onSubmit={onSubmit ? handleSubmit(onSubmit) : undefined}  spacing={2} alignItems="flex-start">
             <Grid item xs={12}>
                 <AppTagSelector
                  control={control}
@@ -63,18 +63,12 @@ const ProductAdditionalForm = ({ tags }: SeoSettingsFormProps) => {
                         />
                     </Grid>
                 </Grid>
+                {
+                    onSubmit &&
+                    <LoadingButton type='submit' loading={isSubmitting}>Submit</LoadingButton>
+                }
             </Grid>
 
-            {/* <Grid item xs={12}>
-                <Typography variant="h6" gutterBottom>
-                    {t('keywords')}
-                </Typography>
-                <AppTagSelector control={control} name='keywords' />
-            </Grid> */}
-
-            {/* Tags Selector */}
-
-           
         </Grid>
     );
 };

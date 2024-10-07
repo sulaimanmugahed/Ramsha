@@ -51,7 +51,8 @@ public static class ProductExtensions
          product.ImageUrl,
          product.Status.ToString(),
          product.SeoSettings,
-         variantsDetails
+         variantsDetails,
+         product.Tags.Select(t => t.Tag.Name).ToList()
          );
    }
 
