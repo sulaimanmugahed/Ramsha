@@ -22,21 +22,28 @@ public sealed class Product : BaseEntity, IAuditable, ISoftDeletable
 
     public ProductId Id { get; private set; }
     public string Name { get; private set; }
+
     public int TotalQuantity { get; private set; }
-    public decimal? Price => Variants.FirstOrDefault()?.Price;
-    public decimal? FinalPrice => Variants.FirstOrDefault()?.FinalPrice;
+    public decimal? Price { get; private set; }
+    public decimal? FinalPrice { get; private set; }
     public string Description { get; private set; }
     public string? ImageUrl { get; private set; }
-    public ProductStatus Status { get; set; }
-    public CategoryId CategoryId { get; set; }
-    public Category Category { get; set; }
-    public List<InventoryItem> Inventories { get; set; } = [];
-    public List<ProductVariant> Variants { get; set; } = [];
-    public List<ProductOption> Options { get; set; } = [];
+    //public decimal AverageRating { get; set; }
+    public ProductStatus Status { get; private set; }
+    public CategoryId CategoryId { get; private set; }
+    public Category Category { get; private set; }
+    public List<InventoryItem> Inventories { get; private set; } = [];
+    public List<ProductVariant> Variants { get; private set; } = [];
+    public List<ProductOption> Options { get; private set; } = [];
     public List<ProductTag> Tags { get; set; } = [];
-    public BrandId? BrandId { get; set; }
-    public Brand? Brand { get; set; }
-    public SeoSettings SeoSettings { get; set; }
+    public BrandId? BrandId { get; private set; }
+    public Brand? Brand { get; private set; }
+    public SeoSettings SeoSettings { get; private set; }
+
+     public List<Rating> Ratings { get; set; } = [];
+
+    public decimal AverageRating { get; private set; }
+    public int NumberOfRatings { get; private set; }
 
 
     public void SetSeoSettings(SeoSettings seoSettings)
@@ -44,6 +51,55 @@ public sealed class Product : BaseEntity, IAuditable, ISoftDeletable
         SeoSettings = seoSettings;
     }
 
+      public void AddOrUpdateRating(string username, decimal value, string review = "")
+    {
+        var existingRating = Ratings.FirstOrDefault(r => r.RatingBy.Equals(username, StringComparison.OrdinalIgnoreCase));
+
+        if (existingRating != null)
+        {
+            existingRating.Value = value;
+            existingRating.Review = review;
+        }
+        else
+        {
+            var rating = new Rating(value, Id, username, review);
+            Ratings.Add(rating);
+        }
+
+        NumberOfRatings = Ratings.Count;
+        AverageRating = Ratings.Average(r => r.Value);
+
+    }
+
+
+
+    public void UpdatePrice(decimal price, decimal? finalPrice = null)
+    {
+        Price = price;
+        FinalPrice = finalPrice;
+    }
+
+    public void IncreaseQuantity(int value)
+    {
+        TotalQuantity += value;
+    }
+
+    public void DecreaseQuantity(int value)
+    {
+        TotalQuantity -= value;
+    }
+
+    public void SetName(string name)
+    {
+        if (!string.IsNullOrEmpty(name))
+            Name = name;
+    }
+
+    public void SetDescription(string description)
+    {
+        if (!string.IsNullOrEmpty(description))
+            Description = description;
+    }
 
     public static Product Create(string name, string description)
     {
@@ -64,13 +120,31 @@ public sealed class Product : BaseEntity, IAuditable, ISoftDeletable
 
     public void SetImage(string url)
     {
-        ImageUrl = url;
+        if (!string.IsNullOrEmpty(url))
+            ImageUrl = url;
     }
 
     public void SetStatus(ProductStatus status)
     {
         Status = status;
     }
+
+    public void RemoveTags(List<string> tags)
+    {
+        if (Tags.Count > 0)
+        {
+            foreach (var tag in tags)
+            {
+                var existTag = Tags.FirstOrDefault(x => x.Tag.Name.ToLower() == tag.ToLower());
+
+                if (existTag is not null)
+                    Tags.Remove(existTag);
+            }
+        }
+    }
+
+
+
 
 
     public void AddVariant(ProductVariant variant)
@@ -80,11 +154,12 @@ public sealed class Product : BaseEntity, IAuditable, ISoftDeletable
 
     public void AddTag(Tag tag)
     {
-        if (Tags.Any(t => t.Tag.Name.Equals(tag.Name, StringComparison.OrdinalIgnoreCase)))
+        if (Tags.Any(t => t.TagId.Value == tag.Id.Value && t.ProductId == Id))
             return;
 
-        Tags.Add(new(this, tag));
+        Tags.Add(new ProductTag(this, tag.Id));
     }
+
 
     public void AddOption(OptionId optionId)
     {
@@ -92,11 +167,37 @@ public sealed class Product : BaseEntity, IAuditable, ISoftDeletable
         Options.Add(productOption);
     }
 
-
-    public void UpdateQuantity()
+    public void UpdateQuantity(int quantity)
     {
-        TotalQuantity = Inventories.Select(x => x.Quantity).Sum();
+        TotalQuantity = quantity;
     }
+
+    public void UpdateQuantityFromInventories()
+    {
+        if (Inventories.Count != 0)
+            TotalQuantity = Inventories.Select(x => x.Quantity).Sum();
+    }
+
+    public void AdjustQuantity(int quantityChange)
+    {
+        if (TotalQuantity + quantityChange < 0)
+        {
+            throw new InvalidOperationException("Cannot reduce quantity below zero.");
+        }
+        TotalQuantity += quantityChange;
+    }
+
+    public void UpdatePriceFromVariants()
+    {
+        if (Variants.Count != 0)
+        {
+            var variant = Variants.MinBy(v => v.Price);
+            Price = variant?.Price;
+            FinalPrice = variant?.FinalPrice;
+        }
+    }
+
+
 
 
     public Guid CreatedBy { get; set; }

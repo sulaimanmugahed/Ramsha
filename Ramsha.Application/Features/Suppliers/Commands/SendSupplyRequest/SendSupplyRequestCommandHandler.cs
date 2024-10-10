@@ -36,7 +36,7 @@ public class SendSupplyRequestCommandHandler(
 
         foreach (var item in supplyRequest.Items)
         {
-            var itemSupplied = new ItemSupplied(item.ProductId, item.SKU, item.Product.Name);
+            var itemSupplied = new ItemSupplied(item.ProductId, item.ProductVariantId, item.SKU, item.Product.Name);
             var supplyItem = SupplyItem.Create(itemSupplied, item.WholesalePrice, item.Quantity);
             supply.AddItem(supplyItem);
             totalQuantity += item.Quantity;

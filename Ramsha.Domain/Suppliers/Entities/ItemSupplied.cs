@@ -9,14 +9,17 @@ public class ItemSupplied
     {
 
     }
-    public ItemSupplied(ProductId productId, string sku, string name)
+    public ItemSupplied(ProductId productId, ProductVariantId? productVariantId, string sku, string name)
     {
         ProductId = productId;
-        SKU = sku;
+        ProductVariantId = productVariantId;
         Name = name;
+        Sku = sku;
     }
 
     public ProductId ProductId { get; set; }
     public string Name { get; set; }
-    public string SKU { get; set; }
+    public ProductVariantId? ProductVariantId { get; set; }
+    public string Sku { get; set; }
+
 }

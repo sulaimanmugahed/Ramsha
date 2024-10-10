@@ -15,10 +15,10 @@ public class ProductTag
     {
 
     }
-    public ProductTag(Product product, Tag tag)
+    public ProductTag(Product product, TagId tag) : this()
     {
         Product = product;
-        Tag = tag;
+        TagId = tag;
     }
 
     public TagId TagId { get; set; }

@@ -57,14 +57,57 @@ public static class ProductExtensions
    }
 
 
+
+
+
+   // public static CatalogVariantDto AsCatalogVariantDto(this ProductVariant variant)
+   // {
+   //    return new CatalogVariantDto(
+   //       variant.Id.Value,
+   //       variant.Name,
+   //       variant.VariantValues.Select(x => x.AsDto()).ToList(),
+   //       variant.Images.FirstOrDefault(x => x.IsHome)?.Url,
+   //       variant.InventoryItems.Select(x => new InventoryCatalogDto(
+   //          x.Quantity,
+   //          x.InventorySKU,
+   //          x.RetailPrice,
+   //          x.FinalPrice
+   //       )).ToList()
+   //    );
+   // }
+
+
+   public static CatalogProductDto AsCatalogDto(this Product product)
+   {
+      var basePrice = product.Price ?? 0;
+
+      return new CatalogProductDto(
+         product.Id.Value,
+         product.Name,
+         product.Category.Name,
+         product.Brand?.Name,
+         product.ImageUrl,
+         basePrice,
+         product.FinalPrice ?? basePrice,
+         product.TotalQuantity,
+         product.AverageRating,
+         product.NumberOfRatings
+      );
+   }
+
+
    public static ProductDto AsDto(this Product product)
    {
+      var basePrice = product.Price ?? 0;
       return new ProductDto(
          product.Id.Value,
          product.Name,
          product.Description,
          product.Created,
          product.Status.ToString(),
+         product.TotalQuantity,
+         basePrice,
+         product.FinalPrice ?? basePrice,
          product.ImageUrl,
          product.Category.Name,
          product.Brand?.Name

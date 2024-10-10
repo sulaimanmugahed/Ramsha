@@ -14,7 +14,6 @@ public record ProductVariantDto(
     List<VariantValuesDto> VariantValues,
     List<ProductImageDto> VariantImages);
 
-
 public record VariantValuesDto(
 Guid OptionId,
 Guid OptionValueId,

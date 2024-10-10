@@ -11,8 +11,8 @@ public static class DomainEventRegistrar
 {
     public static void RegisterHandlers()
     {
-        DomainEvents.RegisterHandler(new InventoryUpdatedEventHandler());
-       // DomainEvents.RegisterHandler(new VariantUpdatedEventHandler());
+        // DomainEvents.RegisterHandler(new InventoryUpdatedEventHandler());
+        // DomainEvents.RegisterHandler(new VariantUpdatedEventHandler());
         // Register other handlers as needed...
     }
 }

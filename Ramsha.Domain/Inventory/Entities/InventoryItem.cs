@@ -18,32 +18,40 @@ public class InventoryItem : BaseEntity, IAuditable
     {
 
     }
-    private InventoryItem(InventoryItemId id, ProductId productId, SupplierId supplierId, string productName, int quantity)
+    private InventoryItem(InventoryItemId id, ProductId productId, ProductVariantId? productVariantId, SupplierId supplierId, string productName)
     {
         Id = id;
-        Quantity = quantity;
         SupplierId = supplierId;
         ProductId = productId;
         ProductName = productName;
+        ProductVariantId = productVariantId;
     }
 
     public static InventoryItem Create(
           ProductId productId,
+          ProductVariantId? productVariantId,
           SupplierId supplierId,
           string productName,
-         int quantity)
+          int quantity,
+          ProductPrice wholePrice,
+          string sku
+         )
     {
-        return new InventoryItem(new InventoryItemId(Guid.NewGuid()),
+        var newItem = new InventoryItem(new InventoryItemId(Guid.NewGuid()),
         productId,
+        productVariantId,
         supplierId,
-        productName,
-        quantity);
+        productName);
+
+        newItem.AdjustQuantity(quantity);
+        newItem.UpdatePrice(wholePrice);
+        newItem.SetSKU(sku, supplierId.Value.ToString()[..8]);
+
+        newItem.RaiseDomainEvent(new InventoryItemCreatedEvent(newItem.Id, newItem.ProductId, newItem.ProductVariantId, newItem.Quantity, newItem.RetailPrice, newItem.FinalPrice));
+
+        return newItem;
     }
 
-    public void AddRatalPrice()
-    {
-
-    }
 
     public InventoryItemId Id { get; set; }
     public int Quantity { get; set; }
@@ -68,47 +76,51 @@ public class InventoryItem : BaseEntity, IAuditable
     public Guid? LastModifiedBy { get; set; }
     public DateTime? LastModified { get; set; }
 
-    public void UpdateInventory(int quantity, decimal wholePrice, Currency currency = Currency.USD)
+    public void UpdateInventory(int quantity, ProductPrice productPrice)
     {
-        Quantity += quantity;
-
+        AdjustQuantity(quantity);
         var existPrice = Prices.Where(x =>
           x.Type == PriceType.Wholesale &&
-          x.Currency == currency &&
-          x.Value == wholePrice)
+          x.Currency == productPrice.Currency &&
+          x.Value == productPrice.Value)
           .MaxBy(x => x.EffectiveDate);
 
         if (existPrice is null)
         {
-            UpdatePrice(wholePrice, currency);
+            UpdatePrice(productPrice);
         }
 
+        RaiseDomainEvent(new InventoryItemUpdatedEvent(Id, ProductId, ProductVariantId, Quantity, RetailPrice, FinalPrice));
     }
 
 
-    public void UpdatePrice(decimal wholePrice, Currency currency = Currency.USD)
+    public void UpdatePrice(ProductPrice wholePrice)
     {
-        var WholePrice = ProductPrice.Create(
-
-                      wholePrice,
-                       currency, PriceType.Wholesale);
-
         var retailPrice = ProductPrice.Create(
-                   ApplyMarkupPercentage(wholePrice),
-                    currency, PriceType.Retail);
+                   ApplyMarkupPercentage(wholePrice.Value),
+                    wholePrice.Currency, PriceType.Retail);
 
-        Prices.Add(WholePrice);
+        Prices.Add(wholePrice);
         Prices.Add(retailPrice);
 
-        WholesalePrice = wholePrice;
+        WholesalePrice = wholePrice.Value;
         RetailPrice = retailPrice.Value;
         FinalPrice = ApplyDiscount(RetailPrice);
-        DomainEvents.Raise(new InventoryUpdatedEvent(this));
+
+        RaiseDomainEvent(new InventoryItemPriceChangeEvent(ProductId, ProductVariantId, RetailPrice, FinalPrice));
     }
 
     public void AddDiscount(Discount discount)
     {
+        var discountChain = DiscountChain.Create();
+        var strategy = DiscountStrategyFactory.Create(discount);
+        if (strategy is not null)
+            discountChain.AddDiscount(strategy);
+
+        FinalPrice = discountChain.ApplyDiscount(RetailPrice);
         Discounts.Add(discount);
+
+        RaiseDomainEvent(new InventoryItemPriceChangeEvent(ProductId, ProductVariantId, RetailPrice, FinalPrice));
     }
 
     public void SetSKU(string sku, string username)
@@ -124,6 +136,14 @@ public class InventoryItem : BaseEntity, IAuditable
     private static string GenerateInventorySKU(string sku, string supplierUsername)
     {
         return $"{sku}-{supplierUsername.ToUpper()}";
+    }
+
+    public void AdjustQuantity(int quantityChange)
+    {
+        if (Quantity + quantityChange < 0) return;
+
+        Quantity += quantityChange;
+        RaiseDomainEvent(new InventoryItemQuantityChangeEvent(ProductId, ProductVariantId, quantityChange));
     }
 
     private decimal ApplyMarkupPercentage(decimal wholePrice)

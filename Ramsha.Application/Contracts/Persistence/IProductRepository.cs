@@ -23,5 +23,6 @@ public interface IProductRepository : IGenericRepository<Product, ProductId>
     Task RemoveRange(List<ProductId> productIds);
 
     Task RemoveVariant(ProductVariant variant);
+    Task<PaginationResponseDto<CatalogProductDto>> GetCatalogProductsPaged(PaginationParams paginationParams);
     Task<ProductVariant?> GetVariant(ProductId productId, ProductVariantId productVariantId);
 }

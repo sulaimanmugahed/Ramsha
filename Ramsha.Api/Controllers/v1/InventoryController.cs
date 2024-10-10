@@ -7,6 +7,7 @@ using Ramsha.Application.Features.Inventory.Queries.GetInventoryItems;
 using Ramsha.Application.Features.Inventory.Queries.GetSupplyRequestList;
 using Ramsha.Application.Wrappers;
 using Microsoft.AspNetCore.Mvc;
+using Ramsha.Application.Features.Inventory.Commands.ApplyInventoryItemDiscount;
 
 namespace Ramsha.Api.Controllers.v1;
 
@@ -26,5 +27,9 @@ public class InventoryController : BaseApiController
     [HttpGet(nameof(GetSupplyList))]
     public async Task<BaseResult<List<SupplyDto>>> GetSupplyList(GetSupplyListQuery query)
     => await Mediator.Send(query);
+
+    [HttpPost("discount")]
+    public async Task<BaseResult> ApplyInventoryItemDiscount(ApplyInventoryItemDiscountCommand command)
+    => await Mediator.Send(command);
 
 }

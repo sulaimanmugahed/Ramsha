@@ -26,7 +26,7 @@ public static class SupplierExtensions
 		x.Id.Value,
 		x.ItemSupplied.ProductId.Value,
 		x.ItemSupplied.Name,
-		x.ItemSupplied.SKU,
+		x.ItemSupplied.Sku,
 		x.Quantity,
 		x.WholesalePrice
 	)).ToList(),

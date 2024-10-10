@@ -27,6 +27,7 @@ public class CreateProductCommandHandler(
 
         product.SetCategory(category.Id);
 
+
         var brand = await brandRepository.GetByIdAsync(new Domain.Products.BrandId(request.Brand));
         if (brand is null)
             return new Error(ErrorCode.EmptyData);

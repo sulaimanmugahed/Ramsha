@@ -132,6 +132,15 @@ export const useUpdateProduct = (productId: string) => {
 
     const queryClient = useQueryClient()
 
+
+
+    const { mutateAsync: updateProduct, isPending: isUpdateProductPending } = useMutation({
+        mutationFn: async (data: any) => await productService.updateProduct({ productId, data }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [[PRODUCTS_QUERY_KEY]] })
+        }
+    })
+
     const { mutateAsync: updateStatus, isPending: isStatusPending } = useMutation({
         mutationFn: async (status: ProductStatus) =>
             await productService.changeProductStatus(productId, status),
@@ -143,7 +152,9 @@ export const useUpdateProduct = (productId: string) => {
 
     return {
         updateStatus,
-        isStatusPending
+        updateProduct,
+        isStatusPending,
+        isUpdateProductPending
     }
 }
 
@@ -187,18 +198,7 @@ export const useDeleteProducts = () => {
     }
 }
 
-export const useProductForm = (id?: string) => {
-    const { mutateAsync } = useMutation({
-        mutationFn: async (data: any) => {
-            return id ?
-                await productService.editProduct(data, id) :
-                await productService.createProduct(data);
-        },
-    })
-    return {
-        submitProduct: mutateAsync
-    }
-}
+
 
 export const useAddVariants = () => {
     const { mutateAsync } = useMutation({

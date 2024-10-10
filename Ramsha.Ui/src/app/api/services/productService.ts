@@ -36,15 +36,7 @@ const createProduct = async (data: any) => {
 }
 
 
-const editProduct = async (data: any, id: string) => {
-    const formData = createFormData(data);
-    return await request({
-        url: `${BASE_URL}/${id}`,
-        method: 'PUT',
-        headers: { 'Content-Type': 'multipart/form-data' },
-        data: formData
-    })
-}
+
 
 
 const addVariants = async (data: any, productId: string) => {
@@ -117,8 +109,16 @@ const updateVariant = async ({ productId, variantId, data }: { productId: string
     })
 }
 
+const updateProduct = async ({ productId, data }: { productId: string, data: any }) => {
+    return await request({
+        url: `${BASE_URL}/${productId}`,
+        method: 'PUT',
+        data
+    })
+}
 
-const changeProductStatus =async (productId:string,status:string) => {
+
+const changeProductStatus = async (productId: string, status: string) => {
     return await request({
         url: `${BASE_URL}/${productId}/status?statusValue=${status}`,
         method: 'PUT',
@@ -130,7 +130,7 @@ const changeProductStatus =async (productId:string,status:string) => {
 export const productService = {
     getProduct,
     createProduct,
-    editProduct,
+    updateProduct,
     getProductDetail,
     getProductsPaged,
     addVariants,

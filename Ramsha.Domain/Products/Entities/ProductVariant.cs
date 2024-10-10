@@ -1,11 +1,14 @@
 
 
+using Ramsha.Domain.Common;
+using Ramsha.Domain.Common.Events;
 using Ramsha.Domain.Inventory.Entities;
 using Ramsha.Domain.Inventory.Services;
+using Ramsha.Domain.Products.Events;
 
 namespace Ramsha.Domain.Products.Entities;
 
-public class ProductVariant
+public class ProductVariant : BaseEntity
 {
     public ProductVariant(ProductVariantId id, ProductId productId, string name, string description)
     {
@@ -37,7 +40,7 @@ public class ProductVariant
 
     public void RemoveImage(ProductImage image)
     {
-            Images.Remove(image);
+        Images.Remove(image);
     }
 
     public void RemoveImageByPath(string fullPath)
@@ -49,10 +52,10 @@ public class ProductVariant
         }
     }
 
-     public ProductImage? GetImageByUrl(string url)
+    public ProductImage? GetImageByUrl(string url)
     {
         return Images.FirstOrDefault(x => x.Url == url);
-        
+
     }
 
 
@@ -69,16 +72,11 @@ public class ProductVariant
     public decimal FinalPrice { get; private set; }
     public int TotalQuantity { get; private set; }
 
-    public List<Discount> Discounts { get; set; } = [];
     public List<VariantValue> VariantValues { get; set; } = [];
     public List<InventoryItem> InventoryItems { get; set; } = [];
 
     public List<ProductImage> Images { get; set; } = [];
-    public List<Rating> Ratings { get; set; } = [];
-
-    public decimal AverageRating { get; private set; }
-    public int NumberOfRatings { get; private set; }
-
+   
 
 
     public void SetBasePrice(decimal price)
@@ -86,13 +84,20 @@ public class ProductVariant
         Price = price;
     }
 
-    public void AddRating(decimal value, string username, string review = "")
+    public void AdjustQuantity(int quantityChange)
     {
-        var rating = new Rating(value, ProductId, username, review);
-        Ratings.Add(rating);
-        NumberOfRatings = Ratings.Count;
-        AverageRating = Ratings.Average(r => r.Value);
+        if (TotalQuantity + quantityChange < 0)
+        {
+            throw new InvalidOperationException("Cannot reduce quantity below zero.");
+        }
+        TotalQuantity += quantityChange;
     }
+
+  
+
+
+
+
 
     public static ProductVariant Create(ProductId productId, string name, string description)
     {
@@ -123,11 +128,10 @@ public class ProductVariant
     {
         SKU = sku;
     }
-    public void UpdatePrice(decimal newPrice)
+    public void UpdatePrice(decimal price, decimal finalPrice)
     {
-        Price = newPrice;
-        decimal discountedPrice = ApplyDiscount(newPrice);
-        FinalPrice = discountedPrice;
+        Price = price;
+        FinalPrice = finalPrice;
     }
 
     public void UpdateQuantity()
@@ -135,27 +139,15 @@ public class ProductVariant
         TotalQuantity = InventoryItems.Select(x => x.Quantity).Sum();
     }
 
-    private decimal ApplyDiscount(decimal price)
+    public void IncreaseQuantity(int value)
     {
-        var activeDiscounts = Discounts
-                        .Where(d => d.IsValid)
-                        .ToList();
+        TotalQuantity += value;
+    }
 
-        if (activeDiscounts.Count > 0)
-        {
-            var discountChain = DiscountChain.Create();
+    public void DecreaseQuantity(int value)
+    {
+        TotalQuantity -= value;
 
-            foreach (var discount in activeDiscounts)
-            {
-                var strategy = DiscountStrategyFactory.Create(discount);
-
-                if (strategy is not null)
-                    discountChain.AddDiscount(strategy);
-
-            }
-            return discountChain.ApplyDiscount(price);
-        }
-        return price;
     }
 
 }

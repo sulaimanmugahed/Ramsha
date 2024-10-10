@@ -60,9 +60,11 @@ export type ProductDetail = {
     brand: BrandDto;
     imageUrl: string;
     variants: ProductVariantDto[];
-    tags:string[]
+    tags: string[]
     seoSettings: SeoSettings
 }
+
+
 
 export type VariantDetailDto = {
     id: string;

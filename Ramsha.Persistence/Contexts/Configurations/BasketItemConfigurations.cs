@@ -16,5 +16,7 @@ internal class BasketItemConfigurations : IEntityTypeConfiguration<BasketItem>
 			.WithMany(x => x.Items)
 			.HasForeignKey(x => x.BasketId);
 
+		builder.HasQueryFilter(x => !x.InventoryItem.Product.IsDeleted);
+
 	}
 }

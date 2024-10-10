@@ -10,6 +10,7 @@ using Ramsha.Domain.Inventory.Entities;
 using Ramsha.Persistence.Contexts;
 using Ramsha.Persistence.Helpers;
 using Microsoft.EntityFrameworkCore;
+using Ramsha.Domain.Products;
 
 namespace Ramsha.Persistence.Repositories;
 
@@ -84,6 +85,17 @@ IInventoryItemRepository
           query.Select(p => p.AsDto()),
           paginationParams
           );
+    }
+
+    public async Task<int> GetVariantQuantity(ProductVariantId productVariantId)
+    {
+        var items = await _items.Where(i => i.ProductVariantId == productVariantId).ToListAsync();
+        return items.Select(x => x.Quantity).Sum();
+    }
+
+    public async Task<InventoryItem?> GetInventoryItemBySku(string sku)
+    {
+        return await _items.FirstOrDefaultAsync(x => x.InventorySKU == sku);
     }
 }
 

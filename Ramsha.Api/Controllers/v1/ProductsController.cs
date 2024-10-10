@@ -3,7 +3,6 @@ using Ramsha.Application.Dtos.Common;
 using Ramsha.Application.Dtos.Products;
 using Ramsha.Application.Features.Products.Commands.AddProductOption;
 using Ramsha.Application.Features.Products.Commands.AddProductVariant;
-using Ramsha.Application.Features.Products.Commands.ApplyProductVariantDiscount;
 using Ramsha.Application.Features.Products.Commands.CreateProduct;
 using Ramsha.Application.Features.Products.Commands.DeleteProductOption;
 using Ramsha.Application.Features.Products.Commands.DeleteProductRange;
@@ -20,6 +19,7 @@ using Ramsha.Application.Features.Products.Queries.GetVariantDetails;
 using Ramsha.Application.Wrappers;
 using Microsoft.AspNetCore.Mvc;
 using Ramsha.Domain.Products.Enums;
+using Ramsha.Application.Features.Products.Commands.UpdateProduct;
 
 namespace Ramsha.Api.Controllers.v1;
 
@@ -111,10 +111,17 @@ public class ProductsController : BaseApiController
     //     public async Task<BaseResult<List<ProductDetailsDto>>> GetProductsDetails()
     //    => await Mediator.Send(new GetProductsDetailsQuery());
 
-    [HttpPost("{productId}/variants/{variantId}/discount")]
-    public async Task<BaseResult> ApplyProductVariantDiscount(Guid productId, Guid variantId, ApplyProductVariantDiscountCommand command)
+    // [HttpPost("{productId}/variants/{variantId}/discount")]
+    // public async Task<BaseResult> ApplyProductVariantDiscount(Guid productId, Guid variantId, ApplyProductVariantDiscountCommand command)
+    // {
+    //     command.ProductVariantId = variantId;
+    //     command.ProductId = productId;
+    //     return await Mediator.Send(command);
+    // }
+
+    [HttpPut("{productId}")]
+    public async Task<BaseResult> UpdateVariant(Guid productId, UpdateProductCommand command)
     {
-        command.ProductVariantId = variantId;
         command.ProductId = productId;
         return await Mediator.Send(command);
     }
@@ -130,6 +137,6 @@ public class ProductsController : BaseApiController
     [HttpPut("{productId}/status")]
 
     public async Task<BaseResult> ChangeProductStatus([FromRoute] Guid productId, [FromQuery] ProductStatus statusValue)
-    => await Mediator.Send(new ChangeProductStatusCommand{ProductId= productId,Status = statusValue});
+    => await Mediator.Send(new ChangeProductStatusCommand { ProductId = productId, Status = statusValue });
 
 }

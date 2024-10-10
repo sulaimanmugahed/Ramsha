@@ -47,6 +47,7 @@ public class AddSupplyRequestItemCommandHandler(
         {
             var supplyRequestItem = SupplyRequestItem.Create(
                 product.Id,
+                variant?.Id,
                 request.WholesalePrice,
                 request.Quantity);
             supplyRequestItem.SetSKU(request.SKU);

@@ -1,9 +1,9 @@
 import { Box, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import ProductBasicForm from './ProductBasicForm';
 import ProductAdditionalForm from './ProductAdditionalForm';
-import { basicInfoSchema, additionalInfoScheme, ProductFormScheme } from './productFormValidations';
+import { basicInfoSchema, additionalInfoScheme, ProductFormScheme, BasicInfoSchema, AdditionalInfoScheme } from './productFormValidations';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useProductDetails } from '../../app/hooks/productHooks';
+import { useProductDetails, useUpdateProduct } from '../../app/hooks/productHooks';
 import { Close } from '@mui/icons-material';
 import { useEffect } from 'react';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -11,6 +11,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { useUploadFile } from '../../app/hooks/storageHooks';
 
 const ProductEditModal = () => {
 
@@ -44,6 +45,10 @@ const ProductEditModal = () => {
 
     const { productDetails: product } = useProductDetails(productId!)
 
+    const { upload } = useUploadFile()
+
+    const { updateProduct } = useUpdateProduct(productId!)
+
 
     const methods = useForm<ProductFormScheme>({
         defaultValues: {
@@ -63,11 +68,68 @@ const ProductEditModal = () => {
 
     })
 
-    const { formState: { isSubmitting }, handleSubmit } = methods
+    const { formState: { isSubmitting, dirtyFields, isDirty }, handleSubmit } = methods
 
 
-    const onSubmit = (data: ProductFormScheme) => {
-        console.log(`to edit ${section} : `, data)
+    const handleBasicDataSubmission = async (data: BasicInfoSchema) => {
+        const { file, brand, category, name, description } = data
+        let imageUrl;
+        const newFile = file?.file;
+        if (newFile && dirtyFields.file) {
+            const uploadResponse = await upload({ path: 'products', file: newFile })
+            imageUrl = uploadResponse.url
+        }
+        await updateProduct(
+            {
+                productBasicCommand: {
+                    name: dirtyFields.name ? name : null,
+                    description: dirtyFields.description ? description : null,
+                    brand: dirtyFields.brand ? brand : null,
+                    category: dirtyFields.category ? category : null,
+                    imageUrl
+                }
+            })
+    }
+
+    const handleAdditional = async (data: AdditionalInfoScheme) => {
+        const { seoSettings, tags } = data
+
+        const tagsToAdd = dirtyFields.tags
+            ? tags?.filter(t => !product?.tags?.includes(t)) || null
+            : null;
+
+        const tagsToRemove = dirtyFields.tags
+            ? product?.tags?.filter(t => !tags?.includes(t)) || null
+            : null;
+
+        await updateProduct(
+            {
+                productAdditionalCommand:
+                {
+                    seoSettings: dirtyFields.seoSettings ? seoSettings : null,
+                    tagsToAdd,
+                    tagsToRemove
+                }
+            })
+    }
+
+
+    const onSubmit = async (data: ProductFormScheme) => {
+
+        if (isDirty) {
+            switch (section) {
+                case 'basic': {
+                    await handleBasicDataSubmission(data)
+                    break;
+                }
+                case 'additional': {
+                    await handleAdditional(data)
+                    break;
+                }
+                default: break;
+            }
+        }
+
         handleClose()
     }
 

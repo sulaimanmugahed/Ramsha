@@ -13,9 +13,6 @@ public class Rating
     public string RatingBy { get; set; }
     public string Review { get; set; }
     public DateTime Created { get; set; } = DateTime.UtcNow;
-    public ProductVariantId ProductVariantId { get; set; }
-    // public ProductVariant ProductVariant { get; set; }
-    // public Product Product { get; set; }
     public ProductId ProductId { get; set; }
 
     public Rating(decimal value, ProductId productId, string ratingBy, string review = "")
@@ -32,9 +29,9 @@ public class Rating
         RatingBy = ratingBy;
     }
 
-    public void SetVariant(ProductVariantId productVariantId)
+    public void SetVariant(ProductId productId)
     {
-        ProductVariantId = productVariantId;
+        ProductId = productId;
     }
 
 }

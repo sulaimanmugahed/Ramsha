@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Ramsha.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class Amdswbydbvnomi1obb4e : Migration
+    public partial class AddProfile2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -173,6 +173,8 @@ namespace Ramsha.Persistence.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TotalQuantity = table.Column<int>(type: "int", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,6)", nullable: true),
+                    FinalPrice = table.Column<decimal>(type: "decimal(18,6)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: false),
@@ -396,37 +398,6 @@ namespace Ramsha.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SupplyRequestItem",
-                schema: "Core",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SupplyRequestId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SKU = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    WholesalePrice = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
-                    Quantity = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SupplyRequestItem", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_SupplyRequestItem_Products_ProductId",
-                        column: x => x.ProductId,
-                        principalSchema: "Core",
-                        principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_SupplyRequestItem_SupplyRequests_SupplyRequestId",
-                        column: x => x.SupplyRequestId,
-                        principalSchema: "Core",
-                        principalTable: "SupplyRequests",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "OrderItem",
                 schema: "Core",
                 columns: table => new
@@ -460,7 +431,8 @@ namespace Ramsha.Persistence.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ItemSupplied_ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ItemSupplied_Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ItemSupplied_SKU = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ItemSupplied_ProductVariantId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ItemSupplied_Sku = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     WholesalePrice = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     SupplyId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
@@ -549,32 +521,6 @@ namespace Ramsha.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductVariant_Discounts",
-                schema: "Core",
-                columns: table => new
-                {
-                    ProductVariantProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ProductVariantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Type = table.Column<int>(type: "int", nullable: false),
-                    Value = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductVariant_Discounts", x => new { x.ProductVariantProductId, x.ProductVariantId, x.Id });
-                    table.ForeignKey(
-                        name: "FK_ProductVariant_Discounts_ProductVariant_ProductVariantProductId_ProductVariantId",
-                        columns: x => new { x.ProductVariantProductId, x.ProductVariantId },
-                        principalSchema: "Core",
-                        principalTable: "ProductVariant",
-                        principalColumns: new[] { "ProductId", "Id" },
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Ratings",
                 schema: "Core",
                 columns: table => new
@@ -597,6 +543,44 @@ namespace Ramsha.Persistence.Migrations
                         principalTable: "ProductVariant",
                         principalColumns: new[] { "ProductId", "Id" },
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SupplyRequestItem",
+                schema: "Core",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SupplyRequestId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProductVariantId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    SKU = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    WholesalePrice = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SupplyRequestItem", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SupplyRequestItem_ProductVariant_ProductId_ProductVariantId",
+                        columns: x => new { x.ProductId, x.ProductVariantId },
+                        principalSchema: "Core",
+                        principalTable: "ProductVariant",
+                        principalColumns: new[] { "ProductId", "Id" });
+                    table.ForeignKey(
+                        name: "FK_SupplyRequestItem_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalSchema: "Core",
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SupplyRequestItem_SupplyRequests_SupplyRequestId",
+                        column: x => x.SupplyRequestId,
+                        principalSchema: "Core",
+                        principalTable: "SupplyRequests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -664,7 +648,7 @@ namespace Ramsha.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "InventoryItems_Discounts",
+                name: "Discount",
                 schema: "Core",
                 columns: table => new
                 {
@@ -678,9 +662,9 @@ namespace Ramsha.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_InventoryItems_Discounts", x => new { x.InventoryItemId, x.Id });
+                    table.PrimaryKey("PK_Discount", x => new { x.InventoryItemId, x.Id });
                     table.ForeignKey(
-                        name: "FK_InventoryItems_Discounts_InventoryItems_InventoryItemId",
+                        name: "FK_Discount_InventoryItems_InventoryItemId",
                         column: x => x.InventoryItemId,
                         principalSchema: "Core",
                         principalTable: "InventoryItems",
@@ -802,10 +786,10 @@ namespace Ramsha.Persistence.Migrations
                 column: "SupplyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SupplyRequestItem_ProductId",
+                name: "IX_SupplyRequestItem_ProductId_ProductVariantId",
                 schema: "Core",
                 table: "SupplyRequestItem",
-                column: "ProductId");
+                columns: new[] { "ProductId", "ProductVariantId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_SupplyRequestItem_SupplyRequestId",
@@ -836,7 +820,7 @@ namespace Ramsha.Persistence.Migrations
                 schema: "Core");
 
             migrationBuilder.DropTable(
-                name: "InventoryItems_Discounts",
+                name: "Discount",
                 schema: "Core");
 
             migrationBuilder.DropTable(
@@ -857,10 +841,6 @@ namespace Ramsha.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "ProductTag",
-                schema: "Core");
-
-            migrationBuilder.DropTable(
-                name: "ProductVariant_Discounts",
                 schema: "Core");
 
             migrationBuilder.DropTable(

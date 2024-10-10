@@ -93,6 +93,8 @@ public class ProductRepository(ApplicationDbContext context)
    {
       return await _productsVariants
       .AsSplitQuery()
+      .Include(x => x.InventoryItems)
+      .Include(x => x.Product)
       .Include(v => v.Images)
         .Include(v => v.VariantValues)
            .ThenInclude(vv => vv.Option)
@@ -119,7 +121,6 @@ public class ProductRepository(ApplicationDbContext context)
    {
       return await _productsVariants
      .AsSplitQuery()
-     .Include(v => v.Discounts)
        .Include(v => v.VariantValues)
           .ThenInclude(vv => vv.Option)
        .Include(x => x.VariantValues)
@@ -135,6 +136,21 @@ public class ProductRepository(ApplicationDbContext context)
       return await _variantValues.AnyAsync(x => x.OptionId == optionId);
    }
 
+   public async Task<PaginationResponseDto<CatalogProductDto>> GetCatalogProductsPaged(PaginationParams paginationParams)
+   {
+      var productsQuery = _product
+     .Include(p => p.Category)
+     .Include(p => p.Brand)
+     .OrderBy(x => x.Created)
+     .AsQueryable();
+
+      return await Paged(
+       productsQuery.Select(p => p.AsCatalogDto()),
+       paginationParams
+       );
+   }
+
+
    public async Task<PaginationResponseDto<ProductDto>> GetProductsPaged(PaginationParams paginationParams, FilterParams? filterParams = null, SortingParams? sortingParams = null)
    {
       var productsQuery = _product
@@ -142,8 +158,10 @@ public class ProductRepository(ApplicationDbContext context)
       .Include(p => p.Brand)
       .AsQueryable();
 
-      if (sortingParams is not null)
-         productsQuery = productsQuery.OrderByColumnName(sortingParams.ColumnsSort);
+
+      productsQuery = sortingParams is not null && sortingParams.ColumnsSort.Count > 0
+       ? productsQuery.OrderByColumnName(sortingParams.ColumnsSort)
+       : productsQuery.OrderBy(x => x.Created);
 
       if (filterParams is not null)
       {
@@ -161,7 +179,6 @@ public class ProductRepository(ApplicationDbContext context)
             var allCategoryIds = await GetChildCategoryIds(filterParams.Categories);
             productsQuery = productsQuery.Where(p => allCategoryIds.Contains(p.CategoryId));
          }
-
       }
 
       return await Paged(
@@ -172,7 +189,6 @@ public class ProductRepository(ApplicationDbContext context)
 
    private async Task<List<CategoryId>> GetChildCategoryIds(List<CategoryId> categoryIds)
    {
-      // Fetch the selected category and all its child categories
       var allCategoryIds = new List<CategoryId>();
 
       foreach (var categoryId in categoryIds)

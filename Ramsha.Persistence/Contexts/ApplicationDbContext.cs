@@ -9,10 +9,11 @@ using Ramsha.Domain.Suppliers.Entities;
 using Ramsha.Domain.Inventory.Entities;
 using Ramsha.Domain.Suppliers;
 using Ramsha.Domain.Orders.Entities;
+using MediatR;
 
 
 namespace Ramsha.Persistence.Contexts;
-public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IAuthenticatedUserService authenticatedUserService)
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IAuthenticatedUserService authenticatedUserService, IPublisher publisher)
     : DbContext(options)
 {
     public DbSet<Product> Products { get; set; }
@@ -28,11 +29,12 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<ProductVariant> ProductVariant { get; set; }
     public DbSet<Rating> Ratings { get; set; }
     public DbSet<Tag> Tags { get; set; }
+
     public DbSet<Brand> Brand { get; set; }
 
 
 
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
         var userId = Guid.Parse(authenticatedUserService.UserId ?? "00000000-0000-0000-0000-000000000000");
 
@@ -58,7 +60,32 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             }
         }
 
-        return base.SaveChangesAsync(cancellationToken);
+        var result = await base.SaveChangesAsync(cancellationToken);
+
+        await PublishDomainEventsAsync();
+
+        return result;
+    }
+
+    private async Task PublishDomainEventsAsync()
+    {
+        // Get all domain events from all entities
+        var domainEntities = ChangeTracker
+            .Entries<BaseEntity>()
+            .Where(e => e.Entity.DomainEvents.Any())
+            .Select(e => e.Entity)
+            .ToList();
+
+        foreach (var entity in domainEntities)
+        {
+            var events = entity.DomainEvents.ToList();
+            entity.ClearDomainEvent();
+
+            foreach (var domainEvent in events)
+            {
+                await publisher.Publish(domainEvent);
+            }
+        }
     }
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -74,15 +101,10 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
         builder.HasDefaultSchema("Core");
 
+        builder.Ignore<BaseEntity>();
 
-        builder.Entity<Tag>(entity =>
-          {
-              entity.HasKey(b => b.Id);
 
-              entity.Property(x => x.Id)
-             .HasConversion(id => id.Value, value => new TagId(value));
 
-          });
 
         builder.Entity<Brand>(entity =>
      {
@@ -111,28 +133,45 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
           .HasConversion(id => id.Value, value => new RatingId(value));
 
             builder
-                .HasOne<ProductVariant>()
+                .HasOne<Product>()
                 .WithMany(pv => pv.Ratings)
-                .HasForeignKey(r => new { r.ProductId, r.ProductVariantId })
+                .HasForeignKey(r =>  r.ProductId )
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
         //tags
 
-        builder.Entity<ProductTag>()
-           .HasKey(pt => new { pt.ProductId, pt.TagId });  // Composite key
+        builder.Entity<Tag>(entity =>
+       {
+           entity.HasKey(b => b.Id);
 
-        builder.Entity<ProductTag>()
-            .HasOne(pt => pt.Product)
-            .WithMany(p => p.Tags)
-            .HasForeignKey(pt => pt.ProductId);
+           entity.Property(x => x.Id)
+          .HasConversion(id => id.Value, value => new TagId(value));
 
-        builder.Entity<ProductTag>()
-            .HasOne(pt => pt.Tag)
-            .WithMany(t => t.ProductTags)
-            .HasForeignKey(pt => pt.TagId);
+       });
 
-        ///
+        builder.Entity<ProductTag>(entity =>
+        {
+            entity.HasKey(pt => new { pt.ProductId, pt.TagId });
+
+            entity
+                 .HasOne(pt => pt.Product)
+                 .WithMany(p => p.Tags)
+                 .HasForeignKey(pt => pt.ProductId);
+
+            entity
+                .HasOne(pt => pt.Tag)
+                .WithMany(t => t.ProductTags)
+                .HasForeignKey(pt => pt.TagId);
+
+            entity.HasQueryFilter(x => !x.Product.IsDeleted);
+
+
+
+        });
+
+
+
 
         builder.Entity<Coupon>(builder =>
         {
@@ -151,6 +190,10 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             builder.HasOne(x => x.Product)
             .WithMany()
             .HasForeignKey(x => x.ProductId);
+
+            builder.HasOne(x => x.ProductVariant)
+            .WithMany()
+            .HasForeignKey(x => new { x.ProductId, x.ProductVariantId });
 
             builder.HasQueryFilter(x => !x.Product.IsDeleted);
 
@@ -278,6 +321,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             {
                 sp.Property(x => x.ProductId)
                .HasConversion(id => id.Value, value => new ProductId(value));
+
+                sp.Property(x => x.ProductVariantId)
+                .HasConversion(id => id.Value, value => new ProductVariantId(value));
             });
         });
 
@@ -355,8 +401,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
           .HasForeignKey(pi => new { pi.ProductId, pi.ProductVariantId })
           .OnDelete(DeleteBehavior.Cascade);
 
-        builder.Entity<ProductVariant>()
-          .OwnsMany(x => x.Discounts);
 
         base.OnModelCreating(builder);
     }

@@ -13,7 +13,7 @@ public static class ServiceRegistration
     public static IServiceCollection AddApplicationLayer(this IServiceCollection services)
     {
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-        services.AddMediatR(Assembly.GetExecutingAssembly());
+        services.AddMediatR(x=> x.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
         services.AddScoped<IVariantService, VariantService>();
 
