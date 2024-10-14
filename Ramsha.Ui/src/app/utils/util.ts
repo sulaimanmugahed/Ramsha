@@ -1,12 +1,11 @@
 import { ColumnDef } from "@tanstack/react-table";
-import dayjs from 'dayjs';
 import { PagedParams, PaginationParams, CategoryFilter, FilterParams, SortingParams, ColumnSort, ColumnFilter } from "../models/common/commonModels";
 
 
 
 
 export function serializeParams(params: PagedParams): string {
-    const { paginationParams, sortingParams, filterParams } = params;
+    const { paginationParams, sortingParams, filterParams, variantParams, sku, variantId } = params;
 
     const serializedPagination = paginationParams
         ? `pageNumber=${paginationParams.pageNumber}&pageSize=${paginationParams.pageSize}`
@@ -34,7 +33,17 @@ export function serializeParams(params: PagedParams): string {
         ].filter(Boolean).join('&')
         : '';
 
-    return `${serializedPagination}&${serializedSorting}&${serializedFilters}`.replace(/^&/, '');
+    const serializedVariants = variantParams
+        ? Object.entries(variantParams)
+            .map(([key, value]) => `variantParams[${encodeURIComponent(key)}]=${encodeURIComponent(value)}`)
+            .join('&')
+        : '';
+
+    const serializedVariantId = variantId ? `variantId=${encodeURIComponent(variantId)}` : '';
+
+    const serializedSku = sku ? `sku=${encodeURIComponent(sku)}` : '';
+
+    return `${serializedPagination}&${serializedSorting}&${serializedFilters}&${serializedVariants}&${serializedVariantId}&${serializedSku}`.replace(/^&/, '');
 }
 
 
@@ -72,17 +81,28 @@ export function deserializeParams(searchParams: URLSearchParams): PagedParams {
         ? { columnsSort }
         : undefined;
 
+    const variantParams: { [key: string]: string } = {};
+    searchParams.forEach((value, key) => {
+        const match = key.match(/^variantParams\[(.+)\]$/);
+        if (match) {
+            variantParams[match[1]] = value;
+        }
+    });
+
+    const variantId: string | null = searchParams.get('variantId') || null;
+
+    const sku: string | null = searchParams.get('sku') || null;
+
 
     return {
         paginationParams,
         sortingParams,
         filterParams,
+        variantParams,
+        variantId,
+        sku
     };
 }
-
-
-
-
 
 
 
@@ -187,14 +207,14 @@ export const createFormData = <T extends Record<string, any>>(data: T): FormData
         const value = data[key];
 
         if (value instanceof File || value instanceof Blob) {
-            formData.append(key, value); 
+            formData.append(key, value);
         }
         else if (Array.isArray(value)) {
             value.forEach((item) => {
                 if (item instanceof File || item instanceof Blob) {
-                    formData.append(key, item); 
+                    formData.append(key, item);
                 } else {
-                    formData.append(`${key}[]`, item); 
+                    formData.append(`${key}[]`, item);
                 }
             });
         }

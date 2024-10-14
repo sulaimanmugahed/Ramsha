@@ -197,6 +197,35 @@ namespace Ramsha.Persistence.Migrations
                     b.ToTable("InventoryItems", "Core");
                 });
 
+            modelBuilder.Entity("Ramsha.Domain.Inventory.Entities.InventoryItemImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<Guid>("InventoryItemId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsHome")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InventoryItemId");
+
+                    b.ToTable("InventoryItemImage", "Core");
+                });
+
             modelBuilder.Entity("Ramsha.Domain.Orders.Entities.Order", b =>
                 {
                     b.Property<Guid>("Id")
@@ -855,6 +884,17 @@ namespace Ramsha.Persistence.Migrations
                     b.Navigation("Supplier");
                 });
 
+            modelBuilder.Entity("Ramsha.Domain.Inventory.Entities.InventoryItemImage", b =>
+                {
+                    b.HasOne("Ramsha.Domain.Inventory.Entities.InventoryItem", "InventoryItem")
+                        .WithMany("InventoryItemImages")
+                        .HasForeignKey("InventoryItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("InventoryItem");
+                });
+
             modelBuilder.Entity("Ramsha.Domain.Orders.Entities.Order", b =>
                 {
                     b.HasOne("Ramsha.Domain.Customers.Entities.Customer", "Customer")
@@ -1195,6 +1235,11 @@ namespace Ramsha.Persistence.Migrations
                 {
                     b.Navigation("Address")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Ramsha.Domain.Inventory.Entities.InventoryItem", b =>
+                {
+                    b.Navigation("InventoryItemImages");
                 });
 
             modelBuilder.Entity("Ramsha.Domain.Orders.Entities.Order", b =>

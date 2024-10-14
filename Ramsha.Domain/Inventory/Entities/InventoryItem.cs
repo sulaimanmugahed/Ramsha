@@ -71,6 +71,7 @@ public class InventoryItem : BaseEntity, IAuditable
     public Supplier Supplier { get; set; }
     public List<ProductPrice> Prices { get; set; } = [];
     public List<Discount> Discounts { get; set; } = [];
+    public List<InventoryItemImage> InventoryItemImages { get; set; } = [];
     public Guid CreatedBy { get; set; }
     public DateTime Created { get; set; }
     public Guid? LastModifiedBy { get; set; }
@@ -144,6 +145,37 @@ public class InventoryItem : BaseEntity, IAuditable
 
         Quantity += quantityChange;
         RaiseDomainEvent(new InventoryItemQuantityChangeEvent(ProductId, ProductVariantId, quantityChange));
+    }
+
+    public void AddImage(string url, string fullPath, bool isHome = false)
+    {
+        var image = new InventoryItemImage
+        {
+            Url = url,
+            Path = fullPath,
+            IsHome = isHome
+        };
+
+        InventoryItemImages.Add(image);
+    }
+
+    public void RemoveImage(InventoryItemImage image)
+    {
+        InventoryItemImages.Remove(image);
+    }
+
+    public void RemoveImageByPath(string fullPath)
+    {
+        var existImage = InventoryItemImages.FirstOrDefault(x => x.Path == fullPath);
+        if (existImage is not null)
+        {
+            InventoryItemImages.Remove(existImage);
+        }
+    }
+
+    public InventoryItemImage? GetImageByUrl(string url)
+    {
+        return InventoryItemImages.FirstOrDefault(x => x.Url == url);
     }
 
     private decimal ApplyMarkupPercentage(decimal wholePrice)

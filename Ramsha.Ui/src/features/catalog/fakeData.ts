@@ -1,564 +1,134 @@
-import { ProductDetailsDto } from "../../app/models/products/product";
+import { CatalogProductDetailType } from '../../app/models/catalog/catalogProduct';
 
-export const products: ProductDetailsDto[] = [
-    {
-        id: "1",
-        name: "Wireless Headphones Wireless Headphones",
-        description: "High-quality wireless headphones with noise cancellation.",
-        basePrice: 15000000,
-        discountPrice: 1300000,
-        category: { id: "1", label: "Electronics", children: [] },
-        quantity: 100,
-        images: [
-            {
-                url: "https://via.placeholder.com/300x200?text=Headphones",
-                isHome: true,
-            },
-        ],
-        variants: [
-            {
-                id: "v1",
-                sku: "WH-001",
-                quantity: 20,
-                basePrice: 150,
-                discountedPrice: 120,
-                values: [
-                    { optionId: "o1", optionValueId: "ov1", optionName: "Color", valueName: "Black" },
-                    { optionId: "o2", optionValueId: "ov2", optionName: "Size", valueName: "Over-Ear" },
-                    { optionId: "o3", optionValueId: "ov2", optionName: "Size", valueName: "Over-Ear" },
-                    { optionId: "o4", optionValueId: "ov2", optionName: "Size", valueName: "Over-Ear" },
-                    { optionId: "o5", optionValueId: "ov2", optionName: "Size", valueName: "Over-Ear" },
-
-                ],
-            },
-            {
-                id: "v2",
-                sku: "WH-002",
-                quantity: 10,
-                basePrice: 150,
-                discountedPrice: 130,
-                values: [
-                    { optionId: "o1", optionValueId: "ov1", optionName: "Color", valueName: "White" },
-                    { optionId: "o2", optionValueId: "ov2", optionName: "Size", valueName: "On-Ear" },
-                ],
-            },
-        ],
-        rating: 4
-    },
-    {
-        id: "2",
-        name: "Smartwatch",
-        description: "Smartwatch with heart-rate monitor and GPS tracking.",
-        basePrice: 200,
-        discountPrice: 180,
-        category: { id: "2", label: "Wearables", children: [] },
-        quantity: 50,
-        images: [
-            {
-                url: "https://via.placeholder.com/300x200?text=Smartwatch",
-                isHome: true,
-            },
-        ],
-        variants: [
-            {
-                id: "v3",
-                sku: "SW-001",
-                quantity: 15,
-                basePrice: 200,
-                discountedPrice: 180,
-                values: [
-                    { optionId: "o3", optionValueId: "ov3", optionName: "Color", valueName: "Black" },
-                    { optionId: "o4", optionValueId: "ov4", optionName: "Size", valueName: "42mm" },
-                ],
-            },
-            {
-                id: "v4",
-                sku: "SW-002",
-                quantity: 25,
-                basePrice: 200,
-                discountedPrice: 185,
-                values: [
-                    { optionId: "o3", optionValueId: "ov3", optionName: "Color", valueName: "Silver" },
-                    { optionId: "o4", optionValueId: "ov5", optionName: "Size", valueName: "44mm" },
-                ],
-            },
-        ],
-    },
-    {
-        id: "3",
-        name: "Wireless Headphones",
-        description: "High-quality wireless headphones with noise cancellation.",
-        basePrice: 15000000,
-        discountPrice: 1300000,
-        category: { id: "1", label: "Electronics", children: [] },
-        quantity: 100,
-        images: [
-            {
-                url: "https://via.placeholder.com/300x200?text=Headphones",
-                isHome: true,
-            },
-        ],
-        variants: [
-            {
-                id: "v1",
-                sku: "WH-001",
-                quantity: 20,
-                basePrice: 150,
-                discountedPrice: 120,
-                values: [
-                    { optionId: "o1", optionValueId: "ov1", optionName: "Color", valueName: "Black" },
-                    { optionId: "o2", optionValueId: "ov2", optionName: "Size", valueName: "Over-Ear" },
-                ],
-            },
-            {
-                id: "v2",
-                sku: "WH-002",
-                quantity: 10,
-                basePrice: 150,
-                discountedPrice: 130,
-                values: [
-                    { optionId: "o1", optionValueId: "ov1", optionName: "Color", valueName: "White" },
-                    { optionId: "o2", optionValueId: "ov2", optionName: "Size", valueName: "On-Ear" },
-                ],
-            },
-        ],
-        rating: 4,
-    },
-    {
-        id: "4",
-        name: "Smartwatch",
-        description: "Smartwatch with heart-rate monitor and GPS tracking.",
-        basePrice: 200,
-        discountPrice: 180,
-        category: { id: "2", label: "Wearables", children: [] },
-        quantity: 50,
-        images: [
-            {
-                url: "https://via.placeholder.com/300x200?text=Smartwatch",
-                isHome: true,
-            },
-        ],
-        variants: [
-            {
-                id: "v3",
-                sku: "SW-001",
-                quantity: 15,
-                basePrice: 200,
-                discountedPrice: 180,
-                values: [
-                    { optionId: "o3", optionValueId: "ov3", optionName: "Color", valueName: "Black" },
-                    { optionId: "o4", optionValueId: "ov4", optionName: "Size", valueName: "42mm" },
-                ],
-            },
-            {
-                id: "v4",
-                sku: "SW-002",
-                quantity: 25,
-                basePrice: 200,
-                discountedPrice: 185,
-                values: [
-                    { optionId: "o3", optionValueId: "ov3", optionName: "Color", valueName: "Silver" },
-                    { optionId: "o4", optionValueId: "ov5", optionName: "Size", valueName: "44mm" },
-                ],
-            },
-        ],
-    },
-    {
-        id: "5",
-        name: "4K LED TV",
-        description: "Ultra HD 4K LED TV with smart features.",
-        basePrice: 6000000,
-        discountPrice: 5500000,
-        category: { id: "3", label: "Home Appliances", children: [] },
-        quantity: 20,
-        images: [
-            {
-                url: "https://via.placeholder.com/300x200?text=4K+TV",
-                isHome: true,
-            },
-        ],
-        variants: [
-            {
-                id: "v5",
-                sku: "TV-001",
-                quantity: 8,
-                basePrice: 6000000,
-                discountedPrice: 5500000,
-                values: [
-                    { optionId: "o5", optionValueId: "ov5", optionName: "Size", valueName: "55 inch" },
-                    { optionId: "o6", optionValueId: "ov6", optionName: "Resolution", valueName: "4K" },
-                ],
-            },
-            {
-                id: "v6",
-                sku: "TV-002",
-                quantity: 12,
-                basePrice: 6000000,
-                discountedPrice: 5800000,
-                values: [
-                    { optionId: "o5", optionValueId: "ov5", optionName: "Size", valueName: "65 inch" },
-                    { optionId: "o6", optionValueId: "ov6", optionName: "Resolution", valueName: "4K" },
-                ],
-            },
-        ],
-    },
-    {
-        id: "6",
-        name: "Gaming Laptop",
-        description: "High-performance gaming laptop with RTX graphics.",
-        basePrice: 18000000,
-        discountPrice: 16000000,
-        category: { id: "1", label: "Electronics", children: [] },
-        quantity: 15,
-        images: [
-            {
-                url: "https://via.placeholder.com/300x200?text=Gaming+Laptop",
-                isHome: true,
-            },
-        ],
-        variants: [
-            {
-                id: "v7",
-                sku: "LAP-001",
-                quantity: 7,
-                basePrice: 18000000,
-                discountedPrice: 16000000,
-                values: [
-                    { optionId: "o7", optionValueId: "ov7", optionName: "RAM", valueName: "16GB" },
-                    { optionId: "o8", optionValueId: "ov8", optionName: "Storage", valueName: "512GB SSD" },
-                ],
-            },
-            {
-                id: "v8",
-                sku: "LAP-002",
-                quantity: 8,
-                basePrice: 18000000,
-                discountedPrice: 16500000,
-                values: [
-                    { optionId: "o7", optionValueId: "ov7", optionName: "RAM", valueName: "32GB" },
-                    { optionId: "o8", optionValueId: "ov8", optionName: "Storage", valueName: "1TB SSD" },
-                ],
-            },
-        ],
-    },
-    {
-        id: "7",
-        name: "Bluetooth Speaker",
-        description: "Portable Bluetooth speaker with waterproof design.",
-        basePrice: 500000,
-        discountPrice: 450000,
-        category: { id: "1", label: "Electronics", children: [] },
-        quantity: 80,
-        images: [
-            {
-                url: "https://via.placeholder.com/300x200?text=Bluetooth+Speaker",
-                isHome: true,
-            },
-        ],
-        variants: [
-            {
-                id: "v9",
-                sku: "SPK-001",
-                quantity: 40,
-                basePrice: 500000,
-                discountedPrice: 450000,
-                values: [
-                    { optionId: "o9", optionValueId: "ov9", optionName: "Color", valueName: "Black" },
-                    { optionId: "o10", optionValueId: "ov10", optionName: "Waterproof", valueName: "Yes" },
-                ],
-            },
-            {
-                id: "v10",
-                sku: "SPK-002",
-                quantity: 40,
-                basePrice: 500000,
-                discountedPrice: 470000,
-                values: [
-                    { optionId: "o9", optionValueId: "ov9", optionName: "Color", valueName: "Blue" },
-                    { optionId: "o10", optionValueId: "ov10", optionName: "Waterproof", valueName: "Yes" },
-                ],
-            },
-        ],
-    },
-
-    {
-        id: "8",
-        name: "Wireless Headphones Wireless Headphones",
-        description: "High-quality wireless headphones with noise cancellation.",
-        basePrice: 15000000,
-        discountPrice: 1300000,
-        category: { id: "1", label: "Electronics", children: [] },
-        quantity: 100,
-        images: [
-            {
-                url: "https://via.placeholder.com/300x200?text=Headphones",
-                isHome: true,
-            },
-        ],
-        variants: [
-            {
-                id: "v1",
-                sku: "WH-001",
-                quantity: 20,
-                basePrice: 150,
-                discountedPrice: 120,
-                values: [
-                    { optionId: "o1", optionValueId: "ov1", optionName: "Color", valueName: "Black" },
-                    { optionId: "o2", optionValueId: "ov2", optionName: "Size", valueName: "Over-Ear" },
-                    { optionId: "o3", optionValueId: "ov2", optionName: "Size", valueName: "Over-Ear" },
-                    { optionId: "o4", optionValueId: "ov2", optionName: "Size", valueName: "Over-Ear" },
-                    { optionId: "o5", optionValueId: "ov2", optionName: "Size", valueName: "Over-Ear" },
-
-                ],
-            },
-            {
-                id: "v2",
-                sku: "WH-002",
-                quantity: 10,
-                basePrice: 150,
-                discountedPrice: 130,
-                values: [
-                    { optionId: "o1", optionValueId: "ov1", optionName: "Color", valueName: "White" },
-                    { optionId: "o2", optionValueId: "ov2", optionName: "Size", valueName: "On-Ear" },
-                ],
-            },
-        ],
-        rating: 4
-    },
-    {
-        id: "9",
-        name: "Smartwatch",
-        description: "Smartwatch with heart-rate monitor and GPS tracking.",
-        basePrice: 200,
-        discountPrice: 180,
-        category: { id: "2", label: "Wearables", children: [] },
-        quantity: 50,
-        images: [
-            {
-                url: "https://via.placeholder.com/300x200?text=Smartwatch",
-                isHome: true,
-            },
-        ],
-        variants: [
-            {
-                id: "v3",
-                sku: "SW-001",
-                quantity: 15,
-                basePrice: 200,
-                discountedPrice: 180,
-                values: [
-                    { optionId: "o3", optionValueId: "ov3", optionName: "Color", valueName: "Black" },
-                    { optionId: "o4", optionValueId: "ov4", optionName: "Size", valueName: "42mm" },
-                ],
-            },
-            {
-                id: "v4",
-                sku: "SW-002",
-                quantity: 25,
-                basePrice: 200,
-                discountedPrice: 185,
-                values: [
-                    { optionId: "o3", optionValueId: "ov3", optionName: "Color", valueName: "Silver" },
-                    { optionId: "o4", optionValueId: "ov5", optionName: "Size", valueName: "44mm" },
-                ],
-            },
-        ],
-    },
-    {
-        id: "10",
-        name: "Wireless Headphones",
-        description: "High-quality wireless headphones with noise cancellation.",
-        basePrice: 15000000,
-        discountPrice: 1300000,
-        category: { id: "1", label: "Electronics", children: [] },
-        quantity: 100,
-        images: [
-            {
-                url: "https://via.placeholder.com/300x200?text=Headphones",
-                isHome: true,
-            },
-        ],
-        variants: [
-            {
-                id: "v1",
-                sku: "WH-001",
-                quantity: 20,
-                basePrice: 150,
-                discountedPrice: 120,
-                values: [
-                    { optionId: "o1", optionValueId: "ov1", optionName: "Color", valueName: "Black" },
-                    { optionId: "o2", optionValueId: "ov2", optionName: "Size", valueName: "Over-Ear" },
-                ],
-            },
-            {
-                id: "v2",
-                sku: "WH-002",
-                quantity: 10,
-                basePrice: 150,
-                discountedPrice: 130,
-                values: [
-                    { optionId: "o1", optionValueId: "ov1", optionName: "Color", valueName: "White" },
-                    { optionId: "o2", optionValueId: "ov2", optionName: "Size", valueName: "On-Ear" },
-                ],
-            },
-        ],
-        rating: 4,
-    },
-    {
-        id: "11",
-        name: "Smartwatch",
-        description: "Smartwatch with heart-rate monitor and GPS tracking.",
-        basePrice: 200,
-        discountPrice: 180,
-        category: { id: "2", label: "Wearables", children: [] },
-        quantity: 50,
-        images: [
-            {
-                url: "https://via.placeholder.com/300x200?text=Smartwatch",
-                isHome: true,
-            },
-        ],
-        variants: [
-            {
-                id: "v3",
-                sku: "SW-001",
-                quantity: 15,
-                basePrice: 200,
-                discountedPrice: 180,
-                values: [
-                    { optionId: "o3", optionValueId: "ov3", optionName: "Color", valueName: "Black" },
-                    { optionId: "o4", optionValueId: "ov4", optionName: "Size", valueName: "42mm" },
-                ],
-            },
-            {
-                id: "v4",
-                sku: "SW-002",
-                quantity: 25,
-                basePrice: 200,
-                discountedPrice: 185,
-                values: [
-                    { optionId: "o3", optionValueId: "ov3", optionName: "Color", valueName: "Silver" },
-                    { optionId: "o4", optionValueId: "ov5", optionName: "Size", valueName: "44mm" },
-                ],
-            },
-        ],
-    },
-    {
-        id: "12",
-        name: "4K LED TV",
-        description: "Ultra HD 4K LED TV with smart features.",
-        basePrice: 6000000,
-        discountPrice: 5500000,
-        category: { id: "3", label: "Home Appliances", children: [] },
-        quantity: 20,
-        images: [
-            {
-                url: "https://via.placeholder.com/300x200?text=4K+TV",
-                isHome: true,
-            },
-        ],
-        variants: [
-            {
-                id: "v5",
-                sku: "TV-001",
-                quantity: 8,
-                basePrice: 6000000,
-                discountedPrice: 5500000,
-                values: [
-                    { optionId: "o5", optionValueId: "ov5", optionName: "Size", valueName: "55 inch" },
-                    { optionId: "o6", optionValueId: "ov6", optionName: "Resolution", valueName: "4K" },
-                ],
-            },
-            {
-                id: "v6",
-                sku: "TV-002",
-                quantity: 12,
-                basePrice: 6000000,
-                discountedPrice: 5800000,
-                values: [
-                    { optionId: "o5", optionValueId: "ov5", optionName: "Size", valueName: "65 inch" },
-                    { optionId: "o6", optionValueId: "ov6", optionName: "Resolution", valueName: "4K" },
-                ],
-            },
-        ],
-    },
-    {
-        id: "13",
-        name: "Gaming Laptop",
-        description: "High-performance gaming laptop with RTX graphics.",
-        basePrice: 18000000,
-        discountPrice: 16000000,
-        category: { id: "1", label: "Electronics", children: [] },
-        quantity: 15,
-        images: [
-            {
-                url: "https://via.placeholder.com/300x200?text=Gaming+Laptop",
-                isHome: true,
-            },
-        ],
-        variants: [
-            {
-                id: "v7",
-                sku: "LAP-001",
-                quantity: 7,
-                basePrice: 18000000,
-                discountedPrice: 16000000,
-                values: [
-                    { optionId: "o7", optionValueId: "ov7", optionName: "RAM", valueName: "16GB" },
-                    { optionId: "o8", optionValueId: "ov8", optionName: "Storage", valueName: "512GB SSD" },
-                ],
-            },
-            {
-                id: "v8",
-                sku: "LAP-002",
-                quantity: 8,
-                basePrice: 18000000,
-                discountedPrice: 16500000,
-                values: [
-                    { optionId: "o7", optionValueId: "ov7", optionName: "RAM", valueName: "32GB" },
-                    { optionId: "o8", optionValueId: "ov8", optionName: "Storage", valueName: "1TB SSD" },
-                ],
-            },
-        ],
-    },
-    {
-        id: "14",
-        name: "Bluetooth Speaker",
-        description: "Portable Bluetooth speaker with waterproof design.",
-        basePrice: 500000,
-        discountPrice: 450000,
-        category: { id: "1", label: "Electronics", children: [] },
-        quantity: 80,
-        images: [
-            {
-                url: "https://via.placeholder.com/300x200?text=Bluetooth+Speaker",
-                isHome: true,
-            },
-        ],
-        variants: [
-            {
-                id: "v9",
-                sku: "SPK-001",
-                quantity: 40,
-                basePrice: 500000,
-                discountedPrice: 450000,
-                values: [
-                    { optionId: "o9", optionValueId: "ov9", optionName: "Color", valueName: "Black" },
-                    { optionId: "o10", optionValueId: "ov10", optionName: "Waterproof", valueName: "Yes" },
-                ],
-            },
-            {
-                id: "v10",
-                sku: "SPK-002",
-                quantity: 40,
-                basePrice: 500000,
-                discountedPrice: 470000,
-                values: [
-                    { optionId: "o9", optionValueId: "ov9", optionName: "Color", valueName: "Blue" },
-                    { optionId: "o10", optionValueId: "ov10", optionName: "Waterproof", valueName: "Yes" },
-                ],
-            },
-        ],
-    },
-   
-];
+export const fakeProduct: CatalogProductDetailType = {
+    id: "4e4f1b71-dbeb-4af7-84fc-98adafb865c9",
+    name: "Sweater Hat",
+    description: "A cozy hat to keep you warm.",
+    category: "Women's Wear",
+    brand: "Adidas",
+    imageUrl: "https://firebasestorage.googleapis.com/v0/b/restore-96837.appspot.com/o/products%2Fa8c9e811-9192-405c-9653-a5418af07b36-hat-core1.png?alt=media",
+    totalQuantity: 20,
+    averageRating: 4.5,
+    numberOfRatings: 10,
+    variants: [
+        {
+            id: "b86436e0-c3d2-4962-9f9d-6a96dfde4405",
+            name: "Basic Red Hat",
+            description: "A vibrant red hat for winter.",
+            variantValues: [
+                { optionId: "color", optionValueId: "red", optionName: "Color", valueName: "Red" },
+                { optionId: "size", optionValueId: "medium", optionName: "Size", valueName: "Medium" },
+                { optionId: "material", optionValueId: "cotton", optionName: "Material", valueName: "Cotton" },
+            ],
+            inventoryItems: [
+                { id: "35e9b2b2-edf8-483e-bdd0-17bf1e3d5afb", availableQuantity: 5, sku: "HAT-RED-M-COTTON", basePrice: 100, finalPrice: 80 },
+                { id: "d1f3c3c1-fc5d-47d5-bd8d-12cf0c752fed", availableQuantity: 3, sku: "HAT-RED-L-COTTON", basePrice: 130, finalPrice: 104 },
+            ]
+        },
+        {
+            id: "9c3eae38-7b39-42ae-bc3b-d2de0d1f1b2f",
+            name: "Basic Blue Hat",
+            description: "A classic blue hat for any occasion.",
+            variantValues: [
+                { optionId: "color", optionValueId: "blue", optionName: "Color", valueName: "Blue" },
+                { optionId: "size", optionValueId: "small", optionName: "Size", valueName: "Small" },
+                { optionId: "material", optionValueId: "wool", optionName: "Material", valueName: "Wool" },
+            ],
+            inventoryItems: [
+                { id: "4e2f38d2-0c3e-4b51-befc-7b89427f5d70", availableQuantity: 8, sku: "HAT-BLUE-S-WOOL", basePrice: 330, finalPrice: 304 },
+                { id: "1e47b44d-6ed0-4be3-8514-8014da6f9d8d", availableQuantity: 2, sku: "HAT-BLUE-M-WOOL", basePrice: 630, finalPrice: 604 },
+            ]
+        },
+        {
+            id: "f45a3b59-ec5e-4d29-b79f-78e6a14e04d1",
+            name: "Classic Grey Hat",
+            description: "A neutral grey hat for versatile styling.",
+            variantValues: [
+                { optionId: "color", optionValueId: "grey", optionName: "Color", valueName: "Grey" },
+                { optionId: "size", optionValueId: "large", optionName: "Size", valueName: "Large" },
+                { optionId: "material", optionValueId: "acrylic", optionName: "Material", valueName: "Acrylic" },
+            ],
+            inventoryItems: [
+                { id: "f0d1d5a1-6cc7-4c58-9f25-50c579481ab3", availableQuantity: 10, sku: "HAT-GREY-L-ACRYLIC", basePrice: 120, finalPrice: 90 },
+            ]
+        },
+        {
+            id: "c5b3b5d0-bc4e-4e5f-97c3-9d4f9f5a94cf",
+            name: "Bright Pink Hat",
+            description: "A fun pink hat to brighten your day.",
+            variantValues: [
+                { optionId: "color", optionValueId: "pink", optionName: "Color", valueName: "Pink" },
+                { optionId: "size", optionValueId: "medium", optionName: "Size", valueName: "Medium" },
+                { optionId: "material", optionValueId: "polyester", optionName: "Material", valueName: "Polyester" },
+            ],
+            inventoryItems: [
+                { id: "6d76184c-5742-4932-a64f-b71d3f2ed22f", availableQuantity: 6, sku: "HAT-PINK-M-POLYESTER", basePrice: 90, finalPrice: 70 },
+            ]
+        },
+        {
+            id: "d2cde19b-1ee8-4f80-88e3-78dfadfd3034",
+            name: "Elegant Black Hat",
+            description: "A stylish black hat for elegant looks.",
+            variantValues: [
+                { optionId: "color", optionValueId: "black", optionName: "Color", valueName: "Black" },
+                { optionId: "size", optionValueId: "large", optionName: "Size", valueName: "Large" },
+                { optionId: "material", optionValueId: "felt", optionName: "Material", valueName: "Felt" },
+            ],
+            inventoryItems: [
+                { id: "d2e6d905-8f2e-4d77-87b3-59c0bcde3d98", availableQuantity: 4, sku: "HAT-BLACK-L-FELT", basePrice: 150, finalPrice: 120 },
+            ]
+        },
+        {
+            id: "68a77582-2b98-47d2-bf82-ef0637e9de68",
+            name: "Casual Beige Hat",
+            description: "A casual beige hat for everyday wear.",
+            variantValues: [
+                { optionId: "color", optionValueId: "beige", optionName: "Color", valueName: "Beige" },
+                { optionId: "size", optionValueId: "medium", optionName: "Size", valueName: "Medium" },
+                { optionId: "material", optionValueId: "linen", optionName: "Material", valueName: "Linen" },
+            ],
+            inventoryItems: [
+                { id: "0c5d1e15-69d3-404f-94d8-2c9c0c7a27ea", availableQuantity: 12, sku: "HAT-BEIGE-M-LINEN", basePrice: 110, finalPrice: 90 },
+            ]
+        },
+        {
+            id: "7a572ee0-bf5f-4731-92b7-0610a95c2f56",
+            name: "Vibrant Green Hat",
+            description: "A bright green hat for a lively look.",
+            variantValues: [
+                { optionId: "color", optionValueId: "green", optionName: "Color", valueName: "Green" },
+                { optionId: "size", optionValueId: "small", optionName: "Size", valueName: "Small" },
+                { optionId: "material", optionValueId: "cotton", optionName: "Material", valueName: "Cotton" },
+            ],
+            inventoryItems: [
+                { id: "8c02df34-4e76-47e2-90f4-44a21cba340b", availableQuantity: 7, sku: "HAT-GREEN-S-COTTON", basePrice: 95, finalPrice: 75 },
+            ]
+        },
+        {
+            id: "f4933bc8-9cbd-42b4-9b8e-e14bc6545cbd",
+            name: "Light Blue Hat",
+            description: "A light blue hat for a fresh feel.",
+            variantValues: [
+                { optionId: "color", optionValueId: "light-blue", optionName: "Color", valueName: "Light Blue" },
+                { optionId: "size", optionValueId: "large", optionName: "Size", valueName: "Large" },
+                { optionId: "material", optionValueId: "acrylic", optionName: "Material", valueName: "Acrylic" },
+            ],
+            inventoryItems: [
+                { id: "a4b5bdb4-bfd6-4cb5-90ae-3bb8fc60cdd7", availableQuantity: 9, sku: "HAT-LIGHT-BLUE-L-ACRYLIC", basePrice: 135, finalPrice: 100 },
+            ]
+        },
+        {
+            id: "c3b14ed4-2a29-4e06-8c74-0c0ae4fa391b",
+            name: "Orange Striped Hat",
+            description: "A stylish orange striped hat for the adventurous.",
+            variantValues: [
+                { optionId: "color", optionValueId: "orange-striped", optionName: "Color", valueName: "Orange Striped" },
+                { optionId: "size", optionValueId: "medium", optionName: "Size", valueName: "Medium" },
+                { optionId: "material", optionValueId: "cotton", optionName: "Material", valueName: "Cotton" },
+            ],
+            inventoryItems: [
+                { id: "d72867e4-918c-4eb6-977e-7c6b7d5f45d1", availableQuantity: 5, sku: "HAT-ORANGE-STRIPED-M-COTTON", basePrice: 85, finalPrice: 70 },
+            ]
+        },
+    ]
+};

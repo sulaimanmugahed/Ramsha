@@ -9,6 +9,7 @@ using Ramsha.Application.Wrappers;
 using Ramsha.Application.Extensions;
 
 using Ramsha.Persistence.Helpers;
+using Ramsha.Application.Dtos.Catalog;
 
 
 
@@ -29,9 +30,13 @@ public class ProductRepository(ApplicationDbContext context)
    {
       return await _product
      .AsSplitQuery()
+     .Include(p => p.Brand)
      .Include(p => p.Category)
-     .Include(p => p.Inventories)
+     .Include(x => x.Variants)
+     .ThenInclude(p => p.InventoryItems)
       .ThenInclude(i => i.Supplier)
+       .Include(p => p.Variants)
+     .ThenInclude(v => v.Images)
      .Include(p => p.Variants)
        .ThenInclude(v => v.VariantValues)
        .ThenInclude(vv => vv.Option)
@@ -39,6 +44,26 @@ public class ProductRepository(ApplicationDbContext context)
        .ThenInclude(v => v.VariantValues)
        .ThenInclude(vv => vv.OptionValue)
   .ToListAsync();
+   }
+
+   public async Task<Product?> GetProductCatalogDetail(ProductId productId)
+   {
+      return await _product
+     .AsSplitQuery()
+     .Include(p => p.Brand)
+     .Include(p => p.Category)
+     .Include(x => x.Variants)
+      .ThenInclude(p => p.InventoryItems)
+       .ThenInclude(i => i.Supplier)
+     .Include(p => p.Variants)
+       .ThenInclude(v => v.Images)
+     .Include(p => p.Variants)
+       .ThenInclude(v => v.VariantValues)
+       .ThenInclude(vv => vv.Option)
+     .Include(p => p.Variants)
+       .ThenInclude(v => v.VariantValues)
+       .ThenInclude(vv => vv.OptionValue)
+  .SingleOrDefaultAsync(x => x.Id == productId);
    }
 
    public async Task<Option?> GetProductOption(ProductId productId, OptionId optionId)
@@ -145,7 +170,7 @@ public class ProductRepository(ApplicationDbContext context)
      .AsQueryable();
 
       return await Paged(
-       productsQuery.Select(p => p.AsCatalogDto()),
+       productsQuery.Select(p => p.AsProductCatalogDto()),
        paginationParams
        );
    }

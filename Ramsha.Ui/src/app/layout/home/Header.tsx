@@ -70,7 +70,8 @@ const midLinks = [
     {
         title: 'Catalog',
         path: '/catalog'
-    }, {
+    },
+     {
         title: 'About',
         path: '/about'
     }, {

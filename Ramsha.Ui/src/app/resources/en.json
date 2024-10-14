@@ -1,3 +1,15 @@
 {
-    "welcome_message": "welcome {{name}}"
+    "welcome_message": "welcome {{name}}",
+    "color": {
+        "Red": "Red",
+        "Blue": "Blue",
+        "Green": "Green",
+        "Yellow": "Yellow",
+        "Purple": "Purple",
+        "Crimson": "Crimson",
+        "Grey": "Grey",
+        "selectedColor": "Selected Color:",
+        "selectColor": "Select a Color",
+        "Orange Striped": "Orange Striped"
+    }
 }

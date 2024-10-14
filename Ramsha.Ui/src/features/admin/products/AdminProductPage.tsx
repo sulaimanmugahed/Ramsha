@@ -61,7 +61,7 @@ const AdminProductPage = () => {
     const handleEdit = (product: ProductDto) => {
     }
     const handleShow = (product: ProductDto) => {
-        navigate(`${product.id}/detail`)
+        navigate(`${product.id}`)
     }
 
     const handleDelete = (product: ProductDto) => {

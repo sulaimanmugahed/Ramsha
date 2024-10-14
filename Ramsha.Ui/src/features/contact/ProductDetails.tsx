@@ -24,14 +24,10 @@ import { styled, useTheme } from "@mui/material/styles";
 import VariantSlider from "../products/variants/VariantSlider";
 import { ProductDetail, ProductStatus } from "../../app/models/products/product";
 import { useUpdateProduct } from "../../app/hooks/productHooks";
-import { useForm, UseFormReturn } from "react-hook-form";
-import { additionalInfoScheme, AdditionalInfoScheme, basicInfoSchema, BasicInfoSchema, ProductFormScheme } from "../products/productFormValidations";
-import { zodResolver } from "@hookform/resolvers/zod";
-import ProductCommand from "../products/ProductCommand";
-import ProductBasicForm from "../products/ProductBasicForm";
 import { AppEditIcon } from "../../app/components/icons/AppEditIcon";
 import { Outlet, useNavigate } from "react-router-dom";
 import { Add } from "@mui/icons-material";
+import AppDynamicBreadcrumb from "../../app/components/AppDynamicBreadcrumb";
 
 // Styled Dialog with larger border radius and shadow
 const StyledDialog = styled(Dialog)(({ theme }) => ({
@@ -81,21 +77,11 @@ const ProductDetails = ({ product, onClose }: { product: ProductDetail, onClose:
   };
 
 
-
   return (
     <StyledDialog open={open} onClose={handleClose} fullWidth maxWidth="lg">
       <DialogTitle sx={{ position: "relative", pb: 3 }}>
-        <Breadcrumbs aria-label="breadcrumb">
-          <Link underline="hover" color="inherit" href="/admin">
-            Admin
-          </Link>
-          <Link underline="hover" color="inherit" href="/admin/products">
-            Products
-          </Link>
-          <Typography color="textPrimary" fontWeight="bold">
-            {product.name}
-          </Typography>
-        </Breadcrumbs>
+       
+        <AppDynamicBreadcrumb />
         <IconButton
           aria-label="close"
           onClick={handleClose}

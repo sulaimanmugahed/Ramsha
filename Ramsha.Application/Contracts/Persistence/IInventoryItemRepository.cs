@@ -1,5 +1,6 @@
 
 using System.Linq.Expressions;
+using Ramsha.Application.Dtos.Catalog;
 using Ramsha.Application.Dtos.Inventory;
 using Ramsha.Application.DTOs.Common;
 using Ramsha.Application.Wrappers;
@@ -23,5 +24,7 @@ public interface IInventoryItemRepository : IGenericRepository<InventoryItem, In
     Task<int> GetVariantQuantity(ProductVariantId productVariantId);
 
     Task<PaginationResponseDto<InventoryItemDto>> GetItemsPagedListAsync(PaginationParams paginationParams, SortingParams? sortingParams = null, FilterParams? filterParams = null);
+
+    Task<PaginationResponseDto<CatalogInventoryItemDetailDto>> GetCatalogItemsPagedListAsync(ProductId productId, ProductVariantId productVariantId, PaginationParams paginationParams, SortingParams? sortingParams = null, FilterParams? filterParams = null);
 
 }

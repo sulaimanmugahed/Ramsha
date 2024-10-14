@@ -8,6 +8,7 @@ import { VariantScheme } from "../../products/productFormValidations";
 import { PreviewVariantType, UploadResponse } from "../../../app/models/common/commonModels";
 import { ProductVariantDto } from "../../../app/models/products/product";
 import VariantSlider from "../../products/variants/VariantSlider";
+import AppDynamicBreadcrumb from "../../../app/components/AppDynamicBreadcrumb";
 export type variantFormType = {
     variant: VariantScheme
 }
@@ -41,7 +42,7 @@ const ProductVariantsPage = () => {
                 }}
             >
                 <DialogTitle>
-                    Product variants
+                    <AppDynamicBreadcrumb />
                     <IconButton
                         aria-label="close"
                         onClick={() => navigate(-1)}

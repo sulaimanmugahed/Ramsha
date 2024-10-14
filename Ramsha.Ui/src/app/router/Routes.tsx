@@ -22,6 +22,9 @@ import CreateVariantPage from "../../features/products/variants/CreateVariantPag
 import EditVariantPage from "../../features/products/variants/EditVariantPage";
 import ProductDetailsPage from "../../features/products/ProductDetailsPage";
 import ProductEditModal from "../../features/products/ProductEditModal";
+import CatalogProductDetailPage from "../../features/catalog/CatalogProductDetailPage";
+import ProductsPage from "../../features/products/ProductsPage";
+import AboutPage from "../../features/about/AboutPage";
 //import AdminProductPage from "../../features/admin/products/AdminProductPage";
 
 export const router = createBrowserRouter([
@@ -53,13 +56,20 @@ export const router = createBrowserRouter([
                         element: <ContactPage />,
                         path: 'contact'
                     },
-                    // {
-                    //     element: <AboutPage />,
-                    //     path: 'about'
-                    // },
+                    {
+                        element: <AboutPage />,
+                        path: 'about'
+                    },
                     {
                         element: <CatalogPage />,
-                        path: 'catalog'
+                        path: 'catalog',
+                        children: [
+                            {
+                                element: <CatalogProductDetailPage />,
+                                path: ':productId'
+                            }
+                        ]
+
                     },
                     {
                         element: <BasketPage />,
@@ -94,27 +104,14 @@ export const router = createBrowserRouter([
                                 path: 'products',
                                 children: [
                                     {
-                                        path: ':productId/detail',
+                                        path: ':productId',
                                         element: <ProductDetailsPage />,
                                         children: [
                                             {
                                                 element: <ProductEditModal />,
                                                 path: 'edit/:section'
                                             },
-                                            {
-                                                path: 'variants',
-                                                children: [
-                                                    {
-                                                        path: 'create',
-                                                        element: <CreateVariantPage />
-                                                    },
-                                                    {
-                                                        path: 'edit/:variantId',
-                                                        element: <EditVariantPage />
-                                                    },
 
-                                                ]
-                                            }
                                         ]
                                     },
                                     {

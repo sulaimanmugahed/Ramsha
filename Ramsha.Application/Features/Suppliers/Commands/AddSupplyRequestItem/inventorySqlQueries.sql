@@ -1,0 +1,20 @@
+SELECT TOP (1000)
+    [Id]
+      , [Quantity]
+      , [InventorySKU]
+      , [ProductName]
+      , [ImageUrl]
+      , [WholesalePrice]
+      , [RetailPrice]
+      , [FinalPrice]
+      , [Status]
+      , [ProductId]
+      , [SupplierId]
+      , [ProductVariantId]
+      , [CreatedBy]
+      , [Created]
+      , [LastModifiedBy]
+      , [LastModified]
+FROM [Ramsha.DevDatabase].[Core].[InventoryItems]
+
+-- DELETE from [Ramsha.DevDatabase].[Core].[InventoryItems] WHERE [Id] = '86f4b80d-6118-43bd-939e-5d9982dcb0b9'

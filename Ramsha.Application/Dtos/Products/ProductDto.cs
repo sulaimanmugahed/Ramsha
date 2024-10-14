@@ -20,32 +20,9 @@ string Category,
 string Brand
 );
 
-public record CatalogProductDto(
-Guid Id,
-string Name,
-string Category,
-string Brand,
-string? ImageUrl,
-decimal BasePrice,
-decimal FinalPrice,
-int TotalQuantity,
-decimal AverageRating,
-int NumberOfRatings
-);
-
-public record CatalogVariantDto(
-Guid Id,
-string Name,
-List<VariantValuesDto> VariantValues,
-string ImageUrl,
-List<InventoryCatalogDto> Inventories
-);
 
 
-public record InventoryCatalogDto(
- int AvailableQuantity,
- string SKU
-);
+
 
 
 public record ProductDetailsDto(

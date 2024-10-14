@@ -20,7 +20,8 @@ public class AddSupplyRequestItemCommandHandler(
     public async Task<BaseResult<SupplyRequestDto>> Handle(AddSupplyRequestItemCommand request, CancellationToken cancellationToken)
     {
         var supplyRequest = await supplyRequestRepository.GetAsync(
-            x => x.Id == new Domain.Suppliers.SupplyRequestId(request.SupplyRequestId));
+            x => x.Id == new Domain.Suppliers.SupplyRequestId(request.SupplyRequestId),
+            x => x.Items);
 
         if (supplyRequest is null)
             return new Error(ErrorCode.EmptyData);

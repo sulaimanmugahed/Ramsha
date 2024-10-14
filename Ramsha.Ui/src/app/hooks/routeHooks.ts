@@ -1,18 +1,14 @@
 import { useSearchParams } from 'react-router-dom';
 import { useCallback } from 'react';
 import {
-    ColumnFilter,
-    PaginationParams,
-    ColumnSort,
-    SortingParams,
-    FilterParams,
+
     PagedParams,
-    CategoryFilter,
 } from '../models/common/commonModels';
 import { deserializeParams, serializeParams } from '../utils/util';
 
 export function usePagedParams(): [PagedParams, (partialParams: Partial<PagedParams>) => void] {
     const [searchParams, setSearchParams] = useSearchParams();
+
 
     const getParams = useCallback(() => {
         return deserializeParams(searchParams);
@@ -21,13 +17,13 @@ export function usePagedParams(): [PagedParams, (partialParams: Partial<PagedPar
     const setParams = useCallback((partialParams: Partial<PagedParams>) => {
         const currentParams = getParams();
 
-        // Merge pagination params, replacing existing values
+
         const updatedPaginationParams = {
             ...currentParams.paginationParams,
             ...(partialParams.paginationParams || {}),
         };
 
-        // Merge sorting params, replacing existing sorting columns
+
         const updatedSortingParams = partialParams.sortingParams
             ? {
                 columnsSort: [
@@ -36,7 +32,7 @@ export function usePagedParams(): [PagedParams, (partialParams: Partial<PagedPar
             }
             : currentParams.sortingParams;
 
-       // Merge filter params, replacing existing filters
+
         const updatedFilterParams = partialParams.filterParams
             ? {
                 columnsFilter: [
@@ -49,13 +45,25 @@ export function usePagedParams(): [PagedParams, (partialParams: Partial<PagedPar
             }
             : currentParams.filterParams;
 
-    
-         
+        const updatedVariantParams = {
+            ...currentParams.variantParams,
+            ...(partialParams.variantParams || {}),
+        };
+
+        // Correctly access variantId from partialParams
+        const updatedVariantId = partialParams.variantId || currentParams.variantId || undefined;
+
+
+        const updatedSku = partialParams.sku || currentParams.sku || '';
+
 
         const updatedParams = {
             paginationParams: updatedPaginationParams,
             sortingParams: updatedSortingParams,
             filterParams: updatedFilterParams,
+            variantParams: updatedVariantParams,
+            variantId: updatedVariantId,
+            sku: updatedSku
         };
 
         setSearchParams(serializeParams(updatedParams));

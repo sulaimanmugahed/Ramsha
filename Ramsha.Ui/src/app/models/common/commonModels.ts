@@ -20,7 +20,7 @@ export type FormFileType = {
 export type PreviewVariantType = {
     id?: string
     name: string;
-    description:string;
+    description: string;
     basePrice: number;
     variantValues: {
         optionName: string
@@ -84,19 +84,24 @@ export interface ColumnSort {
 }
 
 export interface CategoryFilter {
-    value: string; // assuming Guid will be represented as a string
+    value: string;
 }
 
 export interface FilterParams {
     columnsFilter?: ColumnFilter[];
-    categories?: CategoryFilter[]; // List of CategoryId objects
-    globalFilterValue?: string | null;// New global filter value
+    categories?: CategoryFilter[];
+    globalFilterValue?: string | null;
 }
+
+
 
 export interface PagedParams {
     paginationParams: PaginationParams;
     sortingParams?: SortingParams;
     filterParams?: FilterParams;
+    variantParams?: { [key: string]: string };
+    variantId?: string | null
+    sku?: string | null
 }
 
 export type UploadRequest = {

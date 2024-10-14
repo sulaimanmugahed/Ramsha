@@ -135,7 +135,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             builder
                 .HasOne<Product>()
                 .WithMany(pv => pv.Ratings)
-                .HasForeignKey(r =>  r.ProductId )
+                .HasForeignKey(r => r.ProductId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
@@ -400,6 +400,15 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
           .WithOne()
           .HasForeignKey(pi => new { pi.ProductId, pi.ProductVariantId })
           .OnDelete(DeleteBehavior.Cascade);
+
+
+
+
+        builder.Entity<InventoryItemImage>()
+        .HasOne(x => x.InventoryItem)
+        .WithMany(x => x.InventoryItemImages)
+        .HasForeignKey(i => i.InventoryItemId);
+
 
 
         base.OnModelCreating(builder);

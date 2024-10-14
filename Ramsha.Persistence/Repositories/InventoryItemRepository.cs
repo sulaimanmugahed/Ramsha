@@ -11,6 +11,7 @@ using Ramsha.Persistence.Contexts;
 using Ramsha.Persistence.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Ramsha.Domain.Products;
+using Ramsha.Application.Dtos.Catalog;
 
 namespace Ramsha.Persistence.Repositories;
 
@@ -63,12 +64,18 @@ IInventoryItemRepository
         .ToListAsync();
     }
 
-    public async Task<PaginationResponseDto<InventoryItemDto>> GetItemsPagedListAsync(PaginationParams paginationParams, SortingParams? sortingParams = null, FilterParams? filterParams = null)
+    public async Task<PaginationResponseDto<CatalogInventoryItemDetailDto>> GetCatalogItemsPagedListAsync(ProductId productId, ProductVariantId productVariantId, PaginationParams paginationParams, SortingParams? sortingParams = null, FilterParams? filterParams = null)
     {
-        var query = _items.AsQueryable();
+        var query = _items
+        .Include(x => x.InventoryItemImages)
+        .Include(x => x.Supplier)
+        .Where(x => x.ProductId == productId && x.ProductVariantId == productVariantId)
+        .AsQueryable();
 
         if (sortingParams is not null)
+        {
             query = query.OrderByColumnName(sortingParams.ColumnsSort);
+        }
 
         if (filterParams is not null)
         {
@@ -78,7 +85,40 @@ IInventoryItemRepository
                 query = query.Where(p => p.ProductName.Contains(globalFilter));
             }
 
-            query = query.FilterByColumn(filterParams.ColumnsFilter);
+            if (filterParams.ColumnsFilter.HasItems())
+            {
+                query = query.FilterByColumn(filterParams.ColumnsFilter);
+            }
+        }
+
+        return await Paged(
+          query.Select(p => p.AsCatalogInventoryItemDetailDto()),
+          paginationParams
+          );
+    }
+
+
+    public async Task<PaginationResponseDto<InventoryItemDto>> GetItemsPagedListAsync(PaginationParams paginationParams, SortingParams? sortingParams = null, FilterParams? filterParams = null)
+    {
+        var query = _items.AsQueryable();
+
+        if (sortingParams is not null)
+        {
+            query = query.OrderByColumnName(sortingParams.ColumnsSort);
+        }
+
+        if (filterParams is not null)
+        {
+            var globalFilter = filterParams.GlobalFilterValue;
+            if (!string.IsNullOrEmpty(globalFilter))
+            {
+                query = query.Where(p => p.ProductName.Contains(globalFilter));
+            }
+
+            if (filterParams.ColumnsFilter.HasItems())
+            {
+                query = query.FilterByColumn(filterParams.ColumnsFilter);
+            }
         }
 
         return await Paged(

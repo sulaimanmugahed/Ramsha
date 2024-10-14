@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace Ramsha.Application.Dtos.Suppliers;
 
+
+
+
 public record SupplyDto(
      Guid Id,
     List<SupplyItemDto> Items,

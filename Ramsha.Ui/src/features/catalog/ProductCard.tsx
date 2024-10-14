@@ -1,15 +1,10 @@
-import React from "react";
-import {
-    Card,
-    CardContent,
-    CardMedia,
-    Typography,
-    Box,
-    Chip,
-    IconButton,
-} from "@mui/material";
+import React, { useState } from "react";
+import { Card, CardContent, CardMedia, Typography, Box, Chip, IconButton } from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import AppRating from "../../app/components/AppRating";
+import { Link } from 'react-router-dom';
+import { alpha } from '@mui/material/styles';
+
 
 type ProductCardProps = {
     product: {
@@ -29,11 +24,14 @@ type ProductCardProps = {
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     const discountPercentage = Math.round(((product.basePrice - product.finalPrice) / product.basePrice) * 100);
 
+    const [hovered, setHovered] = useState(false); // Track hover state
+
     return (
         <Card
             sx={{
                 width: { xs: '100%', sm: 300, md: 320 },
-                border: (theme) => `1px solid rgba(${theme.palette.primary.main.slice(1).match(/.{2}/g)?.map(x => parseInt(x, 16)).join(",")}, 0.5)`,
+                border: "1px solid",
+                borderColor: (theme) => alpha(theme.palette.primary.main, 0.5),
                 borderRadius: "1.5rem",
                 transition: "all 0.3s ease",
                 p: 0,
@@ -44,29 +42,69 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 position: "relative",
             }}
         >
-            <Box sx={{ position: "relative" }}>
+            <Box
+                sx={{ position: "relative" }}
+                onMouseEnter={() => setHovered(true)}
+                onMouseLeave={() => setHovered(false)}
+            >
                 {product.imageUrl && (
-                    <Box
-                        sx={{
-                            height: "280px",
-                            padding: '10px',
-                            boxSizing: 'border-box',
-                        }}>
-                        <CardMedia
-                            component="img"
-                            height="100%"
-                            image={product.imageUrl}
-                            alt={product.name}
+                <Link to={`/catalog/${product.id}`} style={{ textDecoration: 'none' }}>
+                        <Box
                             sx={{
-                                objectFit: "cover",
-                                borderRadius: '1rem',
+                                height: "280px",
+                                padding: '10px',
+                                boxSizing: 'border-box',
+                                position: 'relative',
                             }}
-                        />
-                    </Box>
+                        >
+                            <CardMedia
+                                component="img"
+                                height="100%"
+                                image={product.imageUrl}
+                                alt={product.name}
+                                sx={{
+                                    objectFit: "cover",
+                                    borderRadius: '1rem',
+                                }}
+                            />
+                            {hovered && ( // Display details on hover
+                                <Box
+                                    sx={{
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                        right: 0,
+                                        bottom: 0,
+                                        backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        borderRadius: '1rem',
+                                        color: 'white',
+                                        padding: '10px',
+                                        opacity: 0.9,
+                                        transition: 'all 0.3s ease',
+                                    }}
+                                >
+                                    <Typography variant="h6" fontWeight="bold" color="inherit">
+                                        {product.name}
+                                    </Typography>
+                                    <Typography variant="body2" color="inherit" sx={{ mt: 1 }}>
+                                        Brand: {product.brand}
+                                    </Typography>
+                                    <Typography variant="body2" color="inherit">
+                                        Category: {product.category}
+                                    </Typography>
+                                </Box>
+                            )}
+                        </Box>
+                    </Link>
                 )}
+
                 {product.finalPrice < product.basePrice && (
                     <Chip
-                        label={`-${discountPercentage}%`}
+                        label={`- ${discountPercentage}% `}
                         color="error"
                         size="small"
                         sx={{
@@ -86,7 +124,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
             <CardContent sx={{ px: { xs: 2, sm: 2 } }}>
                 <Box display="flex" alignItems="center" justifyContent="space-between">
-
                     <Typography
                         variant="body2"
                         color="text.secondary"
@@ -99,9 +136,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                     <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: "0.75rem", sm: "0.8rem" } }}>
                         Qty {product.totalQuantity}
                     </Typography>
-
                 </Box>
-
 
                 <Typography
                     variant="subtitle2"
@@ -148,10 +183,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                     </IconButton>
                 </Box>
 
-
-
-
-
                 <Box display="flex" justifyContent="space-between" alignItems="center">
                     <Box display="flex" alignItems="center">
                         <AppRating
@@ -167,7 +198,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                         >
                             {product.numberOfRatings === 0
                                 ? "No reviews yet"
-                                : `${product.numberOfRatings} ${product.numberOfRatings === 1 ? "Review" : "Reviews"}`}
+                                : `${product.numberOfRatings} ${product.numberOfRatings === 1 ? "Review" : "Reviews"} `}
                         </Typography>
                     </Box>
                 </Box>
@@ -177,6 +208,189 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 };
 
 export default ProductCard;
+
+
+
+
+// import React from "react";
+// import {
+//     Card,
+//     CardContent,
+//     CardMedia,
+//     Typography,
+//     Box,
+//     Chip,
+//     IconButton,
+// } from "@mui/material";
+// import FavoriteIcon from '@mui/icons-material/Favorite';
+// import AppRating from "../../app/components/AppRating";
+
+// type ProductCardProps = {
+//     product: {
+//         id: string;
+//         name: string;
+//         category: string;
+//         imageUrl: string;
+//         totalQuantity: number;
+//         basePrice: number;
+//         finalPrice: number;
+//         brand: string;
+//         averageRating: number;
+//         numberOfRatings: number;
+//     };
+// };
+
+// const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+//     const discountPercentage = Math.round(((product.basePrice - product.finalPrice) / product.basePrice) * 100);
+
+//     return (
+//         <Card
+//             sx={{
+//                 width: { xs: '100%', sm: 300, md: 320 },
+//                 border: (theme) => `1px solid rgba(${ theme.palette.primary.main.slice(1).match(/.{2}/g)?.map(x => parseInt(x, 16)).join(",") }, 0.5)`,
+//                 borderRadius: "1.5rem",
+//                 transition: "all 0.3s ease",
+//                 p: 0,
+//                 boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+//                 "&:hover": {
+//                     transform: "translateY(-5px)",
+//                 },
+//                 position: "relative",
+//             }}
+//         >
+//             <Box sx={{ position: "relative" }}>
+//                 {product.imageUrl && (
+//                     <Box
+//                         sx={{
+//                             height: "280px",
+//                             padding: '10px',
+//                             boxSizing: 'border-box',
+//                         }}>
+//                         <CardMedia
+//                             component="img"
+//                             height="100%"
+//                             image={product.imageUrl}
+//                             alt={product.name}
+//                             sx={{
+//                                 objectFit: "cover",
+//                                 borderRadius: '1rem',
+//                             }}
+//                         />
+//                     </Box>
+//                 )}
+//                 {product.finalPrice < product.basePrice && (
+//                     <Chip
+//                         label={`- ${ discountPercentage }% `}
+//                         color="error"
+//                         size="small"
+//                         sx={{
+//                             position: "absolute",
+//                             top: 12,
+//                             right: 12,
+//                             fontWeight: 500,
+//                             fontSize: "0.7rem",
+//                             borderRadius: 20,
+//                             height: 20,
+//                             backgroundColor: "red",
+//                             color: "white",
+//                         }}
+//                     />
+//                 )}
+//             </Box>
+
+//             <CardContent sx={{ px: { xs: 2, sm: 2 } }}>
+//                 <Box display="flex" alignItems="center" justifyContent="space-between">
+
+//                     <Typography
+//                         variant="body2"
+//                         color="text.secondary"
+//                         sx={{ fontSize: { xs: "0.7rem", sm: "0.8rem" }, mb: 0.5 }}
+//                         noWrap
+//                     >
+//                         {product.category} / {product.brand}
+//                     </Typography>
+
+//                     <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: "0.75rem", sm: "0.8rem" } }}>
+//                         Qty {product.totalQuantity}
+//                     </Typography>
+
+//                 </Box>
+
+
+//                 <Typography
+//                     variant="subtitle2"
+//                     fontWeight="bold"
+//                     noWrap
+//                     sx={{ fontSize: { xs: "0.9rem", sm: "1rem" } }}
+//                 >
+//                     {product.name}
+//                 </Typography>
+
+//                 <Box display="flex" alignItems="center" justifyContent="space-between" mb={0.5}>
+//                     <Box display="flex" alignItems="center">
+//                         <Typography
+//                             variant="subtitle2"
+//                             color="primary"
+//                             sx={{ fontSize: { xs: "0.85rem", sm: "0.9rem" }, fontWeight: 600 }}
+//                         >
+//                             ${product?.finalPrice}
+//                         </Typography>
+//                         {product?.finalPrice < product?.basePrice && (
+//                             <Typography
+//                                 variant="body2"
+//                                 color="text.secondary"
+//                                 sx={{
+//                                     textDecoration: "line-through",
+//                                     marginLeft: 1,
+//                                     fontSize: { xs: "0.7rem", sm: "0.8rem" },
+//                                 }}
+//                             >
+//                                 ${product?.basePrice}
+//                             </Typography>
+//                         )}
+//                     </Box>
+//                     <IconButton
+//                         aria-label="add to favorites"
+//                         sx={{
+//                             padding: 0,
+//                             borderRadius: '50%',
+//                             width: '50px',
+//                             height: '50px',
+//                         }}
+//                     >
+//                         <FavoriteIcon sx={{ color: 'error.main', fontSize: '1.8rem' }} />
+//                     </IconButton>
+//                 </Box>
+
+
+
+
+
+//                 <Box display="flex" justifyContent="space-between" alignItems="center">
+//                     <Box display="flex" alignItems="center">
+//                         <AppRating
+//                             name="product-rating"
+//                             value={product.averageRating}
+//                             readOnly
+//                             sx={{ fontSize: { xs: "1rem", sm: "1.2rem" } }}
+//                         />
+//                         <Typography
+//                             variant="body2"
+//                             color="text.secondary"
+//                             sx={{ fontSize: { xs: "0.65rem", sm: "0.7rem" }, marginLeft: 1 }}
+//                         >
+//                             {product.numberOfRatings === 0
+//                                 ? "No reviews yet"
+//                                 : `${ product.numberOfRatings } ${ product.numberOfRatings === 1 ? "Review" : "Reviews" } `}
+//                         </Typography>
+//                     </Box>
+//                 </Box>
+//             </CardContent>
+//         </Card>
+//     );
+// };
+
+// export default ProductCard;
 
 
 
@@ -435,7 +649,7 @@ export default ProductCard;
 //                     {selectedVariantDetails?.variantValues.map((value) => (
 //                         <Chip
 //                             key={value.optionValueId}
-//                             label={`${value.optionName}: ${value.valueName}`}
+//                             label={`${ value.optionName }: ${ value.valueName } `}
 //                             size="small"
 //                             variant="outlined"
 //                             sx={{
@@ -707,7 +921,7 @@ export default ProductCard;
 //                     {selectedVariantDetails?.variantValues.map((value) => (
 //                         <Chip
 //                             key={value.optionValueId}
-//                             label={`${value.optionName}: ${value.valueName}`}
+//                             label={`${ value.optionName }: ${ value.valueName } `}
 //                             size="small"
 //                             variant="outlined"
 //                             sx={{

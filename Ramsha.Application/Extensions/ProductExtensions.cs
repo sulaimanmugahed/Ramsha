@@ -77,23 +77,7 @@ public static class ProductExtensions
    // }
 
 
-   public static CatalogProductDto AsCatalogDto(this Product product)
-   {
-      var basePrice = product.Price ?? 0;
-
-      return new CatalogProductDto(
-         product.Id.Value,
-         product.Name,
-         product.Category.Name,
-         product.Brand?.Name,
-         product.ImageUrl,
-         basePrice,
-         product.FinalPrice ?? basePrice,
-         product.TotalQuantity,
-         product.AverageRating,
-         product.NumberOfRatings
-      );
-   }
+   
 
 
    public static ProductDto AsDto(this Product product)

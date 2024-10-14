@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query"
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
 import { INVENTORY_ITEMS_QUERY_KEY } from "../constants/queriesKey"
 import { inventoryService } from "../api/services/inventoryService"
 import { InventoryItemDto } from "../models/inventories/inventory"
@@ -7,7 +7,7 @@ import { PagedParams, PaginationResponse } from "../models/common/commonModels"
 
 const initialState: PaginationResponse<InventoryItemDto[]> = {
     items: [
-        
+
     ]
 }
 
@@ -30,3 +30,5 @@ export const useInventoryItems = (params: PagedParams) => {
         isItemsError: isError
     }
 }
+
+

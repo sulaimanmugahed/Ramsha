@@ -12,7 +12,7 @@ type Props = {
 
 const AppDivider = ({ sx, variant }: Props) => {
     return (
-        <TitleDivider variant={variant} sx={sx} />
+        <TitleDivider variant={variant} sx={{ my: 2, ...sx }} />
     )
 }
 

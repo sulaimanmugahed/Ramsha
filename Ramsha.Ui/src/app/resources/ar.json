@@ -1,3 +1,13 @@
 {
-    "welcome_message": "{{name}} مرحبا"
+    "welcome_message": "{{name}} مرحبا",
+    "color": {
+        "Red": "احمر",
+        "Blue": "Blue",
+        "Green": "Green",
+        "Yellow": "Yellow",
+        "Purple": "Purple",
+        "Crimson": "Crimson",
+        "selectedColor": "Selected Color:",
+        "selectColor": "Select a Color"
+    }
 }

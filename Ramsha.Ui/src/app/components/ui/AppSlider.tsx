@@ -22,13 +22,17 @@ type Props<T> = {
     items: T[];
     renderItem: (item: T, index: number) => React.ReactNode; // Render function for the item
     slidesToShow?: number;
-    responsive?: ResponsiveSetting[]; // Custom responsive settings
+    responsive?: ResponsiveSetting[];
+    arrows?: boolean
+    dots?: boolean
+
 };
 
 interface CustomDotProps {
     index: number;
     active: boolean;
     goToSlide: (index: number) => void;
+
 }
 
 const CustomDot: React.FC<CustomDotProps> = ({ index, active, goToSlide }) => {
@@ -57,7 +61,9 @@ const AppSlider = <T,>({
     items,
     renderItem,
     slidesToShow = 3,
-    responsive = [], // Default to an empty array if not provided
+    responsive = [],
+    arrows = false,
+    dots = false
 }: Props<T>) => {
     const theme = useTheme();
     const sliderRef = useRef<Slider>(null); // Create a ref for the slider
@@ -101,12 +107,13 @@ const AppSlider = <T,>({
     ];
 
     const sliderSettings = {
-        dots: true,
-        infinite: true,
+        dots,
+        infinite: items.length > slidesToShow,
         speed: 500,
         slidesToShow,
         slidesToScroll: 1,
         autoplay: true,
+        arrows,
         autoplaySpeed: 3000,
         appendDots: (dots: React.ReactNode) => (
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
@@ -126,7 +133,7 @@ const AppSlider = <T,>({
                 })}
             </div>
         ),
-        arrows: true,
+
         cssEase: 'ease-in-out',
         responsive: combinedResponsiveSettings, // Use combined responsive settings
         nextArrow: <CustomNextArrow />,
