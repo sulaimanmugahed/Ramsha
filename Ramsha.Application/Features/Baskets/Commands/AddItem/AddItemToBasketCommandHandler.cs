@@ -6,11 +6,6 @@ using Ramsha.Application.Extensions;
 using Ramsha.Application.Wrappers;
 using Ramsha.Domain.Customers.Entities;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ramsha.Application.Features.Baskets.Commands.AddItem;
 internal class AddItemToBasketCommandHandler(
@@ -19,13 +14,12 @@ internal class AddItemToBasketCommandHandler(
 	IUnitOfWork unitOfWork,
 	IAuthenticatedUserService authenticatedUser,
 	ICookieService cookieService)
-	: IRequestHandler<AddItemToBasketCommand, BaseResult<BasketDto>>
+	: IRequestHandler<AddItemToBasketCommand, BaseResult<BasketItemDto>>
 {
-	public async Task<BaseResult<BasketDto>> Handle(AddItemToBasketCommand request, CancellationToken cancellationToken)
+	public async Task<BaseResult<BasketItemDto>> Handle(AddItemToBasketCommand request, CancellationToken cancellationToken)
 	{
-		var inventoryItem = await inventoryItemRepository.GetWithDetails(
-			x => x.ProductId == new Domain.Products.ProductId(request.ProductId) &&
-			 x.InventorySKU == request.InventorySku);
+		var inventoryItem = await inventoryItemRepository
+		.GetByIdAsync(new Domain.Inventory.InventoryItemId(request.InventoryItemId));
 
 		if (inventoryItem is null)
 			return new Error(ErrorCode.NotFound);
@@ -55,9 +49,9 @@ internal class AddItemToBasketCommandHandler(
 			basket = newBasket;
 		}
 
-		basket.AddItem(inventoryItem, request.Quantity);
+		var basketItem = basket.AddItem(inventoryItem, request.Quantity);
 		await unitOfWork.SaveChangesAsync();
 
-		return basket.ToDto();
+		return basketItem.AsItemDto();
 	}
 }

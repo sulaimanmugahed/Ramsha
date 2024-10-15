@@ -12,10 +12,10 @@ const MaterialSelect: React.FC<MaterialSelectProps> = ({ selectedMaterial, onMat
     return (
         <FormControl fullWidth variant="outlined" sx={{ mb: 2 }}>
             <Select
+                size="small"
                 value={selectedMaterial}
                 onChange={(e) => onMaterialChange(e.target.value)}
                 displayEmpty
-                sx={{ bgcolor: "lightcoral" }} // Example style for material select
             >
                 <MenuItem value="" disabled>
                     Select Material

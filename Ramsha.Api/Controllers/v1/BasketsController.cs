@@ -9,11 +9,11 @@ using Microsoft.AspNetCore.Mvc;
 namespace Ramsha.Api.Controllers.v1;
 
 [ApiVersion("1.0")]
-public class BasketsController:BaseApiController
+public class BasketsController : BaseApiController
 {
 
 	[HttpPost(nameof(AddItemToBasket))]
-	public async Task<BaseResult<BasketDto>> AddItemToBasket(AddItemToBasketCommand command)
+	public async Task<BaseResult<BasketItemDto>> AddItemToBasket(AddItemToBasketCommand command)
 		=> await Mediator.Send(command);
 
 	[HttpDelete(nameof(RemoveItemFromBasket))]

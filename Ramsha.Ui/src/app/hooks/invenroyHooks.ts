@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query"
 import { INVENTORY_ITEMS_QUERY_KEY } from "../constants/queriesKey"
 import { inventoryService } from "../api/services/inventoryService"
 import { InventoryItemDto } from "../models/inventories/inventory"

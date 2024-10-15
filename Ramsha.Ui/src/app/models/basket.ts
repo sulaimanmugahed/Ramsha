@@ -6,10 +6,10 @@ export type Basket = {
 
 export type BasketItem = {
     quantity: number;
-    productId: string;
+    inventoryItemId: string;
     name: string;
-    retailPrice: number;
-    discountedPrice: number;
+    basePrice: number;
+    finalPrice: number;
     categoryName: string;
     inventorySku: string;
     imageUrl: string;

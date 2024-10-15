@@ -21,22 +21,24 @@ public class Basket : BaseEntity
             Buyer = buyer,
         };
 
-    public void AddItem(InventoryItem inventoryItem, int quantity)
+    public BasketItem AddItem(InventoryItem inventoryItem, int quantity)
     {
         var existItem = Items.FirstOrDefault(x => x.InventoryItemId == inventoryItem.Id);
 
-
         if (existItem is null)
         {
-            Items.Add(new()
+            var basketItem = new BasketItem
             {
                 InventoryItem = inventoryItem,
                 Quantity = quantity
-            });
+            };
+            Items.Add(basketItem);
+            return basketItem;
         }
         else
         {
             existItem.Quantity += quantity;
+            return existItem;
         }
     }
 

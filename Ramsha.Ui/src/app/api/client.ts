@@ -3,6 +3,7 @@ import { router } from "../router/Routes";
 import { toast } from "sonner";
 import { useAuthStore } from "../store/authStore";
 import { PaginationResponse } from "../models/common/commonModels";
+import { sleep } from "../utils/util";
 
 
 
@@ -35,7 +36,8 @@ export const client = (() => {
 
 
     client.interceptors.request.use(
-        (config: CustomAxiosRequestConfig) => {
+        async (config: CustomAxiosRequestConfig) => {
+
             const accessToken = useAuthStore.getState().account?.accessToken;
             if (accessToken) {
                 config.headers.Authorization = `Bearer ${accessToken}`;
@@ -45,16 +47,19 @@ export const client = (() => {
         (error) => Promise.reject(error)
     );
 
-    client.interceptors.response.use(response => {
+    client.interceptors.response.use(
+        async (response) => {
 
-        const pagination = response.headers['pagination']
-        if (pagination) {
-            response.data.data = new PaginationResponse(response.data.data, JSON.parse(pagination));
-            console.log('paginationMeta ', pagination)
+            if (import.meta.env.DEV)
+                await sleep(2000);
+            const pagination = response.headers['pagination']
+            if (pagination) {
+                response.data.data = new PaginationResponse(response.data.data, JSON.parse(pagination));
+                console.log('paginationMeta ', pagination)
+                return response.data;
+            }
             return response.data;
-        }
-        return response.data;
-    },
+        },
         async (error: AxiosError) => {
             const { data, status } = error.response as AxiosResponse
 

@@ -7,9 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Ramsha.Application.Features.Baskets.Commands.RemoveItem;
-public class RemoveItemCommand:IRequest<BaseResult>
+public class RemoveItemCommand : IRequest<BaseResult>
 {
     public Guid InventoryItemId { get; set; }
-	public int Quantity { get; set; }
+    public int Quantity { get; set; }
 
 }

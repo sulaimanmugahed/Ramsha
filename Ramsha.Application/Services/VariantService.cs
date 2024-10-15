@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Ramsha.Application.Contracts;
 using Ramsha.Application.Contracts.Persistence;
 using Ramsha.Application.Dtos.Products;
+using Ramsha.Application.Extensions;
 using Ramsha.Application.Wrappers;
 using Ramsha.Domain.Products.Entities;
 
@@ -13,9 +14,9 @@ namespace Ramsha.Application.Services;
 
 public class VariantService : IVariantService
 {
-    public string GenerateSKU(string productCode, List<string> optionValuesNames)
+    public string GenerateSKU(string productName, List<string> optionValuesNames)
     {
-        var sku = new StringBuilder(productCode.Trim());
+        var sku = new StringBuilder(productName.Substring(0, Math.Min(5, productName.Length)).ToUpper().ReplaceSpaces());
 
         foreach (var valueName in optionValuesNames)
         {

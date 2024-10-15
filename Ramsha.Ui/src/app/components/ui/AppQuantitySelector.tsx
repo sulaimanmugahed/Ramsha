@@ -1,14 +1,23 @@
 import { Remove, Add } from '@mui/icons-material'
+import LoadingButton from '@mui/lab/LoadingButton'
 import { IconButton, Box, Typography } from '@mui/material'
+import { AppDeleteIcon } from '../icons/AppDeleteIcon'
 
 
 type Props = {
-    availableQuantity: number
-    selectedQuantity: number
-    onChange: (selected: number) => void
+    increasing?: boolean
+    decreasing?: boolean
+    availableQuantity?: number
+    quantity: number
+    onChange?: (selected: number) => void,
+    onIncrease?: () => void,
+    onDecrease?: () => void
+    allowDelete?: boolean
 }
 
-const AppQuantitySelector = ({ availableQuantity, onChange, selectedQuantity }: Props) => {
+const AppQuantitySelector = ({ availableQuantity, onChange, quantity, onIncrease, onDecrease, increasing, decreasing, allowDelete }: Props) => {
+
+
     return (
         <Box
             sx={{
@@ -19,31 +28,32 @@ const AppQuantitySelector = ({ availableQuantity, onChange, selectedQuantity }: 
                 padding: '4px',
             }}
         >
-
-            <IconButton
-                onClick={() => onChange(Math.max(selectedQuantity - 1, 1))}
+            <LoadingButton
+                disabled={quantity <= 1 && !allowDelete}
+                loading={decreasing}
+                onClick={availableQuantity && onChange ? () => onChange(Math.max(quantity - 1, 1)) : onDecrease}
                 sx={{
                     padding: "3px",
                 }}
-                disabled={selectedQuantity <= 1}
             >
-                <Remove />
-            </IconButton>
+                {allowDelete && quantity === 1 ? <AppDeleteIcon /> : <Remove />}
+            </LoadingButton>
 
 
             <Typography sx={{ fontWeight: 600, fontSize: "1.1rem", minWidth: 40, textAlign: 'center' }}>
-                {selectedQuantity}
+                {quantity}
             </Typography>
-            <IconButton
-                onClick={() => onChange(Math.min(selectedQuantity + 1, availableQuantity))}
+            <LoadingButton
+                loading={increasing}
+                onClick={availableQuantity && onChange ? () => onChange(Math.min(quantity + 1, availableQuantity)) : onIncrease}
                 sx={{
                     padding: "3px",
                 }}
-                disabled={selectedQuantity >= availableQuantity}
+                disabled={availableQuantity ? quantity >= availableQuantity : false}
             >
                 <Add />
-            </IconButton>
-        </Box>
+            </LoadingButton>
+        </Box >
     )
 }
 

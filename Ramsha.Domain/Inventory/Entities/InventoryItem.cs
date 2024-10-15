@@ -136,8 +136,9 @@ public class InventoryItem : BaseEntity, IAuditable
 
     private static string GenerateInventorySKU(string sku, string supplierUsername)
     {
-        return $"{sku}-{supplierUsername.ToUpper()}";
+        return $"{sku}-{supplierUsername.Substring(0, Math.Min(6, supplierUsername.Length)).ToUpper().Replace(" ", "-")}";
     }
+
 
     public void AdjustQuantity(int quantityChange)
     {

@@ -1,4 +1,4 @@
-import { Autocomplete, Box, Button, Card, CardMedia, Chip, Divider, FormControl, Grid, IconButton, LinearProgress, linearProgressClasses, MenuItem, Select, SelectChangeEvent, styled, TextField, Typography } from '@mui/material'
+import { Autocomplete, Box, Button, Card, CardMedia, Chip, Divider, Grid, LinearProgress, linearProgressClasses, MenuItem, Select, SelectChangeEvent, styled, TextField, Typography } from '@mui/material'
 import AppDialog from '../../app/components/AppDialog'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useCatalogProductDetail } from '../../app/hooks/catalogHooks'
@@ -15,6 +15,7 @@ import AppSlider from '../../app/components/ui/AppSlider'
 import AppQuantitySelector from '../../app/components/ui/AppQuantitySelector'
 import { Favorite, FavoriteBorder } from '@mui/icons-material'
 import LoadingButton from '@mui/lab/LoadingButton'
+import { useBasket, useBasketItemCommands } from '../../app/hooks/basketHooks'
 
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
     height: 10,
@@ -30,6 +31,7 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
 }));
 
 const CatalogProductDetailPage = () => {
+
     const [selectedQuantity, setSelectedQuantity] = useState<number>(1);
     const [openSupplierDetails, setOpenSupplierDetails] = useState(false);
     const [openVariantDialog, setOpenVariantDialog] = useState(false);
@@ -54,6 +56,8 @@ const CatalogProductDetailPage = () => {
     const { sku, variantParams, variantId } = params
 
     const [tempVariantParams, setTempVariantParams] = useState(variantParams || {});
+
+    const { addItem, removeItem, isAddPending, isRemovePending } = useBasketItemCommands()
 
 
     useEffect(() => {
@@ -117,6 +121,18 @@ const CatalogProductDetailPage = () => {
 
     }, [items, fetchingItemsStatus]);
 
+    const { basket } = useBasket()
+    const basketItem = basket?.items.find(x => x.inventoryItemId == selectedInventory?.id)
+
+
+    useEffect(() => {
+        if (basketItem) {
+            setSelectedQuantity(basketItem.quantity);
+        } else {
+            setSelectedQuantity(1);
+        }
+
+    }, [basketItem, selectedInventory]);
 
     const navigate = useNavigate()
 
@@ -124,8 +140,19 @@ const CatalogProductDetailPage = () => {
         navigate('/catalog');
     }
 
-    const handleAddToBasket = (quantity: number, sku?: string,) => {
-        setSelectedQuantity(quantity)
+    const handleAddToBasket = async () => {
+        if (!selectedInventory) return;
+
+        if (!basketItem || selectedQuantity > basketItem.quantity) {
+            const quantityToAdd = basketItem ? selectedQuantity - basketItem.quantity : selectedQuantity;
+            await addItem({ inventoryItemId: selectedInventory.id, quantity: quantityToAdd })
+        }
+
+        else {
+            const quantityToRemove = basketItem.quantity - selectedQuantity;
+            await removeItem({ inventoryItemId: selectedInventory.id, quantity: quantityToRemove })
+        }
+
     }
 
     const handleOpenSupplierDetails = () => {
@@ -213,10 +240,12 @@ const CatalogProductDetailPage = () => {
                                         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
                                             <AppQuantitySelector
                                                 availableQuantity={selectedInventory?.availableQuantity!}
-                                                onChange={(newValue) => handleAddToBasket(newValue, selectedInventory?.sku)}
-                                                selectedQuantity={selectedQuantity} />
+                                                onChange={(newValue) => setSelectedQuantity(newValue)}
+                                                quantity={selectedQuantity}/>
 
-                                            <Button
+                                            <LoadingButton
+                                                loading={isAddPending || isRemovePending}
+                                                disabled={basketItem && basketItem.quantity === selectedQuantity}
                                                 size='small'
                                                 variant="outlined"
                                                 sx={{
@@ -225,10 +254,10 @@ const CatalogProductDetailPage = () => {
 
                                                 }}
                                                 endIcon={<AppBagIcon />}
-                                                onClick={() => handleAddToBasket(selectedQuantity, selectedInventory?.sku)}
+                                                onClick={handleAddToBasket}
                                             >
-                                                Add To Bag
-                                            </Button>
+                                                {basketItem ? 'Update Bag' : 'Add To Bag'}
+                                            </LoadingButton>
                                         </Box>
                                     </Box>
                                 </Card>
@@ -432,3 +461,5 @@ const CatalogProductDetailPage = () => {
 }
 
 export default CatalogProductDetailPage
+
+

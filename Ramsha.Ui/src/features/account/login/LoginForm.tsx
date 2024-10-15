@@ -15,8 +15,8 @@ import LoadingButton from '@mui/lab/LoadingButton';
 export const LoginForm = () => {
     const loginForm = useForm<FieldValues>({
         defaultValues: {
-            username: 'SuperAdmin',
-            password: 'Sulaiman@12345'
+            username: 'cus',
+            password: 'Test@12345'
         },
         resolver: zodResolver(loginFormValidation)
     })

@@ -3,6 +3,7 @@ import React from 'react'
 import { BasketDropdownItem } from './BasketDropdownItem'
 import AppDivider from '../components/AppDivider'
 import AppBagIcon from '../components/icons/AppBagIcon'
+import { useBasket, useBasketItemCommands } from '../hooks/basketHooks'
 
 const StyledMenu = styled(Menu)(({ theme }) => ({
     '& .MuiPaper-root': {
@@ -14,6 +15,10 @@ const StyledMenu = styled(Menu)(({ theme }) => ({
 const BasketDropdown = () => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
+
+
+
+    const { basket, isBasketLoading, isBasketError } = useBasket()
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -24,11 +29,10 @@ const BasketDropdown = () => {
     return (
         <>
             <IconButton onClick={handleClick} size='large' edge='start' color='inherit' sx={{ mr: 2 }}>
-                <Badge badgeContent={2} color='primary'>
+                <Badge badgeContent={basket?.items?.length} color='primary'>
                     <AppBagIcon />
                 </Badge>
             </IconButton>
-
 
             <StyledMenu
                 anchorEl={anchorEl}
@@ -49,13 +53,21 @@ const BasketDropdown = () => {
                     }}>
                         <Typography variant='h6' sx={{ fontWeight: 'bold', mb: 2 }}>Shopping Basket</Typography>
 
-                        {
-                            Array.from(new Array(6)).map(item => (
-                                <Box key={item}>
-                                    <BasketDropdownItem />
+                        {isBasketLoading ? (
+                            <h1>loading...</h1>
+                        ) : isBasketError ? (
+                            <h1>error</h1>
+
+                        ) : basket && basket.items.length > 0 ?
+                            basket.items.map(item => (
+                                <Box key={item.inventorySku}>
+                                    <BasketDropdownItem item={item} />
                                     <AppDivider sx={{ mt: 1, mb: 1, color: 'text.secondary' }} />
                                 </Box>
                             ))
+                            : (
+                                <h1>Basket is Empty!</h1>
+                            )
                         }
                     </MenuList>
                     <Box sx={{ mt: 2 }}>

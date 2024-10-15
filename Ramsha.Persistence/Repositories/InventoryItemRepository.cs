@@ -26,8 +26,6 @@ IInventoryItemRepository
         return await _items
         .Include(i => i.Product)
         .ThenInclude(x => x.Category)
-        .Include(x => x.Discounts)
-        .Include(x => x.Prices)
         .FirstOrDefaultAsync(criteria);
     }
 

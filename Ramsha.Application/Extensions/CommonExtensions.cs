@@ -29,6 +29,11 @@ public static class CommonExtensions
        ).ToList());
 
 
+    public static string ReplaceSpaces(this string text)
+    {
+        return text.Replace(" ", "-");
+    }
+
     public static string AsPascalCase(this string camelCase)
     {
         if (string.IsNullOrEmpty(camelCase) || char.IsUpper(camelCase[0]))

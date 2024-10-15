@@ -2,6 +2,12 @@ import { ColumnDef } from "@tanstack/react-table";
 import { PagedParams, PaginationParams, CategoryFilter, FilterParams, SortingParams, ColumnSort, ColumnFilter } from "../models/common/commonModels";
 
 
+export function getCookie(key: string) {
+    var b = document.cookie.match("(^|;)\\s*" + key + "\\s*=\\s*([^;]+)");
+    return b ? b.pop() : "";
+}
+
+export const sleep = (time: number) => new Promise(resolve => setTimeout(resolve, time))
 
 
 export function serializeParams(params: PagedParams): string {

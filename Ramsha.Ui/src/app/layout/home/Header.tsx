@@ -25,6 +25,7 @@ import AppBagIcon from '../../components/icons/AppBagIcon';
 import AppHomeIcon from '../../components/icons/AppHomeIcon';
 import AppGridIcon from '../../components/icons/AppGridIcon';
 import { useTranslation } from 'react-i18next';
+import { useBasket } from '../../hooks/basketHooks';
 
 
 
@@ -71,7 +72,7 @@ const midLinks = [
         title: 'Catalog',
         path: '/catalog'
     },
-     {
+    {
         title: 'About',
         path: '/about'
     }, {
@@ -80,52 +81,6 @@ const midLinks = [
     }
 ]
 
-const buttomNavs = [
-    {
-        label: 'Home',
-        value: '/',
-        icon: <AppHomeIcon />
-    },
-    {
-        label: 'Basket',
-        value: '/basket',
-        icon: (
-            <Badge badgeContent={2} color='primary'>
-                <AppBagIcon />
-            </Badge>
-        )
-    },
-    {
-        label: 'Search',
-        value: '/search',
-        icon: <Search />
-    },
-
-
-    {
-        label: 'Catalog',
-        value: '/catalog',
-        icon: <AppGridIcon />
-
-    },
-    // {
-    //     label:'Profile',
-    //     value:'/profile',
-    //     icon:<User/>
-    // }
-
-]
-
-const rightLinks = [
-    {
-        title: 'Login',
-        path: '/login'
-    },
-    {
-        title: 'Register',
-        path: '/register'
-    },
-]
 
 
 
@@ -145,6 +100,60 @@ export default function AppAppBar() {
         setValue(newValue);
         navigate(newValue)
     };
+
+
+
+    const { basket } = useBasket()
+
+
+
+
+    const buttomNavs = [
+        {
+            label: 'Home',
+            value: '/',
+            icon: <AppHomeIcon />
+        },
+        {
+            label: 'Basket',
+            value: '/basket',
+            icon: (
+                <Badge badgeContent={basket?.items.length} color='primary'>
+                    <AppBagIcon />
+                </Badge>
+            )
+        },
+        {
+            label: 'Search',
+            value: '/search',
+            icon: <Search />
+        },
+
+
+        {
+            label: 'Catalog',
+            value: '/catalog',
+            icon: <AppGridIcon />
+
+        },
+        // {
+        //     label:'Profile',
+        //     value:'/profile',
+        //     icon:<User/>
+        // }
+
+    ]
+
+    const rightLinks = [
+        {
+            title: 'Login',
+            path: '/login'
+        },
+        {
+            title: 'Register',
+            path: '/register'
+        },
+    ]
 
     const navStyles = {
         color: 'inherit',
@@ -192,10 +201,10 @@ export default function AppAppBar() {
                             ))}
                             {
                                 // account?.role.endsWith('Admin') && (
-                                    <Button component={NavLink} to={'/admin/dashboard'} sx={navStyles} variant="text" size="small">
-                                        {t('dashboard')}
-                                    </Button>
-                                
+                                <Button component={NavLink} to={'/admin/dashboard'} sx={navStyles} variant="text" size="small">
+                                    {t('dashboard')}
+                                </Button>
+
                             }
                             {
                                 account?.role === 'Supplier' && (
