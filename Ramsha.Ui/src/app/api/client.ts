@@ -1,11 +1,33 @@
 import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from "axios"
 import { router } from "../router/Routes";
 import { toast } from "sonner";
-import { useAuthStore } from "../store/authStore";
 import { PaginationResponse } from "../models/common/commonModels";
 import { sleep } from "../utils/util";
+import { queryClient } from "../providers/AppQueryProvider";
+import { ACCOUNT_QUERY_KEY, BASKET_QUERY_KEY } from "../constants/queriesKey";
+import { Account } from "../models/account";
 
 
+export const refresh = async () => {
+    try {
+        const response = await axios.post(
+            `${import.meta.env.VITE_API_URL}/account/refresh`,
+            {},
+            { withCredentials: true }
+        );
+        const responseAccount = response.data.data;
+
+        const { basket, ...account } = responseAccount;
+        setTokenToHeader(account.accessToken)
+        queryClient.setQueryData([ACCOUNT_QUERY_KEY], account)
+
+        queryClient.setQueryData([BASKET_QUERY_KEY], basket)
+        return account.accessToken;
+    } catch (error) {
+        queryClient.setQueryData([ACCOUNT_QUERY_KEY], null)
+        throw error;
+    }
+}
 
 
 interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
@@ -38,7 +60,8 @@ export const client = (() => {
     client.interceptors.request.use(
         async (config: CustomAxiosRequestConfig) => {
 
-            const accessToken = useAuthStore.getState().account?.accessToken;
+            const account = queryClient.getQueryData([ACCOUNT_QUERY_KEY]) as Account;
+            const accessToken = account?.accessToken;
             if (accessToken) {
                 config.headers.Authorization = `Bearer ${accessToken}`;
             }
@@ -82,14 +105,11 @@ export const client = (() => {
                 isRefreshing = true;
 
                 try {
-                    const newAccessToken = await useAuthStore.getState().refresh();
-
+                    const newAccessToken = await refresh();
                     processQueue(null, newAccessToken);
-
                     return client(originalRequest);
                 } catch (refreshError: any) {
                     processQueue(refreshError, null);
-                    useAuthStore.getState().clearAccount();
                     router.navigate('/login', { replace: true });
                     return Promise.reject(refreshError);
                 } finally {

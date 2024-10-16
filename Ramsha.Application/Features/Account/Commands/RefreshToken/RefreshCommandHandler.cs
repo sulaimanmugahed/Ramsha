@@ -26,7 +26,7 @@ internal class RefreshCommandHandler(
 
 
 
-		var result = await accountServices.Refresh(refreshToken);
+		var result = await accountServices.Refresh(refreshToken, request.AccessToken);
 		if (!result.Success)
 			return result.Errors;
 

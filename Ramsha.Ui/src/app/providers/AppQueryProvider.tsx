@@ -2,7 +2,7 @@ import { QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-qu
 import { toast } from "sonner"
 
 
-const queryClient = new QueryClient({
+export const queryClient = new QueryClient({
     queryCache: new QueryCache({
         onError: (_error, query) => {
             if (query.meta?.errorMessage) {

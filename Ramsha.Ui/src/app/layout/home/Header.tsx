@@ -18,7 +18,6 @@ import BasketDropdown from '../BasketDropdown';
 import SignedInMenu from '../SignedInMenu';
 import { Moon, Search, SignInAlt } from 'react-flaticons';
 import { LightModeOutlined } from '@mui/icons-material';
-import { useAuthStore } from '../../store/authStore';
 import { ThemeContext } from '../../providers/AppThemeProvider';
 
 import AppBagIcon from '../../components/icons/AppBagIcon';
@@ -26,6 +25,7 @@ import AppHomeIcon from '../../components/icons/AppHomeIcon';
 import AppGridIcon from '../../components/icons/AppGridIcon';
 import { useTranslation } from 'react-i18next';
 import { useBasket } from '../../hooks/basketHooks';
+import { useAccount } from '../../hooks/accountHooks';
 
 
 
@@ -87,7 +87,8 @@ const midLinks = [
 export default function AppAppBar() {
     const [open, setOpen] = React.useState(false);
     const { mode, switchColorMode } = React.useContext(ThemeContext);
-    const { account } = useAuthStore()
+    // const { account } = useAuthStore()
+    const { account } = useAccount()
     const { t } = useTranslation()
 
     const toggleDrawer = (newOpen: boolean) => () => {

@@ -11,9 +11,6 @@ using Ramsha.Identity.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Ramsha.Domain.Constants;
-using Ramsha.Application.Dtos.Account.Requests;
-using Ramsha.Application.Dtos.Account.Responses;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -60,45 +57,50 @@ IOptionsSnapshot<JWTSettings> jwtSettings) : IAccountServices
         return BaseResult.Ok();
     }
 
-    // public async Task<BaseResult<AuthenticationResult>> Refresh(string refreshToken, string? accessToken)
-    // {
-    //     var user = await userManager.Users.FirstOrDefaultAsync(u => u.RefreshToken.Token == refreshToken);
+    public async Task<BaseResult<AuthenticationResult>> Refresh(string token, string? accessToken = null)
+    {
+        var user = await userManager.Users.FirstOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == token));
 
-    //     if (user is null || user.RefreshToken.IsExpired)
-    //         return new Error(ErrorCode.ErrorInIdentity);
+        if (user is null)
+            return new Error(ErrorCode.ErrorInIdentity, "no user found");
 
+        var refreshToken = user.RefreshTokens.Single(t => t.Token == token);
+        if (!refreshToken.IsActive)
+            return new Error(ErrorCode.ErrorInIdentity, "the token expired");
 
-    //     IEnumerable<Claim>? claims;
-    //     if (accessToken is not null)
-    //         claims = tokenService.GetPrincipalFromExpiredToken(accessToken).Claims;
-    //     else
-    //         claims = await GetClaimsAsync(user);
+        refreshToken.RevokedOn = DateTime.UtcNow;
+        var (newRefreshToken, expired) = tokenService.GenerateRefreshToken();
+        user.RefreshTokens.Add(new RefreshToken
+        {
+            Token = newRefreshToken,
+            ExpiresOn = expired,
+            CreatedOn = DateTime.UtcNow
+        });
 
+        await userManager.UpdateAsync(user);
 
-    //     var newAccessToken = tokenService.GenerateAccessToken(claims);
+        IEnumerable<Claim>? claims;
+        if (accessToken is not null)
+            claims = tokenService.GetPrincipalFromExpiredToken(accessToken).Claims;
+        else
+            claims = await GetClaimsAsync(user);
 
-    //     var newRefreshToken = tokenService.GenerateRefreshToken();
+        var newAccessToken = tokenService.GenerateAccessToken(claims);
 
-    //     user.RefreshToken.Token = newRefreshToken;
-    //     user.RefreshToken.ExpiryTime = DateTime.UtcNow.AddMinutes(60);
+        var rolesList = await userManager.GetRolesAsync(user).ConfigureAwait(false);
 
-    //     await userManager.UpdateAsync(user);
-
-    //     var rolesList = await userManager.GetRolesAsync(user).ConfigureAwait(false);
-
-
-    //     return new AuthenticationResult
-    //     {
-    //         AccessToken = newAccessToken,
-    //         RefreshToken = newRefreshToken,
-    //         RefreshTokenExpiration = user.RefreshToken.ExpiryTime,
-    //         Username = user.UserName,
-    //         Email = user.Email,
-    //         AccountId = user.Id,
-    //         Role = rolesList.FirstOrDefault(),
-    //         IsVerified = user.EmailConfirmed,
-    //     };
-    // }
+        return new AuthenticationResult
+        {
+            AccessToken = newAccessToken,
+            RefreshToken = newRefreshToken,
+            RefreshTokenExpiration = expired,
+            Username = user.UserName,
+            Email = user.Email,
+            AccountId = user.Id,
+            Role = rolesList.FirstOrDefault(),
+            IsVerified = user.EmailConfirmed,
+        };
+    }
 
 
     public async Task<BaseResult> ChangeUserName(ChangeUserNameRequest model)
@@ -132,10 +134,13 @@ IOptionsSnapshot<JWTSettings> jwtSettings) : IAccountServices
 
         var claimsPrincipal = await signInManager.ClaimsFactory.CreateAsync(user);
 
+        var jwToken = await GenerateJwtToken(user);
+
+
         AuthenticationResult response = new AuthenticationResult()
         {
             AccountId = user.Id,
-            AccessToken = tokenService.GenerateAccessToken(claimsPrincipal.Claims),
+            AccessToken = new JwtSecurityTokenHandler().WriteToken(jwToken),
             Email = user.Email,
             Username = user.UserName,
             Role = rolesList.FirstOrDefault(),
@@ -270,49 +275,6 @@ IOptionsSnapshot<JWTSettings> jwtSettings) : IAccountServices
 
     }
 
-    public async Task<BaseResult<AuthenticationResult>> Refresh(string token)
-    {
-        var user = await userManager.Users.FirstOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == token));
-
-        if (user is null)
-            return new Error(ErrorCode.ErrorInIdentity, "no user found");
-
-        var refreshToken = user.RefreshTokens.Single(t => t.Token == token);
-        if (!refreshToken.IsActive)
-            return new Error(ErrorCode.ErrorInIdentity, "the token expired");
-
-        refreshToken.RevokedOn = DateTime.UtcNow;
-        var (newRefreshToken, expired) = tokenService.GenerateRefreshToken();
-        user.RefreshTokens.Add(new RefreshToken
-        {
-            Token = newRefreshToken,
-            ExpiresOn = expired,
-            CreatedOn = DateTime.UtcNow
-        });
-
-        await userManager.UpdateAsync(user);
-
-        var claimsPrincipal = await signInManager.ClaimsFactory.CreateAsync(user);
-
-
-        var jwtToken = await GenerateJwtToken(user);
-
-        var newAccessToken = tokenService.GenerateAccessToken(claimsPrincipal.Claims);
-
-        var rolesList = await userManager.GetRolesAsync(user).ConfigureAwait(false);
-
-        return new AuthenticationResult
-        {
-            AccessToken = newAccessToken,
-            RefreshToken = newRefreshToken,
-            RefreshTokenExpiration = expired,
-            Username = user.UserName,
-            Email = user.Email,
-            AccountId = user.Id,
-            Role = rolesList.FirstOrDefault(),
-            IsVerified = user.EmailConfirmed,
-        };
-    }
 
     public async Task LogoutCurrentUser()
     {

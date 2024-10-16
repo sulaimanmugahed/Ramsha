@@ -70,7 +70,7 @@ export const useInfiniteInventoryItems = (productId: string, productVariantId: s
 
 
 export const useCatalogProductDetail = (productId: string) => {
-    const { data, isLoading, isError,isSuccess } = useQuery<CatalogProductDetailType, Error>({
+    const { data, isLoading, isError, isSuccess } = useQuery<CatalogProductDetailType, Error>({
         queryKey: ["catalogProducts", productId],
         queryFn: async () => await catalogService.getProductDetail(productId),
     })
@@ -79,7 +79,7 @@ export const useCatalogProductDetail = (productId: string) => {
         product: data,
         isProductLoading: isLoading,
         isProductError: isError,
-        isProductSuccess:isSuccess
+        isProductSuccess: isSuccess
     }
 }
 

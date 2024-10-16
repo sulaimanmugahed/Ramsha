@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react"
 
 import { Outlet } from "react-router-dom"
-import { useAuthStore } from "../store/authStore"
+import { useAccount } from "../hooks/accountHooks"
+import { refresh } from "../api/client"
 
 
 
 
 const PersistAuth = () => {
 
-  const { account, refresh } = useAuthStore()
+  const { account } = useAccount()
   const [isLoading, setIsLoading] = useState(true)
 
 

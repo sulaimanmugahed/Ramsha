@@ -6,4 +6,5 @@ using MediatR;
 namespace Ramsha.Application.Features.Account.Commands.RefreshToken;
 public class RefreshCommand : IRequest<BaseResult<AuthenticatedUserDto?>>
 {
+    public string? AccessToken { get; set; }
 }

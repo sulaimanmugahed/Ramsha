@@ -20,9 +20,9 @@ import { Box } from '@mui/material';
 import { AppDashboardIcon } from '../../components/icons/AppDashboardIcon';
 import { Inventory } from '@mui/icons-material';
 import { NavLink } from 'react-router-dom';
-import { useAuthStore } from '../../store/authStore';
 import AppGridIcon from '../../components/icons/AppGridIcon';
 import { User } from 'react-flaticons';
+import { useAccount } from '../../hooks/accountHooks';
 
 const drawerWidth = 240;
 
@@ -114,7 +114,7 @@ export default function Header() {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
 
-    const { account } = useAuthStore()
+    const { account } = useAccount()
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -172,12 +172,15 @@ export default function Header() {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" noWrap component="div">
-                        Ramsha
-                    </Typography>
+                    {/* //navs */}
                 </Toolbar>
             </AppBar><Drawer variant="permanent" open={open}>
-                <DrawerHeader>
+                <DrawerHeader sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Box component={NavLink} to={'/'} sx={{ p: 1, textDecoration: 'none' }}>
+                        <Typography color={'primary'} variant="h6" noWrap component="div">
+                            Ramsha
+                        </Typography>
+                    </Box>
                     <IconButton onClick={handleDrawerClose}>
                         {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
                     </IconButton>
@@ -216,7 +219,7 @@ export default function Header() {
                                             },
                                     ]}
                                 >
-                                   <User /> 
+                                    <User />
                                 </ListItemIcon>
                                 <ListItemText
                                     primary={text}

@@ -1,5 +1,5 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import { useAuthStore } from "../store/authStore";
+import { useAccount } from "../hooks/accountHooks";
 
 
 type PrivateRoutesPropsType = {
@@ -8,7 +8,7 @@ type PrivateRoutesPropsType = {
 
 export const PrivateRoutes = ({ allowedRoles }: PrivateRoutesPropsType) => {
 
-    const { account } = useAuthStore()
+    const { account } = useAccount()
     const location = useLocation();
 
     return (

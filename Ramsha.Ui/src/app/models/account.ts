@@ -1,4 +1,3 @@
-import { Basket } from "./basket";
 
 
 
@@ -9,7 +8,6 @@ export type Account = {
     isVerified: boolean;
     accessToken: string;
     refreshTokenExpiration: Date;
-    basket?: Basket
 }
 
 export type loginRequest = {
