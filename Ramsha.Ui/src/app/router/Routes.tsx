@@ -25,6 +25,11 @@ import ProductEditModal from "../../features/products/ProductEditModal";
 import CatalogProductDetailPage from "../../features/catalog/CatalogProductDetailPage";
 import ProductsPage from "../../features/products/ProductsPage";
 import AboutPage from "../../features/about/AboutPage";
+import SuppliesPage from "../../features/suppliers/supplies/SuppliesPage";
+import SupplyRequestPage from "../../features/suppliers/supplies/SupplyRequestPage";
+import SupplierProductList from "../../features/suppliers/supplies/SupplierProductList";
+import AddSupplyRequestItem from "../../features/suppliers/supplies/AddSupplyRequestItemForm";
+import AddSupplyRequestItemPage from "../../features/suppliers/supplies/AddSupplyRequestItemPage";
 //import AdminProductPage from "../../features/admin/products/AdminProductPage";
 
 export const router = createBrowserRouter([
@@ -144,11 +149,25 @@ export const router = createBrowserRouter([
                     },
                     {
                         element: <PrivateRoutes allowedRoles={['Supplier']} />,
-                        path: 'supplier',
+                        path: '/supplier',
                         children: [
                             {
                                 element: <SupplierDashboard />,
                                 path: 'dashboard'
+                            },
+                            {
+                                element: <SuppliesPage />,
+                                path: 'supplies'
+                            },
+                            {
+                                element: <SupplyRequestPage />,
+                                path: 'supply-request',
+                                children: [
+                                    {
+                                        element: <AddSupplyRequestItemPage />,
+                                        path: 'add-item/:productId',
+                                    }
+                                ]
                             }
                         ]
                     },

@@ -21,6 +21,10 @@ public static class ProductExtensions
    }
 
 
+   public static ProductOptionDto AsProductOption(this ProductOption productOption)
+   => new(productOption.OptionId.Value, productOption.Option.Name, productOption.Priority);
+
+
 
    public static BrandDto AsDto(this Brand brand)
    {
@@ -77,7 +81,7 @@ public static class ProductExtensions
    // }
 
 
-   
+
 
 
    public static ProductDto AsDto(this Product product)

@@ -18,10 +18,10 @@ public class InventoryItem : BaseEntity, IAuditable
     {
 
     }
-    private InventoryItem(InventoryItemId id, ProductId productId, ProductVariantId? productVariantId, SupplierId supplierId, string productName)
+    private InventoryItem(InventoryItemId id, ProductId productId, ProductVariantId? productVariantId, string supplier, string productName)
     {
         Id = id;
-        SupplierId = supplierId;
+        Supplier = supplier;
         ProductId = productId;
         ProductName = productName;
         ProductVariantId = productVariantId;
@@ -30,7 +30,7 @@ public class InventoryItem : BaseEntity, IAuditable
     public static InventoryItem Create(
           ProductId productId,
           ProductVariantId? productVariantId,
-          SupplierId supplierId,
+          string supplier,
           string productName,
           int quantity,
           ProductPrice wholePrice,
@@ -40,12 +40,12 @@ public class InventoryItem : BaseEntity, IAuditable
         var newItem = new InventoryItem(new InventoryItemId(Guid.NewGuid()),
         productId,
         productVariantId,
-        supplierId,
+        supplier,
         productName);
 
         newItem.AdjustQuantity(quantity);
         newItem.UpdatePrice(wholePrice);
-        newItem.SetSKU(sku, supplierId.Value.ToString()[..8]);
+        newItem.SetSKU(sku, supplier);
 
         newItem.RaiseDomainEvent(new InventoryItemCreatedEvent(newItem.Id, newItem.ProductId, newItem.ProductVariantId, newItem.Quantity, newItem.RetailPrice, newItem.FinalPrice));
 
@@ -64,11 +64,10 @@ public class InventoryItem : BaseEntity, IAuditable
 
     public InventoryStatus Status { get; set; }
     public ProductId ProductId { get; set; }
-    public SupplierId SupplierId { get; set; }
     public ProductVariantId? ProductVariantId { get; set; }
     public ProductVariant ProductVariant { get; set; }
     public Product Product { get; set; }
-    public Supplier Supplier { get; set; }
+    public string Supplier { get; set; }
     public List<ProductPrice> Prices { get; set; } = [];
     public List<Discount> Discounts { get; set; } = [];
     public List<InventoryItemImage> InventoryItemImages { get; set; } = [];

@@ -17,6 +17,7 @@ import ProductAdditionalForm from './ProductAdditionalForm'
 import AppLoadingWaves from '../../app/components/AppLoadingWaves'
 import { UploadResponse } from '../../app/models/common/commonModels'
 import { useNavigate } from 'react-router-dom'
+import ProductOptionsForm from './ProductOptionsForm'
 
 
 
@@ -54,6 +55,7 @@ const CreateProductPage = ({ }: Props) => {
             category: '',
             file: null,
             variants: [],
+            options: [{ id: '', priority: 1 }],
             seoSettings: null,
             tags: []
         },
@@ -94,6 +96,13 @@ const CreateProductPage = ({ }: Props) => {
             label: 'Additional Info',
             content: (
                 <ProductAdditionalForm />
+            )
+        },
+        {
+            id: 'options',
+            label: 'Product Options',
+            content: (
+                <ProductOptionsForm />
             )
         },
         {
@@ -173,6 +182,7 @@ const CreateProductPage = ({ }: Props) => {
 
     const handleProductSubmission = async (data: ProductFormScheme) => {
         const { file, variants, ...productData } = data
+
 
 
         let variantsToAdd: any[] = []

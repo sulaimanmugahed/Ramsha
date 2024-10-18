@@ -18,4 +18,5 @@ public class CreateProductCommand : IRequest<BaseResult<string?>>
     public string? ImageUrl { get; set; }
     public SeoSettings? SeoSettings { get; set; }
     public List<VariantCommand>? Variants { get; set; }
+    public List<ProductOptionCommand> Options { get; set; }
 }

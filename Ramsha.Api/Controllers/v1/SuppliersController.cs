@@ -9,6 +9,7 @@ using Ramsha.Application.Wrappers;
 using Ramsha.Domain.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Ramsha.Application.Features.Suppliers.Queries.GetCurrentSupplierSupplyRequest;
 
 namespace Ramsha.Api.Controllers.v1;
 
@@ -16,6 +17,12 @@ namespace Ramsha.Api.Controllers.v1;
 
 public class SuppliersController : BaseApiController
 {
+
+	[HttpGet("supply-request")]
+	public async Task<BaseResult<SupplyRequestDto?>> SupplyRequest()
+	=> await Mediator.Send(new GetCurrentSupplierSupplyRequestQuery());
+
+
 	[HttpPost]
 	public async Task<ActionResult<BaseResult<string>>> Create(CreateSupplierCommand command)
 		=> await Mediator.Send(command);
@@ -28,14 +35,16 @@ public class SuppliersController : BaseApiController
 	public async Task<BaseResult<SupplyRequestDto>> AddSupplyRequestItem(AddSupplyRequestItemCommand command)
 	=> await Mediator.Send(command);
 
-	[HttpGet(nameof(GetSupplyRequestsBySupplier))]
-	public async Task<BaseResult<List<SupplyRequestDto>>> GetSupplyRequestsBySupplier()
-	=> await Mediator.Send(new GetSupplyRequestsBySupplierQuery());
+	[HttpPost("supplies")]
+	public async Task<BaseResult<List<SupplyDto>>> GetCurrentSupplierSupplies([FromBody] GetCurrentSupplierSuppliesQuery query)
+	=> await Mediator.Send(query);
 
 
 	[HttpPost(nameof(SendSupplyRequest))]
 	public async Task<BaseResult> SendSupplyRequest(SendSupplyRequestCommand command)
 	=> await Mediator.Send(command);
+
+
 
 }
 

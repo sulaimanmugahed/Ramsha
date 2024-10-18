@@ -55,8 +55,7 @@ Guid Id,
  string Sku,
  decimal BasePrice,
  decimal FinalPrice,
-List<ProductImageDto> Images,
-CatalogSupplierDetailDto SupplierDetail
+List<ProductImageDto> Images
 
 );
 public record CatalogSupplierDetailDto(

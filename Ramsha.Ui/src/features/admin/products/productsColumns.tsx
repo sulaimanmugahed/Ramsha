@@ -3,9 +3,7 @@ import { ProductDto, ProductStatus } from "../../../app/models/products/product"
 import { Box, Checkbox } from "@mui/material";
 import dayjs from "dayjs";
 import AppActionsMenu from "../../../app/components/table/AppActionsMenu";
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import VisibilityIcon from '@mui/icons-material/Visibility';
+
 
 const columnHelper = createColumnHelper<ProductDto>();
 

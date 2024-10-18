@@ -1,9 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { productService } from "../api/services/productService"
-import { BrandDto, ProductDetail, ProductDto, ProductStatus, ProductTag, ProductVariantDto } from "../models/products/product"
+import { BrandDto, ProductDetail, ProductDto, ProductOption, ProductStatus, ProductTag, ProductVariantDto } from "../models/products/product"
 import { toast } from "sonner"
-import { BRANDS_QUERY_KEY, PRODUCT_TAGS_QUERY_KEY, PRODUCTS_QUERY_KEY, PRODUCT_VARIANTS_QUERY_KEY } from "../constants/queriesKey"
+import { BRANDS_QUERY_KEY, PRODUCT_TAGS_QUERY_KEY, PRODUCTS_QUERY_KEY, PRODUCT_VARIANTS_QUERY_KEY, PRODUCT_OPTIONS_QUERY_KEY } from "../constants/queriesKey"
 import { PagedParams, PaginationResponse } from "../models/common/commonModels"
+import { Option } from "../models/options/option"
 
 
 
@@ -76,20 +77,33 @@ export const useProductBrands = () => {
     }
 }
 
-const initialVariants: ProductVariantDto[] = []
 
 
 export const useProductVariants = (productId: string) => {
-    const { data, isLoading, isError } = useQuery<ProductVariantDto[], Error>({
+    const { data, isLoading, isError, isSuccess } = useQuery<ProductVariantDto[], Error>({
         queryKey: [PRODUCT_VARIANTS_QUERY_KEY, productId],
         queryFn: async () => await productService.getProductVariants(productId),
-        initialData: initialVariants
     })
 
     return {
         variants: data,
         isVariantsLoading: isLoading,
-        isVariantsError: isError
+        isVariantsError: isError,
+        isVariantsSuccess: isSuccess
+    }
+}
+
+export const useProductOptions = (productId: string) => {
+    const { data, isLoading, isError, isSuccess } = useQuery<ProductOption[], Error>({
+        queryKey: [PRODUCT_OPTIONS_QUERY_KEY, productId],
+        queryFn: async () => await productService.getProductOptions(productId),
+    })
+
+    return {
+        productOptions: data,
+        isOptionsLoading: isLoading,
+        isOptionsError: isError,
+        isOptionsSuccess: isSuccess
     }
 }
 

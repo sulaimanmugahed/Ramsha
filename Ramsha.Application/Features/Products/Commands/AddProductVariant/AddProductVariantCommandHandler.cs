@@ -38,12 +38,17 @@ public class AddProductVariantCommandHandler(
         foreach (var variantValue in request.VariantValues)
         {
             var option = product.Options.SingleOrDefault(x => x.OptionId.Value == variantValue.Option)?.Option;
-            option ??= await optionRepository.GetAsync(o => o.Id == new Domain.Products.OptionId(variantValue.Option),
-            o => o.OptionValues);
+            if (option is null)
+            {
+                option = await optionRepository.GetAsync(o => o.Id == new Domain.Products.OptionId(variantValue.Option), o => o.OptionValues);
+                if (option is null)
+                    return new Error(ErrorCode.RequestedDataNotExist, "invalid option", nameof(request.VariantValues));
+                product.AddOption(option);
+            }
 
             var value = option?.OptionValues.SingleOrDefault(v => v.Id.Value == variantValue.Value);
-            if (option is null || value is null)
-                return new Error(ErrorCode.EmptyData, nameof(request.VariantValues));
+            if (value is null)
+                return new Error(ErrorCode.EmptyData, "invalid option value", nameof(request.VariantValues));
 
             optionValuesNames.Add(value.Name);
             productVariant.AddValue(option.Id, value.Id);
@@ -119,7 +124,7 @@ public class AddProductVariantCommandHandler(
     {
 
         foreach (var variant in existingVariants)
-        
+
         {
             if (variant.VariantValues.Count != variantValues.Count)
                 continue;

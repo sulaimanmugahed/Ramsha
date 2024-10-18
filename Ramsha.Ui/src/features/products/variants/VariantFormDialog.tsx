@@ -2,19 +2,23 @@ import React, { useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, IconButton, Box } from '@mui/material';
 import ProductVariantForm from './ProductVariantForm';
 import { Close } from '@mui/icons-material';
+import { ProductOption } from '../../../app/models/products/product';
 
 
 interface VariantDialogProps {
     open: boolean;
     onClose: () => void;
-    onSubmit?: (data:any) => void;
-    onClick?:()=> void
+    onSubmit?: (data: any) => void;
+    onClick?: () => void
     edit?: boolean
     name?: string
     type?: 'button' | 'submit'
+    availableOptions: ProductOption[]
 }
 
-const VariantFormDialog: React.FC<VariantDialogProps> = ({ type = 'button', name, open, onClose, onSubmit, edit,onClick }) => {
+const VariantFormDialog: React.FC<VariantDialogProps> = ({ type = 'button', name, open, onClose, onSubmit, edit, onClick, availableOptions }) => {
+
+
 
 
     return (
@@ -46,11 +50,11 @@ const VariantFormDialog: React.FC<VariantDialogProps> = ({ type = 'button', name
                 </IconButton>
             </DialogTitle>
             <DialogContent sx={{ paddingY: 4, }}>
-                <Box sx={{ mt: 4 ,p:2}}>
-                    <ProductVariantForm type={type} name={name} onSubmit={onSubmit} onClick={onClick}/>
+                <Box sx={{ mt: 4, p: 2 }}>
+                    <ProductVariantForm availableOptions={availableOptions} type={type} name={name} onSubmit={onSubmit} onClick={onClick} />
                 </Box>
             </DialogContent>
-          
+
         </Dialog>
     );
 };

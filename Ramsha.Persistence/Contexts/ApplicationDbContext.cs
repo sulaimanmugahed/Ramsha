@@ -29,7 +29,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<ProductVariant> ProductVariant { get; set; }
     public DbSet<Rating> Ratings { get; set; }
     public DbSet<Tag> Tags { get; set; }
-
     public DbSet<Brand> Brand { get; set; }
 
 
@@ -283,14 +282,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
             builder.HasQueryFilter(x => !x.Product.IsDeleted);
 
-
-            builder.HasQueryFilter(x => !x.Supplier.IsDeleted);
-
-            builder
-                .HasOne(x => x.Supplier)
-                .WithMany()
-                .HasForeignKey(ii => ii.SupplierId);
-
             builder
            .HasOne(x => x.ProductVariant)
            .WithMany(x => x.InventoryItems)
@@ -369,15 +360,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
              builder.Property(sr => sr.Id)
          .HasConversion(id => id.Value, value => new SupplyId(value));
 
-             builder.HasOne(x => x.Supplier)
-             .WithMany(x => x.Supplies)
-             .HasForeignKey(x => x.SupplierId);
-
-             builder.HasQueryFilter(x => !x.Supplier.IsDeleted);
-
-
-             builder.Property(x => x.SupplierId)
-             .HasConversion(id => id.Value, value => new SupplierId(value));
          });
 
 

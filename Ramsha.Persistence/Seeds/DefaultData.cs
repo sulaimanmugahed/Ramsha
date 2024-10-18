@@ -13,7 +13,7 @@ public class DefaultData
 {
     public static async Task SeedAsync(ApplicationDbContext context, ILogger<DefaultData> logger)
     {
-
+        context.Database.EnsureCreated();
 
         if (!context.Brand.Any())
         {

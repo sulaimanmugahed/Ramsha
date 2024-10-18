@@ -14,7 +14,6 @@ export type BrandDto = {
 export type ProductDto = {
     id: string
     name: string;
-    description: string;
     created: string;
     status: string;
     imageUrl: string;
@@ -37,11 +36,17 @@ export type ProductImageDto = {
     isHome: boolean;
 };
 
+export type ProductOption = {
+    id: string,
+    name: string,
+    priority: number
+}
+
 export type VariantValuesDto = {
     optionId: string;
     optionValueId: string;
-    optionName?: string;
-    valueName?: string;
+    optionName: string;
+    valueName: string;
 };
 
 export type SeoSettings = {

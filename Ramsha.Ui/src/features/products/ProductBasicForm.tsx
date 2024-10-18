@@ -19,7 +19,8 @@ const ProductBasicForm = ({ onSubmit }: { onSubmit?: (data: any) => void }) => {
     const { t } = useTranslation();
 
     return (
-        <Grid container component={'form'} onSubmit={onSubmit ? handleSubmit(onSubmit) : undefined} spacing={4}>
+        categories && brands &&
+        < Grid container component={'form'} onSubmit={onSubmit ? handleSubmit(onSubmit) : undefined} spacing={4} >
             <Grid item xs={12} md={6}>
                 <Grid container spacing={3.5}>
                     <Grid item xs={12}>
@@ -61,7 +62,7 @@ const ProductBasicForm = ({ onSubmit }: { onSubmit?: (data: any) => void }) => {
                         <AppControlCategorySelector
                             name="category"
                             control={control}
-                            categories={categories!}
+                            categories={categories}
                         />
                     </Grid>
                     <Grid item xs={12}>
@@ -91,7 +92,7 @@ const ProductBasicForm = ({ onSubmit }: { onSubmit?: (data: any) => void }) => {
                 }
 
             </Grid>
-        </Grid>
+        </ Grid>
     );
 };
 

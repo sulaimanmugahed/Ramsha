@@ -21,12 +21,12 @@ export const variantSchema = z.object({
         option: z.string().min(1, "Option name is required"),
         value: z.string().min(1, "Option value is required"),
     })).min(1, "one at least").refine((data) => {
-        const values = data.map(v => v.value);
-        const uniqueValues = new Set(values);
-        return uniqueValues.size === values.length; 
+        const options = data.map(v => v.option);
+        const uniqueValues = new Set(options);
+        return uniqueValues.size === options.length;
     }, {
         message: "Duplicate option values are not allowed",
-        path: [], 
+        path: [],
     }),
     variantImages: z.array(z.object({
         file: z.any().optional(),
@@ -58,7 +58,7 @@ export const additionalInfoScheme = z.object({
 export const basicInfoSchema = z.object({
     name: z.string(),
     description: z.string(),
-    brand:z.string().min(10),
+    brand: z.string().min(10),
     basePrice: z.string(),
     category: z.string().min(10),
     file: z.object({
@@ -79,23 +79,39 @@ const variantsSchema = z.object({
             })
 });
 
+export const optionSchema = z.object({
+    id: z.string(),
+    priority: z.number().min(1, "Priority must be at least 1")
+})
+
+
+export const optionsFormSchema = z.object({
+    options: z.array(optionSchema)
+});
+
+
 
 export const ProductFormValidations = [
     basicInfoSchema,
     additionalInfoScheme,
+    optionsFormSchema,
     variantsSchema,
 ];
 
 
 
 
+
+
 export type VariantsScheme = z.infer<typeof variantsSchema>;
 export type VariantScheme = z.infer<typeof variantSchema>;
+export type OptionsFormSchema = z.infer<typeof optionsFormSchema>;
+
 
 
 
 export type BasicInfoSchema = z.infer<typeof basicInfoSchema>;
 export type AdditionalInfoScheme = z.infer<typeof additionalInfoScheme>;
 
-export type ProductFormScheme = VariantsScheme & BasicInfoSchema & AdditionalInfoScheme;
+export type ProductFormScheme = VariantsScheme & OptionsFormSchema & BasicInfoSchema & AdditionalInfoScheme;
 

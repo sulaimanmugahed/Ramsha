@@ -10,12 +10,16 @@ public class ProductOption : BaseEntity
 
     }
 
-    public ProductOption(Product product, OptionId optionId)
+    public ProductOption(Product product, Option option, int priority)
     {
         Product = product;
-        OptionId = optionId;
+        Option = option;
+        Priority = priority;
     }
 
+
+
+    public int Priority { get; set; }
     public OptionId OptionId { get; set; }
     public ProductId ProductId { get; set; }
 

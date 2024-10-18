@@ -1,4 +1,5 @@
 ﻿using Ramsha.Application.Dtos.Catalog;
+using Ramsha.Application.Dtos.Common;
 using Ramsha.Application.Dtos.Products;
 using Ramsha.Application.DTOs.Common;
 using Ramsha.Application.Wrappers;
@@ -24,6 +25,7 @@ public interface IProductRepository : IGenericRepository<Product, ProductId>
     Task RemoveRange(List<ProductId> productIds);
 
     Task RemoveVariant(ProductVariant variant);
+    Task<List<ProductOption>> GetProductOptions(ProductId productId);
     Task<PaginationResponseDto<CatalogProductDto>> GetCatalogProductsPaged(PaginationParams paginationParams);
     Task<ProductVariant?> GetVariant(ProductId productId, ProductVariantId productVariantId);
 

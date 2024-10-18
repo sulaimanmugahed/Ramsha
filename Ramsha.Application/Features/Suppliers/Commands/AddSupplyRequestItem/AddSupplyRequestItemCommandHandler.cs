@@ -20,25 +20,30 @@ public class AddSupplyRequestItemCommandHandler(
     public async Task<BaseResult<SupplyRequestDto>> Handle(AddSupplyRequestItemCommand request, CancellationToken cancellationToken)
     {
         var supplyRequest = await supplyRequestRepository.GetAsync(
-            x => x.Id == new Domain.Suppliers.SupplyRequestId(request.SupplyRequestId),
+            x => x.Supplier == authenticatedUserService.UserName,
             x => x.Items);
 
         if (supplyRequest is null)
-            return new Error(ErrorCode.EmptyData);
+        {
+            supplyRequest = SupplyRequest.Create(authenticatedUserService.UserName);
+            await supplyRequestRepository.AddAsync(supplyRequest);
+            await unitOfWork.SaveChangesAsync();
+        }
 
         var product = await productRepository.GetAsync(x => x.Id == new Domain.Products.ProductId(request.ProductId), p => p.Variants);
         if (product is null)
             return new Error(ErrorCode.EmptyData);
 
         ProductVariant? variant = null;
+        var productVariantId = new Domain.Products.ProductVariantId(request.ProductVariantId);
+
         if (product.Variants.Count != 0)
         {
-            variant = product.Variants.First(x => x.SKU == request.SKU);
+            variant = product.Variants.First(x => x.Id == productVariantId);
             if (variant is null)
                 return new Error(ErrorCode.EmptyData);
         }
-
-        var existItem = supplyRequest.Items.FirstOrDefault(x => x.SKU == request.SKU);
+        var existItem = supplyRequest.Items.FirstOrDefault(x => x.ProductVariantId == productVariantId);
         if (existItem is not null)
         {
             existItem.IncrementQuantity(request.Quantity);
@@ -51,7 +56,8 @@ public class AddSupplyRequestItemCommandHandler(
                 variant?.Id,
                 request.WholesalePrice,
                 request.Quantity);
-            supplyRequestItem.SetSKU(request.SKU);
+
+            supplyRequestItem.SetSKU(variant.SKU);
 
             supplyRequest.AddItem(supplyRequestItem);
         }

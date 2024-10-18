@@ -26,7 +26,7 @@ public class CreateSupplyRequestCommandHandler(
         if (supplier is null)
             return new Error(ErrorCode.ErrorInIdentity);
 
-        var supplyRequest = SupplyRequest.Create(supplier.Username, request.Currency);
+        var supplyRequest = SupplyRequest.Create(supplier.Username);
 
 
         await supplyRequestRepository.AddAsync(supplyRequest);

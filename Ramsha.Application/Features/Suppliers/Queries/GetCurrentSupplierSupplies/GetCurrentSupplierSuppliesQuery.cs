@@ -8,7 +8,7 @@ using MediatR;
 
 namespace Ramsha.Application.Features.Suppliers.Queries.GetSupplyRequestsBySupplier;
 
-public class GetSupplyRequestsBySupplierQuery : IRequest<BaseResult<List<SupplyRequestDto>>>
+public class GetCurrentSupplierSuppliesQuery : PagedParams, IRequest<BaseResult<List<SupplyDto>>>
 {
 
 }

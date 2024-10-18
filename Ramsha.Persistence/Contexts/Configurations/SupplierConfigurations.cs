@@ -21,12 +21,7 @@ internal class SupplierConfigurations : IEntityTypeConfiguration<Supplier>
 			.Property(p => p.Id)
 			.HasConversion(id => id.Value, value => new SupplierId(value));
 
-	
-
-
 		builder
 			.HasQueryFilter(p => !p.IsDeleted);
-
-
 	}
 }

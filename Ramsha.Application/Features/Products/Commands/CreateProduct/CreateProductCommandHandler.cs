@@ -58,6 +58,17 @@ public class CreateProductCommandHandler(
             product.SetSeoSettings(request.SeoSettings);
         }
 
+        if (request.Options.HasItems())
+        {
+            foreach (var option in request.Options)
+            {
+                var optionToAdd = await optionRepository.GetAsync(o => o.Id == new Domain.Products.OptionId(option.Value));
+                if (optionToAdd is null)
+                    return new Error(ErrorCode.RequestedDataNotExist, "invalid option", nameof(request.Options));
+                product.AddOption(optionToAdd, option.Priority);
+            }
+        }
+
         if (request.Variants.HasItems())
         {
             foreach (var variant in request.Variants)
@@ -78,12 +89,17 @@ public class CreateProductCommandHandler(
                 foreach (var variantValue in variant.VariantValues)
                 {
                     var option = product.Options.SingleOrDefault(x => x.OptionId.Value == variantValue.Option)?.Option;
-                    option ??= await optionRepository.GetAsync(o => o.Id == new Domain.Products.OptionId(variantValue.Option),
-                    o => o.OptionValues);
+                    if (option is null)
+                    {
+                        option = await optionRepository.GetAsync(o => o.Id == new Domain.Products.OptionId(variantValue.Option), o => o.OptionValues);
+                        if (option is null)
+                            return new Error(ErrorCode.RequestedDataNotExist, "invalid option", nameof(variant.VariantValues));
+                        product.AddOption(option);
+                    }
 
                     var value = option?.OptionValues.SingleOrDefault(v => v.Id.Value == variantValue.Value);
-                    if (option is null || value is null)
-                        return new Error(ErrorCode.EmptyData, nameof(variant.VariantValues));
+                    if (value is null)
+                        return new Error(ErrorCode.EmptyData, "invalid option value", nameof(variant.VariantValues));
 
                     optionValuesNames.Add(value.Name);
                     productVariant.AddValue(option.Id, value.Id);

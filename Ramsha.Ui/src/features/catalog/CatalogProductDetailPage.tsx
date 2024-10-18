@@ -16,6 +16,7 @@ import AppQuantitySelector from '../../app/components/ui/AppQuantitySelector'
 import { Favorite, FavoriteBorder } from '@mui/icons-material'
 import LoadingButton from '@mui/lab/LoadingButton'
 import { useBasket, useBasketItemCommands } from '../../app/hooks/basketHooks'
+import { useProductOptions } from '../../app/hooks/productHooks'
 
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
     height: 10,
@@ -58,6 +59,7 @@ const CatalogProductDetailPage = () => {
     const [tempVariantParams, setTempVariantParams] = useState(variantParams || {});
 
     const { addItem, removeItem, isAddPending, isRemovePending } = useBasketItemCommands()
+    const { productOptions } = useProductOptions(productId)
 
 
     useEffect(() => {
@@ -241,7 +243,7 @@ const CatalogProductDetailPage = () => {
                                             <AppQuantitySelector
                                                 availableQuantity={selectedInventory?.availableQuantity!}
                                                 onChange={(newValue) => setSelectedQuantity(newValue)}
-                                                quantity={selectedQuantity}/>
+                                                quantity={selectedQuantity} />
 
                                             <LoadingButton
                                                 loading={isAddPending || isRemovePending}
@@ -434,8 +436,7 @@ const CatalogProductDetailPage = () => {
                             maxWidth="md"
                         >
                             <VariantSelector
-                                selectedVariantValues={tempVariantParams!}
-                                onVariantValueChange={handleVariantValueChange}
+                                options={productOptions?.map(x => x.name) || []}
                                 variants={product.variants}
                             />
 

@@ -27,10 +27,10 @@ public class ApproveSupplyCommandHandler(
 
         foreach (var item in supplyReq.Items)
         {
-          
+
             var inventoryItem = await inventoryItemRepository.GetAsync(x =>
                 x.ProductId == item.ItemSupplied.ProductId &&
-                x.SupplierId == supplyReq.SupplierId &&
+                x.Supplier == supplyReq.Supplier &&
                 x.ProductVariantId == item.ItemSupplied.ProductVariantId);
 
             var price = ProductPrice.Create(item.WholesalePrice, supplyReq.Currency, PriceType.Wholesale);
@@ -39,8 +39,8 @@ public class ApproveSupplyCommandHandler(
             {
                 inventoryItem = InventoryItem.Create(
                     item.ItemSupplied.ProductId,
-                    item.ItemSupplied.ProductVariantId, 
-                    supplyReq.SupplierId,
+                    item.ItemSupplied.ProductVariantId,
+                    supplyReq.Supplier,
                     item.ItemSupplied.Name,
                     item.Quantity,
                     price,

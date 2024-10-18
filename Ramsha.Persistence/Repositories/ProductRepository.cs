@@ -10,6 +10,7 @@ using Ramsha.Application.Extensions;
 
 using Ramsha.Persistence.Helpers;
 using Ramsha.Application.Dtos.Catalog;
+using Ramsha.Application.Dtos.Common;
 
 
 
@@ -68,6 +69,15 @@ public class ProductRepository(ApplicationDbContext context)
 
    public async Task<Option?> GetProductOption(ProductId productId, OptionId optionId)
    => (await _options.Include(x => x.Option).SingleOrDefaultAsync(x => x.ProductId == productId && x.OptionId == optionId))?.Option;
+
+   public async Task<List<ProductOption>> GetProductOptions(ProductId productId)
+   {
+      var options = await _options.Include(x => x.Option)
+      .Where(x => x.ProductId == productId)
+      .OrderBy(x => x.Priority).ToListAsync();
+      return options;
+   }
+
 
 
 

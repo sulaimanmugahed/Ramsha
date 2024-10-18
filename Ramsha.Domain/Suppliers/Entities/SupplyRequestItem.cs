@@ -51,7 +51,6 @@ public class SupplyRequestItem
     public ProductVariant? ProductVariant { get; private set; }
     public ProductVariantId? ProductVariantId { get; private set; }
     public string SKU { get; set; }
-
     public decimal WholesalePrice { get; private set; }
     public int Quantity { get; private set; }
 }

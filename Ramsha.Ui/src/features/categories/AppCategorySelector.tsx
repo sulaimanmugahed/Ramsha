@@ -17,7 +17,7 @@ interface AppCategorySelectorProps {
 const createGroupedOptions = (categories: CategoryDto[]): { title: string; options: CategoryOption[] }[] => {
     const groups: Record<string, { title: string; options: CategoryOption[] }> = {};
 
-    categories.forEach((category) => {
+    categories?.forEach((category) => {
         if (category.children && category.children.length > 0) {
             const childOptions = category.children.map(child => ({
                 id: child.id,
@@ -86,7 +86,7 @@ const AppCategorySelector: React.FC<AppCategorySelectorProps> = ({ categories, o
                 // Find the group title by matching the option's parent
                 const group = options.find(group => group.options.includes(option));
                 return group ? group.title : '';
-            }} 
+            }}
             renderInput={(params) => (
                 <TextField {...params} variant="outlined" label="Select Category" placeholder="Category..." />
             )}

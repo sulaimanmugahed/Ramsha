@@ -22,16 +22,18 @@ import AppMultiDropzone from '../../../app/components/AppMultiDropzone';
 import AppFormError from '../../../app/components/AppFormError';
 import AppTextInput from '../../../app/components/AppTextInput';
 import LoadingButton from '@mui/lab/LoadingButton';
+import { ProductOption } from '../../../app/models/products/product';
 
 type Props = {
     name?: string;
     onSubmit?: (data: any) => void
     onClick?: () => void
     type: 'button' | 'submit'
+    availableOptions: ProductOption[]
 }
 
-const ProductVariantForm = ({ onSubmit, name, type ,onClick}: Props) => {
-    const { control, formState: { errors, isSubmitting, isValid }, handleSubmit
+const ProductVariantForm = ({ onSubmit, name, type, onClick, availableOptions }: Props) => {
+    const { control, formState: { errors, isSubmitting, isValid }, handleSubmit, getValues, watch
     } = useFormContext();
     const { t } = useTranslation();
     const { options } = useOptions();
@@ -124,7 +126,7 @@ const ProductVariantForm = ({ onSubmit, name, type ,onClick}: Props) => {
                                                     <FormControl fullWidth variant="outlined">
                                                         <InputLabel size='small'>{t('Option Name')}</InputLabel>
                                                         <Select {...field} label={t('Option Name')} sx={{ '& .MuiSelect-select': { paddingTop: '10px', paddingBottom: '10px' } }}>
-                                                            {options.map((option) => (
+                                                            {options.filter(x => availableOptions.some(o => o.id == x.id)).map((option) => (
                                                                 <MenuItem key={option.id} value={option.id}>
                                                                     {option.name}
                                                                 </MenuItem>

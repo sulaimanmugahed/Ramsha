@@ -298,11 +298,15 @@ namespace Ramsha.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Sent = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ApprovedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    RejectAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Total = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
                     TotalQuantity = table.Column<int>(type: "int", nullable: false),
                     Currency = table.Column<int>(type: "int", nullable: false),
-                    SupplierId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false)
+                    Supplier = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    SupplierId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -312,8 +316,7 @@ namespace Ramsha.Persistence.Migrations
                         column: x => x.SupplierId,
                         principalSchema: "Core",
                         principalTable: "Suppliers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -487,8 +490,8 @@ namespace Ramsha.Persistence.Migrations
                     FinalPrice = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    SupplierId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ProductVariantId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Supplier = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -510,13 +513,6 @@ namespace Ramsha.Persistence.Migrations
                         principalSchema: "Core",
                         principalTable: "Products",
                         principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_InventoryItems_Suppliers_SupplierId",
-                        column: x => x.SupplierId,
-                        principalSchema: "Core",
-                        principalTable: "Suppliers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -747,12 +743,6 @@ namespace Ramsha.Persistence.Migrations
                 schema: "Core",
                 table: "InventoryItems",
                 columns: new[] { "ProductId", "ProductVariantId" });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_InventoryItems_SupplierId",
-                schema: "Core",
-                table: "InventoryItems",
-                column: "SupplierId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrderItem_OrderId",

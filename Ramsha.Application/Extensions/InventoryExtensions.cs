@@ -28,7 +28,7 @@ public static class InventoryExtensions
       item.Quantity,
       item.Status.ToString(),
       item.ImageUrl,
-      item.Supplier.Username,
+      item.Supplier,
       item.ProductVariant.AsDetailsDto()
   );
 }

@@ -20,23 +20,22 @@ public static class SupplierExtensions
 		};
 	}
 
-	public static SupplyDto AsSupplyDto(this Supply supplyRequest)
-	=> new(supplyRequest.Id.Value, supplyRequest.Items
-	.Select(x => new SupplyItemDto(
-		x.Id.Value,
-		x.ItemSupplied.ProductId.Value,
-		x.ItemSupplied.Name,
-		x.ItemSupplied.Sku,
-		x.Quantity,
-		x.WholesalePrice
-	)).ToList(),
-	supplyRequest.Status.ToString());
+	public static SupplyDto AsSupplyDto(this Supply supply)
+	=> new SupplyDto(
+		supply.Id.Value,
+		supply.Total,
+		supply.Status.ToString(),
+		supply.Currency.ToString(),
+		supply.TotalQuantity,
+		supply.Sent,
+		supply.ApprovedAt);
 
 	public static SupplyRequestDto AsSupplyRequestDto(this SupplyRequest supplyRequest)
 	=> new(supplyRequest.Id.Value, supplyRequest.Items
 	.Select(x => new SupplyRequestItemDto(
 		x.Id.Value,
 		x.ProductId.Value,
+		x.ProductVariantId.Value,
 		x.SKU,
 		x.Quantity,
 		x.WholesalePrice

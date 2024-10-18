@@ -78,6 +78,13 @@ const getProductVariants = async (productId: string) => {
 
     })
 }
+
+const getProductOptions = async (productId: string) => {
+    return await request({
+        url: `${BASE_URL}/${productId}/options`,
+        method: 'GET',
+    })
+}
 const getProductVariant = async (productId: string, variantId: string) => {
     return await request({
         url: `${BASE_URL}/${productId}/variants/${variantId}`,
@@ -142,5 +149,6 @@ export const productService = {
     removeVariant,
     getProductVariant,
     updateVariant,
-    changeProductStatus
+    changeProductStatus,
+    getProductOptions
 }

@@ -4,16 +4,18 @@ using Ramsha.Application.Dtos.Common;
 using Ramsha.Application.Extensions;
 using Ramsha.Application.Wrappers;
 using MediatR;
+using Ramsha.Application.Dtos.Products;
 
 namespace Ramsha.Application.Features.Products.Queries.GetProductOptions;
 
 public class GetProductOptionsQueryHandler(
     IProductRepository productRepository
-) : IRequestHandler<GetProductOptionsQuery, BaseResult<List<OptionDto>?>>
+) : IRequestHandler<GetProductOptionsQuery, BaseResult<List<ProductOptionDto>?>>
 {
-    public async Task<BaseResult<List<OptionDto>?>> Handle(GetProductOptionsQuery request, CancellationToken cancellationToken)
+    public async Task<BaseResult<List<ProductOptionDto>?>> Handle(GetProductOptionsQuery request, CancellationToken cancellationToken)
     {
-        var product = await productRepository.GetProductWithOptions(new Domain.Products.ProductId(request.ProductId));
-        return product?.Options.Select(x => x.AsDto()).ToList();
+        var options = await productRepository.GetProductOptions(new Domain.Products.ProductId(request.ProductId));
+
+        return options.Select(x => x.AsProductOption()).ToList();
     }
 }

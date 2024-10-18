@@ -40,7 +40,7 @@ public sealed class Product : BaseEntity, IAuditable, ISoftDeletable
     public Brand? Brand { get; private set; }
     public SeoSettings SeoSettings { get; private set; }
 
-     public List<Rating> Ratings { get; set; } = [];
+    public List<Rating> Ratings { get; set; } = [];
 
     public decimal AverageRating { get; private set; }
     public int NumberOfRatings { get; private set; }
@@ -51,7 +51,7 @@ public sealed class Product : BaseEntity, IAuditable, ISoftDeletable
         SeoSettings = seoSettings;
     }
 
-      public void AddOrUpdateRating(string username, decimal value, string review = "")
+    public void AddOrUpdateRating(string username, decimal value, string review = "")
     {
         var existingRating = Ratings.FirstOrDefault(r => r.RatingBy.Equals(username, StringComparison.OrdinalIgnoreCase));
 
@@ -161,9 +161,9 @@ public sealed class Product : BaseEntity, IAuditable, ISoftDeletable
     }
 
 
-    public void AddOption(OptionId optionId)
+    public void AddOption(Option option, int priority = 0)
     {
-        var productOption = new ProductOption(this, optionId);
+        var productOption = new ProductOption(this, option, priority);
         Options.Add(productOption);
     }
 

@@ -6,28 +6,33 @@ namespace Ramsha.Domain.Suppliers.Entities;
 
 public class Supply : BaseEntity
 {
-    public Supply(SupplyId id, SupplierId supplierId, Currency currency, SupplyStatus status)
+    public Supply(SupplyId id, string supplier, Currency currency)
     {
         Id = id;
-        SupplierId = supplierId;
+        Supplier = supplier;
         Currency = currency;
-        Status = status;
     }
 
-    public static Supply Create(SupplierId supplierId, Currency currency = Currency.USD, SupplyStatus supplyStatus = SupplyStatus.Pending)
+    public static Supply Create(string supplier, Currency currency = Currency.USD)
     {
-        return new(new SupplyId(Guid.NewGuid()), supplierId, currency, supplyStatus);
+
+        var supply = new Supply(new SupplyId(Guid.NewGuid()), supplier, currency);
+        supply.SetStatus(SupplyStatus.Pending);
+        return supply;
     }
+
+    public DateTime Sent { get; set; }
+    public DateTime? ApprovedAt { get; set; }
+    public DateTime? RejectAt { get; set; }
+
 
     public decimal Total { get; private set; }
     public int TotalQuantity { get; private set; }
     public SupplyId Id { get; private set; }
     public Currency Currency { get; private set; }
-    public SupplierId SupplierId { get; private set; }
-    public Supplier Supplier { get; private set; }
+    public string Supplier { get; private set; }
     public List<SupplyItem> Items { get; private set; }
     public SupplyStatus Status { get; private set; }
-
 
     public void SetTotal(decimal total, int quantity)
     {
@@ -38,6 +43,10 @@ public class Supply : BaseEntity
     public void SetStatus(SupplyStatus status)
     {
         Status = status;
+        var currentData = DateTime.UtcNow;
+        if (Status == SupplyStatus.Rejected) RejectAt = currentData;
+        else if (Status == SupplyStatus.Approved) ApprovedAt = currentData;
+        else Sent = currentData;
     }
     public void AddItem(SupplyItem item)
     {

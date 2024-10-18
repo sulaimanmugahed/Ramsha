@@ -20,8 +20,7 @@ public class SendSupplyRequestCommandHandler(
 {
     public async Task<BaseResult> Handle(SendSupplyRequestCommand request, CancellationToken cancellationToken)
     {
-        var supplier = await supplierRepository.FindByUsername(authenticatedUser.UserName);
-        if (supplier is null)
+        if (authenticatedUser.UserName is null)
             return new Error(ErrorCode.ErrorInIdentity);
 
         var supplyRequest = await supplyRequestRepository.GetWithDetails(
@@ -30,7 +29,7 @@ public class SendSupplyRequestCommandHandler(
         if (supplyRequest is null)
             return new Error(ErrorCode.EmptyData);
 
-        var supply = Supply.Create(supplier.Id, supplyRequest.Currency);
+        var supply = Supply.Create(authenticatedUser.UserName, request.Currency);
         int totalQuantity = 0;
         decimal totalPrice = 0;
 

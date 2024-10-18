@@ -12,8 +12,8 @@ using Ramsha.Persistence.Contexts;
 namespace Ramsha.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241014203911_Initial2")]
-    partial class Initial2
+    [Migration("20241017215904_AddPriority")]
+    partial class AddPriority
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -185,15 +185,14 @@ namespace Ramsha.Persistence.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("SupplierId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Supplier")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("WholesalePrice")
                         .HasColumnType("decimal(18,6)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("SupplierId");
 
                     b.HasIndex("ProductId", "ProductVariantId");
 
@@ -494,6 +493,9 @@ namespace Ramsha.Persistence.Migrations
                     b.Property<Guid>("OptionId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
+
                     b.HasKey("ProductId", "OptionId");
 
                     b.HasIndex("OptionId");
@@ -664,13 +666,26 @@ namespace Ramsha.Persistence.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime?>("ApprovedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("Currency")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("RejectAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Sent")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("SupplierId")
+                    b.Property<string>("Supplier")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("SupplierId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Total")
@@ -791,12 +806,6 @@ namespace Ramsha.Persistence.Migrations
                         .WithMany("Inventories")
                         .HasForeignKey("ProductId");
 
-                    b.HasOne("Ramsha.Domain.Suppliers.Entities.Supplier", "Supplier")
-                        .WithMany()
-                        .HasForeignKey("SupplierId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Ramsha.Domain.Products.Entities.ProductVariant", "ProductVariant")
                         .WithMany("InventoryItems")
                         .HasForeignKey("ProductId", "ProductVariantId")
@@ -883,8 +892,6 @@ namespace Ramsha.Persistence.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("ProductVariant");
-
-                    b.Navigation("Supplier");
                 });
 
             modelBuilder.Entity("Ramsha.Domain.Inventory.Entities.InventoryItemImage", b =>
@@ -1158,13 +1165,9 @@ namespace Ramsha.Persistence.Migrations
 
             modelBuilder.Entity("Ramsha.Domain.Suppliers.Entities.Supply", b =>
                 {
-                    b.HasOne("Ramsha.Domain.Suppliers.Entities.Supplier", "Supplier")
+                    b.HasOne("Ramsha.Domain.Suppliers.Entities.Supplier", null)
                         .WithMany("Supplies")
-                        .HasForeignKey("SupplierId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Supplier");
+                        .HasForeignKey("SupplierId");
                 });
 
             modelBuilder.Entity("Ramsha.Domain.Suppliers.Entities.SupplyItem", b =>

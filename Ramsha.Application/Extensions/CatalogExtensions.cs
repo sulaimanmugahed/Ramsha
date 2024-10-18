@@ -51,8 +51,7 @@ public static class CatalogExtensions
             item.RetailPrice,
             item.FinalPrice,
             Enumerable.Range(1, 10).Select(x => $"https://picsum.photos/200?random={x}")
-            .Select(x => new Dtos.Products.ProductImageDto(x, false)).ToList(),
-            new CatalogSupplierDetailDto(item.Supplier.FirstName, item.Supplier.LastName)
+            .Select(x => new Dtos.Products.ProductImageDto(x, false)).ToList()
         );
     }
 

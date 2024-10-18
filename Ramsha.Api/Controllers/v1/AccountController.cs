@@ -17,20 +17,6 @@ namespace Ramsha.Api.Controllers.v1;
 public class AccountController(IStorageService storageService) : BaseApiController
 {
 
-	
-
-
-	[Authorize]
-	[HttpGet(nameof(Test))]
-	public string Test()
-		=> "hello";
-
-
-	[Authorize]
-	[HttpGet(nameof(TestCookie))]
-	public async Task<BaseResult<string>> TestCookie()
-		=> await Mediator.Send(new TestQuery());
-
 	[HttpPost(nameof(Login))]
 	public async Task<BaseResult<AuthenticatedUserDto?>> Login([FromBody] LoginCommand command)
 	=> await Mediator.Send(command);

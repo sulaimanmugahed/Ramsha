@@ -32,7 +32,7 @@ public class ProductsController : BaseApiController
    => await Mediator.Send(query);
 
     [HttpGet("{productId}/options")]
-    public async Task<BaseResult<List<OptionDto>?>> GetProductOption(Guid productId)
+    public async Task<BaseResult<List<ProductOptionDto>?>> GetProductOption(Guid productId)
     => await Mediator.Send(new GetProductOptionsQuery { ProductId = productId });
 
     [HttpGet("{productId}", Name = nameof(GetProduct))]

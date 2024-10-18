@@ -3,13 +3,13 @@ import { FormProvider, useForm } from "react-hook-form";
 import { variantSchema, VariantScheme } from "../../products/productFormValidations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DevTool } from "@hookform/devtools";
-import { ProductVariantDto } from '../../../app/models/products/product';
+import { ProductOption, ProductVariantDto } from '../../../app/models/products/product';
 import ProductVariantForm from './ProductVariantForm';
 
 
 
 
-const VariantCommand = ({ variant, onSubmit }: { variant?: ProductVariantDto, onSubmit: (data: any) => void }) => {
+const VariantCommand = ({ variant, onSubmit, availableOptions }: { variant?: ProductVariantDto, onSubmit: (data: any) => void, availableOptions: ProductOption[] }) => {
 
 
 
@@ -36,7 +36,7 @@ const VariantCommand = ({ variant, onSubmit }: { variant?: ProductVariantDto, on
 
     return (
         <FormProvider {...form}>
-            <ProductVariantForm type='submit' onSubmit={onSubmit} />
+            <ProductVariantForm availableOptions={availableOptions} type='submit' onSubmit={onSubmit} />
             <DevTool control={control} />
         </FormProvider>
     )

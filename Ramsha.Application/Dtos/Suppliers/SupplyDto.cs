@@ -1,17 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace Ramsha.Application.Dtos.Suppliers;
 
 
-
-
 public record SupplyDto(
-     Guid Id,
-    List<SupplyItemDto> Items,
-    string Status
+    Guid Id,
+    decimal TotalAmount,
+    string Status,
+    string Currency,
+    int TotalQuantity,
+    DateTime Sent,
+    DateTime? ApprovedAt
 );
 
 public record SupplyItemDto(

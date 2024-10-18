@@ -201,12 +201,12 @@ export default function AppAppBar() {
                                 </Button>
                             ))}
                             {
-                                // account?.role.endsWith('Admin') && (
-                                <Button component={NavLink} to={'/admin/dashboard'} sx={navStyles} variant="text" size="small">
-                                    {t('dashboard')}
-                                </Button>
+                                account?.role.endsWith('Admin') && (
+                                    <Button component={NavLink} to={'/admin/dashboard'} sx={navStyles} variant="text" size="small">
+                                        {t('dashboard')}
+                                    </Button>
 
-                            }
+                                )}
                             {
                                 account?.role === 'Supplier' && (
                                     <Button component={NavLink} to={'/supplier/dashboard'} sx={navStyles} variant="text" size="small">

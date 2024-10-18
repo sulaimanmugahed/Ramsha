@@ -22,7 +22,7 @@ public class AddProductOptionCommandHandler(
         if (option is null)
             return new Error(ErrorCode.EmptyData, nameof(request.OptionId));
 
-        product.AddOption(option.Id);
+        product.AddOption(option, request.Priority);
         await unitOfWork.SaveChangesAsync();
 
         return BaseResult.Ok();

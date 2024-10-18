@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { VariantScheme } from '../productFormValidations';
 import { UploadResponse } from '../../../app/models/common/commonModels';
 import { useUploadFiles } from '../../../app/hooks/storageHooks';
-import { useAddVariant } from '../../../app/hooks/productHooks';
+import { useAddVariant, useProductOptions } from '../../../app/hooks/productHooks';
 
 
 const CreateVariantPage = () => {
@@ -14,6 +14,7 @@ const CreateVariantPage = () => {
     if (!productId) return;
 
     const { addVariant } = useAddVariant()
+    const { productOptions } = useProductOptions(productId)
 
     const { upload } = useUploadFiles()
 
@@ -34,7 +35,7 @@ const CreateVariantPage = () => {
         await addVariant({ data: { ...others, variantImages: uploadedImages }, productId })
         handleClose()
     }
-    
+
 
     return (
         <Dialog
@@ -66,7 +67,10 @@ const CreateVariantPage = () => {
             </DialogTitle>
             <DialogContent sx={{ paddingY: 4, }}>
                 <Box sx={{ mt: 4, p: 2 }}>
-                    <VariantCommand onSubmit={onSubmit} />
+                    {
+                        productOptions &&
+                        <VariantCommand availableOptions={productOptions} onSubmit={onSubmit} />
+                    }
                 </Box>
             </DialogContent>
         </Dialog>

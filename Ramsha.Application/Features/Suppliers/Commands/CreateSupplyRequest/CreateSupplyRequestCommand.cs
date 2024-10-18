@@ -7,5 +7,4 @@ namespace Ramsha.Application.Features.Suppliers.Commands.CreateSupplyRequest;
 
 public class CreateSupplyRequestCommand : IRequest<BaseResult<string?>>
 {
-    public Currency Currency { get; set; }
 }

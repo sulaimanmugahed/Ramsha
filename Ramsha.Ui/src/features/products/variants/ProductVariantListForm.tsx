@@ -8,7 +8,7 @@ import { ProductVariantDto } from '../../../app/models/products/product';
 
 
 const ProductVariantListForm: React.FC = () => {
-    const { control, formState: { errors }, setValue, getValues } = useFormContext();
+    const { control, formState: { errors }, setValue, getValues, watch } = useFormContext();
     const { fields: variants, append, remove, update } = useFieldArray({
         control,
         name: 'variants',
@@ -26,6 +26,8 @@ const ProductVariantListForm: React.FC = () => {
 
     const { options } = useOptions();
 
+    const productOptions = watch('options')
+
     const handleVariantSubmit = () => {
         const variantData = getValues(`variants[${dialogState.currentVariantIndex}]`)
         if (dialogState.currentVariantIndex === null) {
@@ -34,7 +36,7 @@ const ProductVariantListForm: React.FC = () => {
             const { currentVariantIndex } = dialogState;
             update(currentVariantIndex, variantData)
         }
-        handleDialogToggle(false); 
+        handleDialogToggle(false);
     };
 
 
@@ -88,6 +90,7 @@ const ProductVariantListForm: React.FC = () => {
                 open={dialogState.open}
                 onClose={() => handleDialogToggle(false)}
                 onClick={handleVariantSubmit}
+                availableOptions={productOptions}
                 name={`variants[${dialogState.currentVariantIndex}]`}
             />
         </>
