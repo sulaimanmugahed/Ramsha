@@ -5,8 +5,6 @@ import { useCatalogCategories, useCatalogProducts } from "../../app/hooks/catalo
 import { usePagination } from "../../app/hooks/paginationHooks"
 import CategoriesSlider from "../categories/CategoriesSlider"
 import ProductList from "./ProductList"
-import AppDivider from "../../app/components/AppDivider"
-import CatalogProductListPage from "../products/ProductsPage"
 import { Outlet } from "react-router-dom"
 
 

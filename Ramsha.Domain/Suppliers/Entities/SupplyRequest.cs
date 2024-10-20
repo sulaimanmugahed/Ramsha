@@ -24,6 +24,13 @@ public class SupplyRequest : BaseEntity
         return new(new SupplyRequestId(Guid.NewGuid()), supplier);
     }
 
+    public void RemoveItem(SupplyRequestItemId itemId)
+    {
+        var item = Items.FirstOrDefault(x => x.Id == itemId);
+        if (item is not null)
+            Items.Remove(item);
+    }
+
     public void AddItem(SupplyRequestItem item)
     {
         if (item.Quantity <= 0)

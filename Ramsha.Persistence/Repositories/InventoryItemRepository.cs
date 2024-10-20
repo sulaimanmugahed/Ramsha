@@ -66,7 +66,6 @@ IInventoryItemRepository
     {
         var query = _items
         .Include(x => x.InventoryItemImages)
-        .Include(x => x.Supplier)
         .Where(x => x.ProductId == productId && x.ProductVariantId == productVariantId)
         .AsQueryable();
 

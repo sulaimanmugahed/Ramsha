@@ -4,11 +4,12 @@ import { toast } from "sonner"
 import { BASKET_QUERY_KEY } from "../constants/queriesKey"
 import { Basket, BasketItem } from "../models/basket"
 import { getCookie } from "../utils/util"
+import AppError from "../utils/appError"
 
 export const useBasketItemCommands = () => {
 
     const queryClient = useQueryClient()
-    const { mutateAsync: addItem, isPending: isAddPending } = useMutation<BasketItem, Error, { inventoryItemId: string, quantity: number }>({
+    const { mutateAsync: addItem, isPending: isAddPending } = useMutation<BasketItem, AppError, { inventoryItemId: string, quantity: number }>({
         mutationFn: async (data) => await basketService.addBasketItem(data),
         onSuccess: (data, variables) => {
             queryClient.setQueryData([BASKET_QUERY_KEY], (oldBasket: Basket) => {
@@ -81,7 +82,7 @@ export const useBasketItemCommands = () => {
 
 
 export const useBasket = () => {
-    const { data, isLoading, isError } = useQuery<Basket, Error>({
+    const { data, isLoading, isError } = useQuery<Basket>({
         queryKey: [BASKET_QUERY_KEY],
         queryFn: async () => await basketService.getBasket(),
         enabled: !!getCookie('buyer')

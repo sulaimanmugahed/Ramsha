@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 using MediatR;
 using Ramsha.Application.Contracts.Persistence;
 using Ramsha.Application.Dtos.Catalog;
-using Ramsha.Application.Extensions;
 using Ramsha.Application.Wrappers;
 
 namespace Ramsha.Application.Features.Catalog.Queries.GetCatalogCategories;

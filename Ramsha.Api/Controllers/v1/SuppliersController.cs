@@ -10,6 +10,9 @@ using Ramsha.Domain.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ramsha.Application.Features.Suppliers.Queries.GetCurrentSupplierSupplyRequest;
+using Ramsha.Application.Features.Suppliers.Commands.UpdateSupplyRequestItem;
+using Ramsha.Application.Features.Suppliers.Commands.RemoveSupplyRequestItem;
+using Ramsha.Application.Features.Suppliers.Queries.GetSupplyRequestItem;
 
 namespace Ramsha.Api.Controllers.v1;
 
@@ -35,15 +38,30 @@ public class SuppliersController : BaseApiController
 	public async Task<BaseResult<SupplyRequestDto>> AddSupplyRequestItem(AddSupplyRequestItemCommand command)
 	=> await Mediator.Send(command);
 
+	[HttpPut("supply-request/items/{id}")]
+	public async Task<BaseResult> UpdateSupplyRequestItem(Guid id, UpdateSupplyRequestItemCommand command)
+	{
+		command.SupplyRequestItemId = id;
+		return await Mediator.Send(command);
+	}
+
+
 	[HttpPost("supplies")]
 	public async Task<BaseResult<List<SupplyDto>>> GetCurrentSupplierSupplies([FromBody] GetCurrentSupplierSuppliesQuery query)
 	=> await Mediator.Send(query);
 
+	[HttpDelete("supply-request/items/{id}")]
+	public async Task<BaseResult> AddSupplyRequestItem(Guid id)
+	=> await Mediator.Send(new RemoveSupplyRequestItemCommand { SupplyRequestItemId = id });
 
-	[HttpPost(nameof(SendSupplyRequest))]
+	[HttpGet("supply-request/items/{id}")]
+	public async Task<BaseResult> GetSupplyRequestItem(Guid id)
+	=> await Mediator.Send(new GetSupplyRequestItemQuery { SupplyRequestItemId = id });
+
+
+	[HttpPost("supply-request/send")]
 	public async Task<BaseResult> SendSupplyRequest(SendSupplyRequestCommand command)
 	=> await Mediator.Send(command);
-
 
 
 }

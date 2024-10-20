@@ -4,6 +4,8 @@ using Ramsha.Application.Features.Products.Commands.CreateCategory;
 using Ramsha.Application.Features.Products.Queries.GetCategories;
 using Ramsha.Application.Wrappers;
 using Microsoft.AspNetCore.Mvc;
+using Ramsha.Application.Features.Products.Commands.RemoveCategory;
+using Ramsha.Application.Features.Products.Commands.UpdateCategory;
 
 namespace Ramsha.Api.Controllers.v1;
 
@@ -17,4 +19,16 @@ public class CategoriesController : BaseApiController
     [HttpGet]
     public async Task<BaseResult<List<CategoryDto>>> GetCategories()
         => await Mediator.Send(new GetCategoriesQuery());
+
+    [HttpDelete("{id}")]
+    public async Task<BaseResult> Remove(Guid id)
+   => await Mediator.Send(new RemoveCategoryCommand { Id = id });
+
+    [HttpPut("{id}")]
+    public async Task<BaseResult> Update(Guid id, UpdateCategoryCommand command)
+    {
+        command.Id = id;
+        return await Mediator.Send(command);
+    }
+
 }

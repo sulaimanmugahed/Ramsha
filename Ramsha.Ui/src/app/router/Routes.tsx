@@ -1,3 +1,4 @@
+
 //import AboutPage from "../../features/about/AboutPage";
 import LoginPage from "../../features/account/login/LoginPage";
 import CatalogPage from "../../features/catalog/CatalogPage";
@@ -23,13 +24,11 @@ import EditVariantPage from "../../features/products/variants/EditVariantPage";
 import ProductDetailsPage from "../../features/products/ProductDetailsPage";
 import ProductEditModal from "../../features/products/ProductEditModal";
 import CatalogProductDetailPage from "../../features/catalog/CatalogProductDetailPage";
-import ProductsPage from "../../features/products/ProductsPage";
 import AboutPage from "../../features/about/AboutPage";
 import SuppliesPage from "../../features/suppliers/supplies/SuppliesPage";
 import SupplyRequestPage from "../../features/suppliers/supplies/SupplyRequestPage";
-import SupplierProductList from "../../features/suppliers/supplies/SupplierProductList";
-import AddSupplyRequestItem from "../../features/suppliers/supplies/AddSupplyRequestItemForm";
 import AddSupplyRequestItemPage from "../../features/suppliers/supplies/AddSupplyRequestItemPage";
+import EditSupplyItemPage from "../../features/suppliers/supplies/EditSupplyItemPage";
 //import AdminProductPage from "../../features/admin/products/AdminProductPage";
 
 export const router = createBrowserRouter([
@@ -116,7 +115,6 @@ export const router = createBrowserRouter([
                                                 element: <ProductEditModal />,
                                                 path: 'edit/:section'
                                             },
-
                                         ]
                                     },
                                     {
@@ -166,6 +164,10 @@ export const router = createBrowserRouter([
                                     {
                                         element: <AddSupplyRequestItemPage />,
                                         path: 'add-item/:productId',
+                                    },
+                                    {
+                                        element: <EditSupplyItemPage />,
+                                        path: 'edit-item/:itemId',
                                     }
                                 ]
                             }

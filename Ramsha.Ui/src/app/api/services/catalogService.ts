@@ -1,11 +1,13 @@
-import { PagedParams } from "../../models/common/commonModels";
+import { CatalogCategory } from "../../models/catalog/catalogCategory";
+import { CatalogProductDetailType } from "../../models/catalog/catalogProduct";
+import { PagedParams, PaginationResponse } from "../../models/common/commonModels";
 import request from "../Request";
 
 const BASE_URL = "catalog"
 
 
 const getProducts = async (params: PagedParams) =>
-    await request({
+    await request<PaginationResponse<any[]>>({
         url: `${BASE_URL}/products`,
         method: 'POST',
         data: params
@@ -13,14 +15,14 @@ const getProducts = async (params: PagedParams) =>
 
 
 const getProductDetail = async (productId: string) =>
-    await request({
+    await request<CatalogProductDetailType>({
         url: `${BASE_URL}/products/${productId}`,
         method: 'GET'
     })
 
 
 const getInventoryItems = async (productId: string, productVariantId: string, params: PagedParams) =>
-    await request({
+    await request<any>({
         url: `${BASE_URL}/${productId}/${productVariantId}/inventoryItems`,
         method: 'POST',
         data: params
@@ -28,7 +30,7 @@ const getInventoryItems = async (productId: string, productVariantId: string, pa
 
 
 const getCategories = async () =>
-    await request({
+    await request<CatalogCategory[]>({
         url: `${BASE_URL}/categories`,
         method: 'GET',
     })

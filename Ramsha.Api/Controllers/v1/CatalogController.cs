@@ -16,7 +16,6 @@ namespace Ramsha.Api.Controllers.v1;
 
 public class CatalogController : BaseApiController
 {
-    [Authorize]
     [HttpPost("products")]
     public async Task<BaseResult<List<CatalogProductDto>>> GetProductsPaged([FromBody] GetCatalogProductsPagedQuery query)
    => await Mediator.Send(query);

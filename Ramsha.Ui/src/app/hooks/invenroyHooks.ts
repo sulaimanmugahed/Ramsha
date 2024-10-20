@@ -14,7 +14,7 @@ const initialState: PaginationResponse<InventoryItemDto[]> = {
 
 
 export const useInventoryItems = (params: PagedParams) => {
-    const { data, isLoading, isError } = useQuery<PaginationResponse<InventoryItemDto[]>, Error>({
+    const { data, isLoading, isError } = useQuery<PaginationResponse<InventoryItemDto[]>>({
         queryKey: [INVENTORY_ITEMS_QUERY_KEY, params],
         queryFn: async () => {
             console.log('Fetching data with params:', params);

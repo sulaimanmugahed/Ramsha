@@ -24,7 +24,7 @@ public class SendSupplyRequestCommandHandler(
             return new Error(ErrorCode.ErrorInIdentity);
 
         var supplyRequest = await supplyRequestRepository.GetWithDetails(
-           x => x.Id == new Domain.Suppliers.SupplyRequestId(request.SupplyRequestId));
+           x => x.Supplier == authenticatedUser.UserName);
 
         if (supplyRequest is null)
             return new Error(ErrorCode.EmptyData);

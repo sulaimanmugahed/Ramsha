@@ -1,4 +1,4 @@
-import { useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useCallback } from 'react';
 import {
 
@@ -71,5 +71,24 @@ export function usePagedParams(): [PagedParams, (partialParams: Partial<PagedPar
 
     return [getParams(), setParams];
 }
+
+
+
+export const useGoToParent = (levels = 1) => {
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const goToParent = () => {
+        const pathParts = location.pathname.split('/').filter(Boolean);
+        
+        const newPath = `/${pathParts.slice(0, pathParts.length - levels).join('/')}`;
+        
+        navigate(newPath);
+    };
+
+    return goToParent;
+};
+
+
 
 

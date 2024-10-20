@@ -11,6 +11,7 @@ const AppFormError = ({ name, styles, errors }: Props) => {
 
     return (
         <ErrorMessage
+            as={'span'}
             errors={errors}
             name={name}
             render={(message) => (

@@ -34,6 +34,11 @@ public class SupplyRequestItem
         SKU = sku;
     }
 
+    public void SetQuantity(int quantity)
+    {
+        Quantity = quantity;
+    }
+
     public void IncrementQuantity(int count = 0)
     {
         if (count == 0)

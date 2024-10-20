@@ -9,7 +9,7 @@ import { INVENTORY_ITEMS_QUERY_KEY } from "../constants/queriesKey"
 
 
 export const useCatalogProducts = (params: PagedParams) => {
-    const { data, isLoading, isError } = useQuery<PaginationResponse<any[]>, Error>({
+    const { data, isLoading, isError } = useQuery<PaginationResponse<any[]>>({
         queryKey: ["catalogProducts", params],
         queryFn: async () => await catalogService.getProducts(params),
     })
@@ -85,7 +85,7 @@ export const useCatalogProductDetail = (productId: string) => {
 
 
 export const useCatalogCategories = () => {
-    const { data, isLoading, isError } = useQuery<CatalogCategory[], Error>({
+    const { data, isLoading, isError } = useQuery<CatalogCategory[]>({
         queryKey: ["catalogCategories"],
         queryFn: async () => await catalogService.getCategories(),
     })

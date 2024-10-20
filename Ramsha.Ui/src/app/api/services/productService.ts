@@ -1,5 +1,6 @@
-import { PagedParams } from "../../models/common/commonModels";
-import { createFormData } from "../../utils/util";
+import { PagedParams, PaginationResponse } from "../../models/common/commonModels";
+import { BrandDto, ProductDetail, ProductDto, ProductOption, ProductVariantDto } from "../../models/products/product";
+
 import request from "../Request";
 
 const BASE_URL = "products"
@@ -11,14 +12,14 @@ const getProduct = (id: string) =>
     })
 
 const getProductsPaged = (params: PagedParams) =>
-    request({
+    request<PaginationResponse<ProductDto[]>>({
         url: `${BASE_URL}/paged`,
         method: 'POST',
         data: params
     })
 
 const getProductDetail = (productId: string) =>
-    request({
+    request<ProductDetail>({
         url: `${BASE_URL}/${productId}/detail`,
         method: 'GET',
     })
@@ -56,7 +57,7 @@ const addVariant = async (data: any, productId: string) => {
 }
 
 const getTags = async () => {
-    return await request({
+    return await request<string[]>({
         url: `${BASE_URL}/tags`,
         method: 'GET',
 
@@ -64,7 +65,7 @@ const getTags = async () => {
 }
 
 const getBrands = async () => {
-    return await request({
+    return await request<BrandDto[]>({
         url: `${BASE_URL}/brands`,
         method: 'GET',
 
@@ -72,7 +73,7 @@ const getBrands = async () => {
 }
 
 const getProductVariants = async (productId: string) => {
-    return await request({
+    return await request<ProductVariantDto[]>({
         url: `${BASE_URL}/${productId}/variants`,
         method: 'GET',
 
@@ -80,13 +81,13 @@ const getProductVariants = async (productId: string) => {
 }
 
 const getProductOptions = async (productId: string) => {
-    return await request({
+    return await request<ProductOption[]>({
         url: `${BASE_URL}/${productId}/options`,
         method: 'GET',
     })
 }
 const getProductVariant = async (productId: string, variantId: string) => {
-    return await request({
+    return await request<ProductVariantDto>({
         url: `${BASE_URL}/${productId}/variants/${variantId}`,
         method: 'GET',
     })

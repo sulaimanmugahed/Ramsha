@@ -7,7 +7,7 @@ const initialOptions: Option[] = []
 
 export const useOptions = () => {
 
-    const { data, isError, isLoading } = useQuery<Option[], Error>({
+    const { data, isError, isLoading } = useQuery<Option[]>({
         queryKey: [OPTIONS_QUERY_KEY],
         queryFn: async () => await optionService.getAllOptions(),
         initialData: initialOptions

@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 
 
 const colorMap: { [key: string]: string } = {
+    Yellow: "yellow",
     Red: "#FF5733",
     Blue: "#3357FF",
     Grey: "#7D7D7D",
@@ -77,9 +78,9 @@ const ColorSelect: React.FC<ColorSelectProps> = ({ selectedColor, onColorChange,
                     );
                 })}
             </Box>
-            <Box sx={{ mt: 2, textAlign: 'center' }}>
+            {/* <Box sx={{ mt: 2, textAlign: 'center' }}>
                 <span>{t('color.selectedColor')} {t(`color.${selectedColor}`) || 'None'}</span>
-            </Box>
+            </Box> */}
         </Box>
     );
 };

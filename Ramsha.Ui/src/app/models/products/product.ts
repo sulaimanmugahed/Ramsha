@@ -42,6 +42,19 @@ export type ProductOption = {
     priority: number
 }
 
+
+export type SelectableVariant = {
+    id: string;
+    variantValues: SelectableVariantValue[];
+}
+
+export type SelectableVariantValue = {
+    optionName: string;
+    valueName: string;
+}
+
+
+
 export type VariantValuesDto = {
     optionId: string;
     optionValueId: string;

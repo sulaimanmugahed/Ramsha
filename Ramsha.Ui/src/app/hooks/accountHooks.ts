@@ -29,7 +29,7 @@ export const useRegister = () => {
     const navigate = useNavigate()
     const { t } = useTranslation()
 
-    const { mutateAsync } = useMutation<Account, Error, any>({
+    const { mutateAsync } = useMutation({
 
         mutationFn: async (data: any) => await accountService.register(data),
         onError: () => toast.error("could not register"),

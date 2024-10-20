@@ -5,17 +5,19 @@ import ColorSelect from './ColorSelector';
 import MaterialSelect from './MaterialSelector';
 import SizeSelect from './SizeSelector';
 import AppFormError from '../../app/components/AppFormError';
+import { SelectableVariant } from '../../app/models/products/product';
 
 type VariantValue = { optionName: string; valueName: string };
 type Variant = { variantValues: VariantValue[] };
 
 type Props = {
-    variants: Variant[];
+    variants: SelectableVariant[];
     options: string[]
+    setParam?: boolean
 };
 
-const VariantSelector = ({ variants, options }: Props) => {
-    const { setValue, formState: { errors } } = useFormContext();
+const VariantSelector = ({ variants, options, setParam }: Props) => {
+    const { setValue, formState: { errors }, handleSubmit } = useFormContext();
 
     const selectedVariantValues = useWatch({ name: "variantValues" });
 
@@ -57,9 +59,9 @@ const VariantSelector = ({ variants, options }: Props) => {
     return (
 
         <>
-            {options.map(optionName => (
-                <Box key={optionName} sx={{ mb: 2 }}>
-                    <Typography variant="subtitle2" mb={1}>Select {optionName}:</Typography>
+            {options.map((optionName, index) => (
+                <Box key={optionName} sx={{ mb: index < options.length - 1 ? 2 : 0 }}>
+                    <Typography variant="subtitle2" mb={1}>Select {optionName}</Typography>
                     {optionName === 'Color' && (
                         <>
                             <ColorSelect
@@ -86,7 +88,10 @@ const VariantSelector = ({ variants, options }: Props) => {
                     )}
                     <AppFormError errors={errors} name={`variantValues.${optionName}`} />
                 </Box>
+
             ))}
+            <AppFormError errors={errors} name='variantValues' />
+
         </>
     );
 };

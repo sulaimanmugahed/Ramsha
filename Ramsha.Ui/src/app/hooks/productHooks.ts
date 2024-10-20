@@ -5,6 +5,7 @@ import { toast } from "sonner"
 import { BRANDS_QUERY_KEY, PRODUCT_TAGS_QUERY_KEY, PRODUCTS_QUERY_KEY, PRODUCT_VARIANTS_QUERY_KEY, PRODUCT_OPTIONS_QUERY_KEY } from "../constants/queriesKey"
 import { PagedParams, PaginationResponse } from "../models/common/commonModels"
 import { Option } from "../models/options/option"
+import AppError from "../utils/appError"
 
 
 
@@ -13,7 +14,7 @@ const initialProducts: PaginationResponse<ProductDto[]> = {
 }
 
 export const useProducts = (params: PagedParams) => {
-    const { data, isLoading, isError } = useQuery<PaginationResponse<ProductDto[]>, Error>({
+    const { data, isLoading, isError } = useQuery<PaginationResponse<ProductDto[]>>({
         queryKey: [PRODUCTS_QUERY_KEY, params],
         queryFn: () => productService.getProductsPaged(params),
         initialData: initialProducts
@@ -29,7 +30,7 @@ export const useProducts = (params: PagedParams) => {
 
 
 export const useProductDetails = (productId: string) => {
-    const { data, isLoading, isError } = useQuery<ProductDetail, Error>({
+    const { data, isLoading, isError } = useQuery<ProductDetail>({
         queryKey: [PRODUCTS_QUERY_KEY, productId],
         queryFn: () => productService.getProductDetail(productId),
         staleTime: 1000 * 60 * 5
@@ -45,7 +46,7 @@ export const useProductDetails = (productId: string) => {
 const initialTags: string[] = []
 
 export const useProductTags = () => {
-    const { data, isLoading, isError } = useQuery<string[], Error>({
+    const { data, isLoading, isError } = useQuery<string[]>({
         queryKey: [PRODUCT_TAGS_QUERY_KEY],
         queryFn: async () => await productService.getTags(),
         initialData: initialTags
@@ -63,7 +64,7 @@ const initialBrands: BrandDto[] = []
 
 
 export const useProductBrands = () => {
-    const { data, isLoading, isError } = useQuery<BrandDto[], Error>({
+    const { data, isLoading, isError } = useQuery<BrandDto[]>({
         queryKey: [BRANDS_QUERY_KEY],
         queryFn: async () => await productService.getBrands(),
         initialData: initialBrands,
@@ -80,7 +81,7 @@ export const useProductBrands = () => {
 
 
 export const useProductVariants = (productId: string) => {
-    const { data, isLoading, isError, isSuccess } = useQuery<ProductVariantDto[], Error>({
+    const { data, isLoading, isError, isSuccess } = useQuery<ProductVariantDto[]>({
         queryKey: [PRODUCT_VARIANTS_QUERY_KEY, productId],
         queryFn: async () => await productService.getProductVariants(productId),
     })
@@ -94,13 +95,14 @@ export const useProductVariants = (productId: string) => {
 }
 
 export const useProductOptions = (productId: string) => {
-    const { data, isLoading, isError, isSuccess } = useQuery<ProductOption[], Error>({
+    const { data, isLoading, isError, isSuccess } = useQuery<ProductOption[]>({
         queryKey: [PRODUCT_OPTIONS_QUERY_KEY, productId],
         queryFn: async () => await productService.getProductOptions(productId),
     })
 
     return {
         productOptions: data,
+        productOptionsNames: data?.map(x => x.name),
         isOptionsLoading: isLoading,
         isOptionsError: isError,
         isOptionsSuccess: isSuccess
@@ -108,7 +110,7 @@ export const useProductOptions = (productId: string) => {
 }
 
 export const useProductVariant = (productId: string, variantId: string) => {
-    const { data, isLoading, isError } = useQuery<ProductVariantDto, Error>({
+    const { data, isLoading, isError } = useQuery<ProductVariantDto>({
         queryKey: [PRODUCT_VARIANTS_QUERY_KEY, productId, variantId],
         queryFn: async () => await productService.getProductVariant(productId, variantId),
     })

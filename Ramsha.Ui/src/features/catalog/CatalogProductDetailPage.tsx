@@ -1,4 +1,4 @@
-import { Autocomplete, Box, Button, Card, CardMedia, Chip, Divider, Grid, LinearProgress, linearProgressClasses, MenuItem, Select, SelectChangeEvent, styled, TextField, Typography } from '@mui/material'
+import { Autocomplete, Box, Button, Card, CardMedia, Chip, Divider, Grid, LinearProgress, linearProgressClasses, styled, TextField, Typography } from '@mui/material'
 import AppDialog from '../../app/components/AppDialog'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useCatalogProductDetail } from '../../app/hooks/catalogHooks'
@@ -7,7 +7,6 @@ import { useEffect, useMemo, useState } from 'react'
 import { CatalogInventoryItem } from '../../app/models/catalog/catalogProduct'
 import { getDiscountPercentage } from '../../app/utils/mathUtils'
 import AppBagIcon from '../../app/components/icons/AppBagIcon'
-import VariantSelector from './VariantSelector'
 import AppRating from '../../app/components/AppRating'
 import { useInfiniteInventoryItems } from '../../app/hooks/catalogHooks'
 import { usePagedParams } from '../../app/hooks/routeHooks'
@@ -16,6 +15,7 @@ import AppQuantitySelector from '../../app/components/ui/AppQuantitySelector'
 import { Favorite, FavoriteBorder } from '@mui/icons-material'
 import LoadingButton from '@mui/lab/LoadingButton'
 import { useBasket, useBasketItemCommands } from '../../app/hooks/basketHooks'
+import VariantValuesSelector from '../products/variants/VariantValuesSelector'
 import { useProductOptions } from '../../app/hooks/productHooks'
 
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
@@ -50,65 +50,21 @@ const CatalogProductDetailPage = () => {
     const { productId } = useParams()
     if (!productId) return null;
 
-    const { product, isProductSuccess } = useCatalogProductDetail(productId)
+    const { product } = useCatalogProductDetail(productId)
+
+    const { productOptionsNames } = useProductOptions(productId)
 
     const [selectedInventory, setSelectedInventory] = useState<CatalogInventoryItem | null>(null);
     const [params, setParams] = usePagedParams()
     const { sku, variantParams, variantId } = params
 
-    const [tempVariantParams, setTempVariantParams] = useState(variantParams || {});
-
     const { addItem, removeItem, isAddPending, isRemovePending } = useBasketItemCommands()
-    const { productOptions } = useProductOptions(productId)
-
-
-    useEffect(() => {
-        if ((product && product.variants.length > 0) && isProductSuccess) {
-            if (!variantId) {
-                const initialVariant = product.variants[0]
-                const initialValues = initialVariant.variantValues.reduce((acc, value) => {
-                    return { ...acc, [value.optionName]: value.valueName };
-                }, {});
-                setTempVariantParams(initialValues)
-                setParams({
-                    variantParams: initialValues,
-                    variantId: initialVariant.id
-                })
-            }
-        }
-    }, [product, isProductSuccess]);
-
-
-    const handleVariantValueChange = (optionName: string, value: string) => {
-        const newSelectedValues = {
-            ...tempVariantParams,
-            [optionName]: value,
-        };
-
-        setTempVariantParams(newSelectedValues);
-    };
-
-    const handleApplyVariant = () => {
-        const matchedVariant = product?.variants.find(variant =>
-            variant.variantValues.every(v => tempVariantParams[v.optionName] === v.valueName)
-        );
-
-        if (matchedVariant) {
-            setParams({
-                variantId: matchedVariant.id,
-                variantParams: tempVariantParams,
-            });
-            setSelectedInventory(null);
-        }
-
-        setOpenVariantDialog(false);
-    };
 
 
     const { items, fetchingItemsStatus } = useInfiniteInventoryItems(
-        product?.id!, variantId!, {
+        productId, variantId!, {
         paginationParams: { pageSize: 3, pageNumber: 1 }
-    }, !!variantId && !!product?.id)
+    }, !!variantId)
 
 
     useEffect(() => {
@@ -177,7 +133,7 @@ const CatalogProductDetailPage = () => {
 
 
     return (
-        product && selectedVariant && selectedInventory &&
+        product &&
         <AppDialog onClose={handleClose} open dynamicBreadcrumb>
             <Grid container>
                 <Grid item xs={12} md={12}>
@@ -292,7 +248,6 @@ const CatalogProductDetailPage = () => {
                                             Select Variant
                                         </Button>
                                     </Box>
-
                                     {
                                         selectedVariant?.variantValues.map(x => (
                                             <Typography color={'text.secondary'} variant="body2">
@@ -423,24 +378,16 @@ const CatalogProductDetailPage = () => {
                             </Grid>
 
                         </Grid>
-                        <AppDialog
-                            actions={
-                                <>
-                                    <Button onClick={() => setOpenVariantDialog(false)} color="secondary">Cancel</Button>
-                                    <Button onClick={handleApplyVariant} color="primary">Apply</Button>
-                                </>
-
-                            }
-                            title='Select Product Variant'
-                            open={openVariantDialog} onClose={() => setOpenVariantDialog(false)}
-                            maxWidth="md"
-                        >
-                            <VariantSelector
-                                options={productOptions?.map(x => x.name) || []}
-                                variants={product.variants}
-                            />
-
-                        </AppDialog>
+                        {
+                            productOptionsNames && (
+                                <VariantValuesSelector
+                                    availableOptionsNames={productOptionsNames}
+                                    onClose={() => setOpenVariantDialog(false)}
+                                    open={openVariantDialog}
+                                    variants={product.variants}
+                                />
+                            )
+                        }
                     </Card>
                 </Grid>
 

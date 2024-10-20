@@ -30,14 +30,18 @@ public static class SupplierExtensions
 		supply.Sent,
 		supply.ApprovedAt);
 
-	public static SupplyRequestDto AsSupplyRequestDto(this SupplyRequest supplyRequest)
-	=> new(supplyRequest.Id.Value, supplyRequest.Items
-	.Select(x => new SupplyRequestItemDto(
+
+	public static SupplyRequestItemDto AsRequestItemDto(this SupplyRequestItem x)
+	=> new SupplyRequestItemDto(
 		x.Id.Value,
 		x.ProductId.Value,
 		x.ProductVariantId.Value,
 		x.SKU,
 		x.Quantity,
 		x.WholesalePrice
-	)).ToList());
+	);
+
+	public static SupplyRequestDto AsSupplyRequestDto(this SupplyRequest supplyRequest)
+	=> new(supplyRequest.Id.Value, supplyRequest.Items
+	.Select(x => x.AsRequestItemDto()).ToList());
 }

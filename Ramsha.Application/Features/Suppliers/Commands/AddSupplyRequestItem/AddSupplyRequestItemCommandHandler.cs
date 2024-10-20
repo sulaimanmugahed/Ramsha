@@ -43,16 +43,17 @@ public class AddSupplyRequestItemCommandHandler(
             if (variant is null)
                 return new Error(ErrorCode.EmptyData);
         }
-        var existItem = supplyRequest.Items.FirstOrDefault(x => x.ProductVariantId == productVariantId);
+        var existItem = supplyRequest.Items
+        .FirstOrDefault(x => x.ProductVariantId == productVariantId && x.ProductId.Value == request.ProductId);
         if (existItem is not null)
         {
-            existItem.IncrementQuantity(request.Quantity);
-            existItem.SetWholesalePrice(request.WholesalePrice);
+            return new Error(ErrorCode.ThisDataAlreadyExist, "The Item is already exist", "variantValues");
         }
         else
         {
             var supplyRequestItem = SupplyRequestItem.Create(
                 product.Id,
+
                 variant?.Id,
                 request.WholesalePrice,
                 request.Quantity);

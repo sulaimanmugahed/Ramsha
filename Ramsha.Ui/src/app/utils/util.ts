@@ -1,5 +1,15 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { PagedParams, PaginationParams, CategoryFilter, FilterParams, SortingParams, ColumnSort, ColumnFilter } from "../models/common/commonModels";
+import { PagedParams, PaginationParams, CategoryFilter, FilterParams, SortingParams, ColumnSort, ColumnFilter, BaseError } from "../models/common/commonModels";
+
+
+export const extractErrorMessages = (errors: BaseError[]): string => {
+    if (errors && Array.isArray(errors)) {
+        return errors
+            .map((error) => error.description)
+            .join('\n');
+    }
+    return 'An unexpected error occurred';
+};
 
 
 export function getCookie(key: string) {
@@ -13,9 +23,13 @@ export const sleep = (time: number) => new Promise(resolve => setTimeout(resolve
 export function serializeParams(params: PagedParams): string {
     const { paginationParams, sortingParams, filterParams, variantParams, sku, variantId } = params;
 
-    const serializedPagination = paginationParams
-        ? `pageNumber=${paginationParams.pageNumber}&pageSize=${paginationParams.pageSize}`
-        : '';
+    const serializedPagination = [
+        paginationParams?.pageNumber ? `pageNumber=${paginationParams.pageNumber}` : '',
+        paginationParams?.pageSize ? `pageSize=${paginationParams.pageSize}` : ''
+    ]
+        .filter(Boolean)
+        .join('&');
+
 
     const serializedSorting = sortingParams
         ? sortingParams.columnsSort
@@ -57,8 +71,8 @@ export function serializeParams(params: PagedParams): string {
 
 export function deserializeParams(searchParams: URLSearchParams): PagedParams {
     const paginationParams: PaginationParams = {
-        pageNumber: parseInt(searchParams.get('pageNumber') || '1', 10),
-        pageSize: parseInt(searchParams.get('pageSize') || '10', 10),
+        pageNumber: searchParams.has('pageNumber') ? parseInt(searchParams.get('pageNumber')!, 10) : undefined,
+        pageSize: searchParams.has('pageSize') ? parseInt(searchParams.get('pageSize')!, 10) : undefined,
     };
 
     const columnsSort: ColumnSort[] = searchParams.getAll('sortColumn').map((column, index) => ({

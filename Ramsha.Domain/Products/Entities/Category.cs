@@ -24,6 +24,11 @@ public class Category : BaseEntity
         return new Category(new CategoryId(Guid.NewGuid()), name);
     }
 
+    public void SetName(string name)
+    {
+        Name = name;
+    }
+
     public void AddChild(Category childCategory)
     {
         SubCategories.Add(childCategory);
