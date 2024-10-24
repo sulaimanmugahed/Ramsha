@@ -50,8 +50,10 @@ export function usePagedParams(): [PagedParams, (partialParams: Partial<PagedPar
             ...(partialParams.variantParams || {}),
         };
 
-        // Correctly access variantId from partialParams
+       
         const updatedVariantId = partialParams.variantId || currentParams.variantId || undefined;
+        const updatedProductId = partialParams.productId || currentParams.productId || undefined;
+
 
 
         const updatedSku = partialParams.sku || currentParams.sku || '';
@@ -63,7 +65,8 @@ export function usePagedParams(): [PagedParams, (partialParams: Partial<PagedPar
             filterParams: updatedFilterParams,
             variantParams: updatedVariantParams,
             variantId: updatedVariantId,
-            sku: updatedSku
+            sku: updatedSku,
+            productId: updatedProductId
         };
 
         setSearchParams(serializeParams(updatedParams));
@@ -80,9 +83,9 @@ export const useGoToParent = (levels = 1) => {
 
     const goToParent = () => {
         const pathParts = location.pathname.split('/').filter(Boolean);
-        
+
         const newPath = `/${pathParts.slice(0, pathParts.length - levels).join('/')}`;
-        
+
         navigate(newPath);
     };
 

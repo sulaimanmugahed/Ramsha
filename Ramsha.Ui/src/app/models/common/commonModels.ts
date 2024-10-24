@@ -148,6 +148,7 @@ export interface PagedParams {
     filterParams?: FilterParams;
     variantParams?: { [key: string]: string };
     variantId?: string | null
+    productId?: string
     sku?: string | null
 }
 

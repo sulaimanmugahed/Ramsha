@@ -13,13 +13,14 @@ import AppDialog from '../../../app/components/AppDialog';
 type Props = {
     variants: SelectableVariant[],
     availableOptionsNames: string[],
-    open: boolean,
+    open?: boolean,
     onApply?: (variantId?: string) => void
-    onClose: () => void
+    onClose?: () => void
+    dialog?: boolean
 
 }
 
-const VariantValuesSelector = ({ variants, availableOptionsNames, open, onApply, onClose }: Props) => {
+const VariantValuesSelector = ({ dialog = true, variants, availableOptionsNames, open, onApply, onClose }: Props) => {
     const [tempVariantParams, setTempVariantParams] = useState({} as { [key: string]: string });
     const [params, setParams] = usePagedParams()
     const { variantId } = params
@@ -70,7 +71,7 @@ const VariantValuesSelector = ({ variants, availableOptionsNames, open, onApply,
         if (onApply) {
             onApply(matchedVariant?.id)
         }
-        onClose()
+        onClose && onClose()
     };
 
 
@@ -96,54 +97,59 @@ const VariantValuesSelector = ({ variants, availableOptionsNames, open, onApply,
         }, {});
     }, [availableOptionsNames, tempVariantParams]);
 
+    const content = (
+        <>
+            {availableOptionsNames.map((optionName, index) => (
+                <Box key={optionName} sx={{ mb: index < availableOptionsNames.length - 1 ? 2 : 0 }}>
+                    <Typography variant="subtitle2" mb={1}>Select {optionName}</Typography>
+                    {optionName === 'Color' && (
+                        <>
+                            <ColorSelect
+                                selectedColor={tempVariantParams[optionName] || ''}
+                                onColorChange={(value) => handleVariantValueChange(optionName, value)}
+                                colors={availableOptions[optionName]}
+                            />
+
+                        </>
+                    )}
+                    {optionName === 'Size' && (
+                        <SizeSelect
+                            selectedSize={tempVariantParams[optionName] || ''}
+                            onSizeChange={(value) => handleVariantValueChange(optionName, value)}
+                            sizes={availableOptions[optionName]}
+                        />
+                    )}
+                    {optionName === 'Material' && (
+                        <MaterialSelect
+                            selectedMaterial={tempVariantParams[optionName] || ''}
+                            onMaterialChange={(value) => handleVariantValueChange(optionName, value)}
+                            materials={availableOptions[optionName]}
+                        />
+                    )}
+                </Box>
+
+            ))}
+        </>
+    )
+
 
 
     return (
-        <>
+        dialog ?
             <AppDialog
                 actions={
                     <>
                         <Button onClick={onClose} color="secondary">Cancel</Button>
                         <Button onClick={handleApplyVariant} color="primary">Apply</Button>
                     </>
-
                 }
                 title='Select Product Variant'
-                open={open} onClose={onClose}
+                open={open!} onClose={onClose!}
                 maxWidth="md"
             >
-                {availableOptionsNames.map((optionName, index) => (
-                    <Box key={optionName} sx={{ mb: index < availableOptionsNames.length - 1 ? 2 : 0 }}>
-                        <Typography variant="subtitle2" mb={1}>Select {optionName}</Typography>
-                        {optionName === 'Color' && (
-                            <>
-                                <ColorSelect
-                                    selectedColor={tempVariantParams[optionName] || ''}
-                                    onColorChange={(value) => handleVariantValueChange(optionName, value)}
-                                    colors={availableOptions[optionName]}
-                                />
-
-                            </>
-                        )}
-                        {optionName === 'Size' && (
-                            <SizeSelect
-                                selectedSize={tempVariantParams[optionName] || ''}
-                                onSizeChange={(value) => handleVariantValueChange(optionName, value)}
-                                sizes={availableOptions[optionName]}
-                            />
-                        )}
-                        {optionName === 'Material' && (
-                            <MaterialSelect
-                                selectedMaterial={tempVariantParams[optionName] || ''}
-                                onMaterialChange={(value) => handleVariantValueChange(optionName, value)}
-                                materials={availableOptions[optionName]}
-                            />
-                        )}
-                    </Box>
-
-                ))}
+                {content}
             </AppDialog>
-        </>
+            : content
     )
 }
 

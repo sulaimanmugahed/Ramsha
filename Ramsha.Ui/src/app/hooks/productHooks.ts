@@ -80,10 +80,11 @@ export const useProductBrands = () => {
 
 
 
-export const useProductVariants = (productId: string) => {
+export const useProductVariants = (productId?: string) => {
     const { data, isLoading, isError, isSuccess } = useQuery<ProductVariantDto[]>({
+        enabled: !!productId,
         queryKey: [PRODUCT_VARIANTS_QUERY_KEY, productId],
-        queryFn: async () => await productService.getProductVariants(productId),
+        queryFn: async () => await productService.getProductVariants(productId!),
     })
 
     return {
@@ -94,10 +95,11 @@ export const useProductVariants = (productId: string) => {
     }
 }
 
-export const useProductOptions = (productId: string) => {
+export const useProductOptions = (productId?: string) => {
     const { data, isLoading, isError, isSuccess } = useQuery<ProductOption[]>({
+        enabled: !!productId,
         queryKey: [PRODUCT_OPTIONS_QUERY_KEY, productId],
-        queryFn: async () => await productService.getProductOptions(productId),
+        queryFn: async () => await productService.getProductOptions(productId!),
     })
 
     return {

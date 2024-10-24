@@ -4,7 +4,10 @@ using Ramsha.Domain.Common;
 using Ramsha.Domain.Common.Events;
 using Ramsha.Domain.Inventory.Entities;
 using Ramsha.Domain.Inventory.Services;
+using Ramsha.Domain.Products.Enums;
 using Ramsha.Domain.Products.Events;
+using Ramsha.Domain.Products.Services;
+using Ramsha.Domain.Suppliers.Entities;
 
 namespace Ramsha.Domain.Products.Entities;
 
@@ -62,12 +65,12 @@ public class ProductVariant : BaseEntity
     public ProductVariantId Id { get; set; }
     public ProductId ProductId { get; set; }
     public Product Product { get; set; }
+    public List<SupplierVariant> SupplierVariants { get; private set; } = [];
+
     public string Name { get; private set; }
     public string? Description { get; private set; }
-
     public string SKU { get; private set; }
     public string? ImageUrl { get; private set; }
-
     public decimal Price { get; private set; }
     public decimal FinalPrice { get; private set; }
     public int TotalQuantity { get; private set; }
@@ -76,7 +79,7 @@ public class ProductVariant : BaseEntity
     public List<InventoryItem> InventoryItems { get; set; } = [];
 
     public List<ProductImage> Images { get; set; } = [];
-   
+
 
 
     public void SetBasePrice(decimal price)
@@ -92,11 +95,6 @@ public class ProductVariant : BaseEntity
         }
         TotalQuantity += quantityChange;
     }
-
-  
-
-
-
 
 
     public static ProductVariant Create(ProductId productId, string name, string description)
@@ -128,6 +126,15 @@ public class ProductVariant : BaseEntity
     {
         SKU = sku;
     }
+
+    public void UpdatePriceBasedOnStrategy(ProductPricingStrategy productPricingStrategy, List<InventoryItem> inventories)
+    {
+        var strategy = ProductPricingStrategyFactory.Create(productPricingStrategy);
+        (decimal basePrice, decimal finalPrice) = strategy.CalculatePrice(inventories) ?? (0, 0);
+        Price = basePrice;
+        FinalPrice = finalPrice;
+    }
+
     public void UpdatePrice(decimal price, decimal finalPrice)
     {
         Price = price;
@@ -136,18 +143,18 @@ public class ProductVariant : BaseEntity
 
     public void UpdateQuantity()
     {
-        TotalQuantity = InventoryItems.Select(x => x.Quantity).Sum();
+        TotalQuantity = InventoryItems.Select(x => x.TotalQuantity).Sum();
     }
 
-    public void IncreaseQuantity(int value)
+    public void IncreaseQuantity(int? value = null)
     {
-        TotalQuantity += value;
+        TotalQuantity += value ?? 1;
     }
 
-    public void DecreaseQuantity(int value)
+    public void DecreaseQuantity(int? value = null)
     {
-        TotalQuantity -= value;
-
+        TotalQuantity -= value ?? 1;
     }
+
 
 }

@@ -81,7 +81,7 @@ const variantsSchema = z.object({
 
 export const optionSchema = z.object({
     id: z.string(),
-    priority: z.number().min(1, "Priority must be at least 1")
+    priority: z.string().transform(val => parseInt(val)),
 })
 
 

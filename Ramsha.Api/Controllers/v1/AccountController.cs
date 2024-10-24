@@ -6,16 +6,24 @@ using Ramsha.Application.Features.Account.Commands.Login;
 using Ramsha.Application.Features.Account.Commands.Logout;
 using Ramsha.Application.Features.Account.Commands.RefreshToken;
 using Ramsha.Application.Features.Account.Commands.RevokeToken;
-using Ramsha.Application.Features.Account.Queries;
+
 using Ramsha.Application.Wrappers;
-using Microsoft.AspNetCore.Authorization;
+
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace Ramsha.Api.Controllers.v1;
 
 [ApiVersion("1.0")]
-public class AccountController(IStorageService storageService) : BaseApiController
+public class AccountController(IStorageService storageService, IAuthenticatedUserService authenticatedUserService) : BaseApiController
 {
+	[Authorize]
+	[HttpGet(nameof(Test))]
+	public string Test()
+	=> authenticatedUserService.UserId;
+
+
 
 	[HttpPost(nameof(Login))]
 	public async Task<BaseResult<AuthenticatedUserDto?>> Login([FromBody] LoginCommand command)

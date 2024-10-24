@@ -141,11 +141,18 @@ namespace Ramsha.Persistence.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("AvailableQuantity")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("FinalPrice")
                         .HasColumnType("decimal(18,6)");
@@ -163,7 +170,7 @@ namespace Ramsha.Persistence.Migrations
                     b.Property<Guid?>("LastModifiedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ProductId")
+                    b.Property<Guid>("ProductId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ProductName")
@@ -173,18 +180,20 @@ namespace Ramsha.Persistence.Migrations
                     b.Property<Guid?>("ProductVariantId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("RetailPrice")
                         .HasColumnType("decimal(18,6)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<string>("Supplier")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("StockSelectionType")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("SupplierId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("TotalQuantity")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("WholesalePrice")
                         .HasColumnType("decimal(18,6)");
@@ -193,36 +202,32 @@ namespace Ramsha.Persistence.Migrations
 
                     b.HasIndex("ProductId", "ProductVariantId");
 
+                    b.HasIndex("SupplierId", "ProductId", "ProductVariantId")
+                        .IsUnique()
+                        .HasFilter("[ProductVariantId] IS NOT NULL");
+
                     b.ToTable("InventoryItems", "Core");
                 });
 
-            modelBuilder.Entity("Ramsha.Domain.Inventory.Entities.InventoryItemImage", b =>
+            modelBuilder.Entity("Ramsha.Domain.Inventory.Entities.Stock", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("InventoryItemId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("IsHome")
-                        .HasColumnType("bit");
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Path")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("Supplied")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
                     b.HasIndex("InventoryItemId");
 
-                    b.ToTable("InventoryItemImage", "Core");
+                    b.ToTable("Stocks", "Core");
                 });
 
             modelBuilder.Entity("Ramsha.Domain.Orders.Entities.Order", b =>
@@ -468,7 +473,10 @@ namespace Ramsha.Persistence.Migrations
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ProductVariantId")
+                    b.Property<Guid?>("ProductVariantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("SupplierId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Url")
@@ -478,6 +486,8 @@ namespace Ramsha.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId", "ProductVariantId");
+
+                    b.HasIndex("SupplierId", "ProductId", "ProductVariantId");
 
                     b.ToTable("ProductImage", "Core");
                 });
@@ -562,6 +572,9 @@ namespace Ramsha.Persistence.Migrations
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("ProductVariantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("RatingBy")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -570,6 +583,9 @@ namespace Ramsha.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("SupplierId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<decimal>("Value")
                         .HasColumnType("decimal(18,6)");
 
@@ -577,7 +593,24 @@ namespace Ramsha.Persistence.Migrations
 
                     b.HasIndex("ProductId");
 
+                    b.HasIndex("SupplierId", "ProductId", "ProductVariantId");
+
                     b.ToTable("Ratings", "Core");
+                });
+
+            modelBuilder.Entity("Ramsha.Domain.Products.Entities.SupplierProduct", b =>
+                {
+                    b.Property<Guid>("SupplierId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("SupplierId", "ProductId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("SupplierProducts", "Core");
                 });
 
             modelBuilder.Entity("Ramsha.Domain.Products.Entities.Tag", b =>
@@ -656,6 +689,30 @@ namespace Ramsha.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Suppliers", "Core");
+                });
+
+            modelBuilder.Entity("Ramsha.Domain.Suppliers.Entities.SupplierVariant", b =>
+                {
+                    b.Property<Guid>("SupplierId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ProductVariantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("AverageRating")
+                        .HasColumnType("decimal(18,6)");
+
+                    b.Property<int>("NumberOfRatings")
+                        .HasColumnType("int");
+
+                    b.HasKey("SupplierId", "ProductId", "ProductVariantId");
+
+                    b.HasIndex("ProductId", "ProductVariantId");
+
+                    b.ToTable("SupplierVariants", "Core");
                 });
 
             modelBuilder.Entity("Ramsha.Domain.Suppliers.Entities.Supply", b =>
@@ -801,16 +858,113 @@ namespace Ramsha.Persistence.Migrations
                 {
                     b.HasOne("Ramsha.Domain.Products.Entities.Product", "Product")
                         .WithMany("Inventories")
-                        .HasForeignKey("ProductId");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Ramsha.Domain.Suppliers.Entities.Supplier", "Supplier")
+                        .WithMany()
+                        .HasForeignKey("SupplierId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Ramsha.Domain.Products.Entities.ProductVariant", "ProductVariant")
                         .WithMany("InventoryItems")
                         .HasForeignKey("ProductId", "ProductVariantId")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("Ramsha.Domain.Products.Entities.SupplierProduct", null)
+                        .WithMany()
+                        .HasForeignKey("SupplierId", "ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Ramsha.Domain.Suppliers.Entities.SupplierVariant", null)
+                        .WithOne("InventoryItem")
+                        .HasForeignKey("Ramsha.Domain.Inventory.Entities.InventoryItem", "SupplierId", "ProductId", "ProductVariantId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Product");
+
+                    b.Navigation("ProductVariant");
+
+                    b.Navigation("Supplier");
+                });
+
+            modelBuilder.Entity("Ramsha.Domain.Inventory.Entities.Stock", b =>
+                {
+                    b.HasOne("Ramsha.Domain.Inventory.Entities.InventoryItem", null)
+                        .WithMany("Stocks")
+                        .HasForeignKey("InventoryItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("Ramsha.Domain.Common.Price", "FinalPrice", b1 =>
+                        {
+                            b1.Property<Guid>("StockId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<decimal>("Amount")
+                                .HasColumnType("decimal(18,6)")
+                                .HasColumnName("StockFinalPriceAmount");
+
+                            b1.Property<int>("Currency")
+                                .HasColumnType("int")
+                                .HasColumnName("StockPriceCurrency");
+
+                            b1.HasKey("StockId");
+
+                            b1.ToTable("Stocks", "Core");
+
+                            b1.WithOwner()
+                                .HasForeignKey("StockId");
+                        });
+
+                    b.OwnsOne("Ramsha.Domain.Common.Price", "RetailPrice", b1 =>
+                        {
+                            b1.Property<Guid>("StockId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<decimal>("Amount")
+                                .HasColumnType("decimal(18,6)")
+                                .HasColumnName("StockRetailPriceAmount");
+
+                            b1.Property<int>("Currency")
+                                .HasColumnType("int")
+                                .HasColumnName("StockRetailPriceCurrency");
+
+                            b1.HasKey("StockId");
+
+                            b1.ToTable("Stocks", "Core");
+
+                            b1.WithOwner()
+                                .HasForeignKey("StockId");
+                        });
+
+                    b.OwnsOne("Ramsha.Domain.Common.Price", "WholesalePrice", b1 =>
+                        {
+                            b1.Property<Guid>("StockId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<decimal>("Amount")
+                                .HasColumnType("decimal(18,6)")
+                                .HasColumnName("StockWholesalePriceAmount");
+
+                            b1.Property<int>("Currency")
+                                .HasColumnType("int")
+                                .HasColumnName("StockWholesalePriceCurrency");
+
+                            b1.HasKey("StockId");
+
+                            b1.ToTable("Stocks", "Core");
+
+                            b1.WithOwner()
+                                .HasForeignKey("StockId");
+                        });
+
                     b.OwnsMany("Ramsha.Domain.Products.Entities.Discount", "Discounts", b1 =>
                         {
-                            b1.Property<Guid>("InventoryItemId")
+                            b1.Property<Guid>("StockId")
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<int>("Id")
@@ -831,75 +985,24 @@ namespace Ramsha.Persistence.Migrations
                             b1.Property<decimal>("Value")
                                 .HasColumnType("decimal(18,6)");
 
-                            b1.HasKey("InventoryItemId", "Id");
+                            b1.HasKey("StockId", "Id");
 
                             b1.ToTable("Discount", "Core");
 
                             b1.WithOwner()
-                                .HasForeignKey("InventoryItemId");
-                        });
-
-                    b.OwnsMany("Ramsha.Domain.Products.Entities.ProductPrice", "Prices", b1 =>
-                        {
-                            b1.Property<Guid>("InventoryItemId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("int");
-
-                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
-
-                            b1.Property<DateTime>("Created")
-                                .HasColumnType("datetime2");
-
-                            b1.Property<Guid>("CreatedBy")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<int>("Currency")
-                                .HasColumnType("int");
-
-                            b1.Property<DateTime>("EffectiveDate")
-                                .HasColumnType("datetime2");
-
-                            b1.Property<DateTime?>("LastModified")
-                                .HasColumnType("datetime2");
-
-                            b1.Property<Guid?>("LastModifiedBy")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<int>("Type")
-                                .HasColumnType("int");
-
-                            b1.Property<decimal>("Value")
-                                .HasColumnType("decimal(18,6)");
-
-                            b1.HasKey("InventoryItemId", "Id");
-
-                            b1.ToTable("ProductPrice", "Core");
-
-                            b1.WithOwner()
-                                .HasForeignKey("InventoryItemId");
+                                .HasForeignKey("StockId");
                         });
 
                     b.Navigation("Discounts");
 
-                    b.Navigation("Prices");
-
-                    b.Navigation("Product");
-
-                    b.Navigation("ProductVariant");
-                });
-
-            modelBuilder.Entity("Ramsha.Domain.Inventory.Entities.InventoryItemImage", b =>
-                {
-                    b.HasOne("Ramsha.Domain.Inventory.Entities.InventoryItem", "InventoryItem")
-                        .WithMany("InventoryItemImages")
-                        .HasForeignKey("InventoryItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.Navigation("FinalPrice")
                         .IsRequired();
 
-                    b.Navigation("InventoryItem");
+                    b.Navigation("RetailPrice")
+                        .IsRequired();
+
+                    b.Navigation("WholesalePrice")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Ramsha.Domain.Orders.Entities.Order", b =>
@@ -1068,11 +1171,26 @@ namespace Ramsha.Persistence.Migrations
 
             modelBuilder.Entity("Ramsha.Domain.Products.Entities.ProductImage", b =>
                 {
+                    b.HasOne("Ramsha.Domain.Suppliers.Entities.Supplier", "Supplier")
+                        .WithMany()
+                        .HasForeignKey("SupplierId");
+
                     b.HasOne("Ramsha.Domain.Products.Entities.ProductVariant", null)
                         .WithMany("Images")
                         .HasForeignKey("ProductId", "ProductVariantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Ramsha.Domain.Products.Entities.SupplierProduct", null)
+                        .WithMany()
+                        .HasForeignKey("SupplierId", "ProductId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Ramsha.Domain.Suppliers.Entities.SupplierVariant", null)
+                        .WithMany("SupplierProductImages")
+                        .HasForeignKey("SupplierId", "ProductId", "ProductVariantId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Supplier");
                 });
 
             modelBuilder.Entity("Ramsha.Domain.Products.Entities.ProductOption", b =>
@@ -1129,8 +1247,41 @@ namespace Ramsha.Persistence.Migrations
                     b.HasOne("Ramsha.Domain.Products.Entities.Product", null)
                         .WithMany("Ratings")
                         .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Ramsha.Domain.Suppliers.Entities.Supplier", "Supplier")
+                        .WithMany()
+                        .HasForeignKey("SupplierId");
+
+                    b.HasOne("Ramsha.Domain.Products.Entities.SupplierProduct", null)
+                        .WithMany()
+                        .HasForeignKey("SupplierId", "ProductId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Ramsha.Domain.Suppliers.Entities.SupplierVariant", null)
+                        .WithMany("Ratings")
+                        .HasForeignKey("SupplierId", "ProductId", "ProductVariantId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Supplier");
+                });
+
+            modelBuilder.Entity("Ramsha.Domain.Products.Entities.SupplierProduct", b =>
+                {
+                    b.HasOne("Ramsha.Domain.Products.Entities.Product", null)
+                        .WithMany("SupplierProducts")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("Ramsha.Domain.Suppliers.Entities.Supplier", "Supplier")
+                        .WithMany()
+                        .HasForeignKey("SupplierId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Supplier");
                 });
 
             modelBuilder.Entity("Ramsha.Domain.Products.Entities.VariantValue", b =>
@@ -1158,6 +1309,39 @@ namespace Ramsha.Persistence.Migrations
                     b.Navigation("OptionValue");
 
                     b.Navigation("ProductVariant");
+                });
+
+            modelBuilder.Entity("Ramsha.Domain.Suppliers.Entities.SupplierVariant", b =>
+                {
+                    b.HasOne("Ramsha.Domain.Products.Entities.Product", null)
+                        .WithMany("SupplierVariants")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Ramsha.Domain.Suppliers.Entities.Supplier", "Supplier")
+                        .WithMany()
+                        .HasForeignKey("SupplierId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Ramsha.Domain.Products.Entities.ProductVariant", "ProductVariant")
+                        .WithMany("SupplierVariants")
+                        .HasForeignKey("ProductId", "ProductVariantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Ramsha.Domain.Products.Entities.SupplierProduct", "SupplierProduct")
+                        .WithMany("SupplierVariants")
+                        .HasForeignKey("SupplierId", "ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ProductVariant");
+
+                    b.Navigation("Supplier");
+
+                    b.Navigation("SupplierProduct");
                 });
 
             modelBuilder.Entity("Ramsha.Domain.Suppliers.Entities.Supply", b =>
@@ -1242,7 +1426,7 @@ namespace Ramsha.Persistence.Migrations
 
             modelBuilder.Entity("Ramsha.Domain.Inventory.Entities.InventoryItem", b =>
                 {
-                    b.Navigation("InventoryItemImages");
+                    b.Navigation("Stocks");
                 });
 
             modelBuilder.Entity("Ramsha.Domain.Orders.Entities.Order", b =>
@@ -1275,6 +1459,10 @@ namespace Ramsha.Persistence.Migrations
 
                     b.Navigation("Ratings");
 
+                    b.Navigation("SupplierProducts");
+
+                    b.Navigation("SupplierVariants");
+
                     b.Navigation("Tags");
 
                     b.Navigation("Variants");
@@ -1286,7 +1474,14 @@ namespace Ramsha.Persistence.Migrations
 
                     b.Navigation("InventoryItems");
 
+                    b.Navigation("SupplierVariants");
+
                     b.Navigation("VariantValues");
+                });
+
+            modelBuilder.Entity("Ramsha.Domain.Products.Entities.SupplierProduct", b =>
+                {
+                    b.Navigation("SupplierVariants");
                 });
 
             modelBuilder.Entity("Ramsha.Domain.Products.Entities.Tag", b =>
@@ -1297,6 +1492,16 @@ namespace Ramsha.Persistence.Migrations
             modelBuilder.Entity("Ramsha.Domain.Suppliers.Entities.Supplier", b =>
                 {
                     b.Navigation("Supplies");
+                });
+
+            modelBuilder.Entity("Ramsha.Domain.Suppliers.Entities.SupplierVariant", b =>
+                {
+                    b.Navigation("InventoryItem")
+                        .IsRequired();
+
+                    b.Navigation("Ratings");
+
+                    b.Navigation("SupplierProductImages");
                 });
 
             modelBuilder.Entity("Ramsha.Domain.Suppliers.Entities.Supply", b =>

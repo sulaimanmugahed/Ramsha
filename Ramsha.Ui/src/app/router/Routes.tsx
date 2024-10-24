@@ -29,6 +29,8 @@ import SuppliesPage from "../../features/suppliers/supplies/SuppliesPage";
 import SupplyRequestPage from "../../features/suppliers/supplies/SupplyRequestPage";
 import AddSupplyRequestItemPage from "../../features/suppliers/supplies/AddSupplyRequestItemPage";
 import EditSupplyItemPage from "../../features/suppliers/supplies/EditSupplyItemPage";
+import SupplierInventoryPage from "../../features/suppliers/inventory/SupplierInventoryPage";
+import AddProductToSupplyPage from "../../features/suppliers/Products/AddProductToSupplyPage";
 //import AdminProductPage from "../../features/admin/products/AdminProductPage";
 
 export const router = createBrowserRouter([
@@ -158,6 +160,10 @@ export const router = createBrowserRouter([
                                 path: 'supplies'
                             },
                             {
+                                element: <AddProductToSupplyPage />,
+                                path: 'add-product-to-supply'
+                            },
+                            {
                                 element: <SupplyRequestPage />,
                                 path: 'supply-request',
                                 children: [
@@ -170,6 +176,10 @@ export const router = createBrowserRouter([
                                         path: 'edit-item/:itemId',
                                     }
                                 ]
+                            },
+                            {
+                                element: <SupplierInventoryPage />,
+                                path: 'inventory'
                             }
                         ]
                     },

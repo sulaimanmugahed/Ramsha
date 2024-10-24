@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Ramsha.Domain.Common;
 using Ramsha.Domain.Common.Events;
 using Ramsha.Domain.Inventory.Entities;
 using Ramsha.Domain.Products;
@@ -13,8 +14,8 @@ public record InventoryItemUpdatedEvent(
     ProductId ProductId,
     ProductVariantId? ProductVariantId,
     int Quantity,
-    decimal RetailPrice,
-    decimal FinalPrice
+    Price RetailPrice,
+    Price FinalPrice
 ) : IDomainEvent
 {
 

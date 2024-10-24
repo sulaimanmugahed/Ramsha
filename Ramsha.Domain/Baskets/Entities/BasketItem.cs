@@ -1,8 +1,6 @@
 ﻿using Ramsha.Domain.Customers.Entities;
 using Ramsha.Domain.Inventory;
 using Ramsha.Domain.Inventory.Entities;
-using Ramsha.Domain.Products;
-using Ramsha.Domain.Products.Entities;
 
 
 namespace Ramsha.Domain.Baskets.Entities;

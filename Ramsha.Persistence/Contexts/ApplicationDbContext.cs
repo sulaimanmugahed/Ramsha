@@ -10,6 +10,7 @@ using Ramsha.Domain.Inventory.Entities;
 using Ramsha.Domain.Suppliers;
 using Ramsha.Domain.Orders.Entities;
 using MediatR;
+using Ramsha.Domain.Inventory;
 
 
 namespace Ramsha.Persistence.Contexts;
@@ -30,12 +31,17 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Rating> Ratings { get; set; }
     public DbSet<Tag> Tags { get; set; }
     public DbSet<Brand> Brand { get; set; }
+    public DbSet<Stock> Stocks { get; set; }
+    public DbSet<SupplierProduct> SupplierProducts { get; set; }
+    public DbSet<SupplierVariant> SupplierVariants { get; set; }
+
+
 
 
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
-        var userId = Guid.Parse(authenticatedUserService.UserId ?? "00000000-0000-0000-0000-000000000000");
+        var userId = Guid.Parse("00000000-0000-0000-0000-000000000000");
 
         foreach (var entry in ChangeTracker.Entries())
         {
@@ -102,9 +108,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
         builder.Ignore<BaseEntity>();
 
-
-
-
         builder.Entity<Brand>(entity =>
      {
          entity.HasKey(b => b.Id);
@@ -116,11 +119,10 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                .IsRequired()
                .HasMaxLength(100);
 
-         // Relationship: Brand has many products
          entity.HasMany(b => b.Products)
                .WithOne(p => p.Brand)
                .HasForeignKey(p => p.BrandId)
-               .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete if desired
+               .OnDelete(DeleteBehavior.Restrict);
      });
 
 
@@ -132,10 +134,18 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
           .HasConversion(id => id.Value, value => new RatingId(value));
 
             builder
-                .HasOne<Product>()
-                .WithMany(pv => pv.Ratings)
-                .HasForeignKey(r => r.ProductId)
-                .OnDelete(DeleteBehavior.Restrict);
+         .HasOne<SupplierVariant>()
+         .WithMany(pv => pv.Ratings)
+         .HasForeignKey(r => new { r.SupplierId, r.ProductId, r.ProductVariantId })
+         .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+           .HasOne<SupplierProduct>()
+           .WithMany()
+           .HasForeignKey(r => new { r.SupplierId, r.ProductId })
+           .OnDelete(DeleteBehavior.Restrict);
+
+
         });
 
         //tags
@@ -164,8 +174,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 .HasForeignKey(pt => pt.TagId);
 
             entity.HasQueryFilter(x => !x.Product.IsDeleted);
-
-
 
         });
 
@@ -235,8 +243,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
 
 
-
-
         builder.Entity<VariantValue>()
         .HasKey(vv => new { vv.ProductId, vv.ProductVariantId, vv.OptionId, vv.OptionValueId });
 
@@ -264,21 +270,31 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
          .OnDelete(DeleteBehavior.Restrict);
 
 
-
-
         //InventoryItem
         builder.Entity<InventoryItem>(builder =>
         {
             builder.HasKey(ii => ii.Id);
 
             builder.Property(x => x.Id)
-            .HasConversion(id => id.Value, value => new Domain.Inventory.InventoryItemId(value));
+            .HasConversion(id => id.Value, value => new InventoryItemId(value));
 
 
             builder
                 .HasOne(x => x.Product)
                 .WithMany(x => x.Inventories)
-                .HasForeignKey(ii => ii.ProductId);
+                .HasForeignKey(ii => ii.ProductId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+              .HasOne<SupplierProduct>()
+              .WithMany()
+              .HasForeignKey(x => new { x.SupplierId, x.ProductId })
+              .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne<SupplierVariant>()
+            .WithOne(x => x.InventoryItem)
+            .HasForeignKey<InventoryItem>(x => new { x.SupplierId, x.ProductId, x.ProductVariantId })
+            .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasQueryFilter(x => !x.Product.IsDeleted);
 
@@ -288,17 +304,100 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
            .HasForeignKey(ii => new { ii.ProductId, ii.ProductVariantId })
            .OnDelete(DeleteBehavior.Restrict);
 
+        });
 
-            builder
-           .OwnsMany(x => x.Discounts);
+        builder.Entity<SupplierProduct>(entity =>
+        {
 
-            builder
-           .OwnsMany(x => x.Prices);
+            entity.HasKey(x => new { x.SupplierId, x.ProductId });
+
+            entity.HasOne<Product>()
+              .WithMany(x => x.SupplierProducts)
+              .HasForeignKey(sp => sp.ProductId)
+                   .OnDelete(DeleteBehavior.Restrict);
 
         });
 
 
+        builder.Entity<SupplierVariant>(entity =>
+         {
+             entity.HasKey(sv => new { sv.SupplierId, sv.ProductId, sv.ProductVariantId });
 
+
+             entity.HasOne(sv => sv.SupplierProduct)
+                   .WithMany(sp => sp.SupplierVariants)
+                   .HasForeignKey(sv => new { sv.SupplierId, sv.ProductId })
+                   .OnDelete(DeleteBehavior.Restrict);
+
+             entity.HasOne<Product>()
+                   .WithMany(x => x.SupplierVariants)
+                   .HasForeignKey(sv => sv.ProductId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+             entity.HasOne(sv => sv.ProductVariant)
+                   .WithMany(x => x.SupplierVariants)
+                   .HasForeignKey(x => new { x.ProductId, x.ProductVariantId })
+                   .OnDelete(DeleteBehavior.Restrict);
+
+
+         });
+
+        builder.Entity<ProductImage>(entity =>
+        {
+            entity
+                  .HasOne<SupplierVariant>()
+                  .WithMany(pv => pv.SupplierProductImages)
+                  .HasForeignKey(r => new { r.SupplierId, r.ProductId, r.ProductVariantId })
+                  .OnDelete(DeleteBehavior.Restrict);
+
+            entity
+           .HasOne<SupplierProduct>()
+           .WithMany()
+           .HasForeignKey(r => new { r.SupplierId, r.ProductId })
+           .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        builder.Entity<Stock>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+            entity.HasOne<InventoryItem>()
+            .WithMany(x => x.Stocks)
+           .HasForeignKey(x => x.InventoryItemId);
+
+            entity.Property(x => x.Id)
+          .HasConversion(id => id.Value, value => new StockId(value));
+
+
+            entity.OwnsOne(x => x.WholesalePrice, price =>
+                {
+                    price.WithOwner();
+                    price.Property(x => x.Amount).HasColumnName("StockWholesalePriceAmount").HasColumnType("decimal(18,6)");
+                    price.Property(x => x.Currency).HasColumnName("StockWholesalePriceCurrency");
+                });
+
+            entity.OwnsOne(p => p.RetailPrice, price =>
+      {
+          price.WithOwner();
+
+          price.Property(x => x.Amount).HasColumnName("StockRetailPriceAmount").HasColumnType("decimal(18,6)");
+          price.Property(x => x.Currency).HasColumnName("StockRetailPriceCurrency");
+      });
+
+            entity.OwnsOne(p => p.FinalPrice, price =>
+            {
+                price.WithOwner();
+
+                price.Property(x => x.Amount).HasColumnName("StockFinalPriceAmount").HasColumnType("decimal(18,6)");
+                price.Property(x => x.Currency).HasColumnName("StockPriceCurrency");
+            });
+
+            entity
+               .OwnsMany(x => x.Discounts, discount =>
+               {
+                   discount.WithOwner();
+                   discount.Property(x => x.Value).HasColumnType("decimal(18,6)");
+               });
+        });
 
 
 
@@ -382,15 +481,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
           .WithOne()
           .HasForeignKey(pi => new { pi.ProductId, pi.ProductVariantId })
           .OnDelete(DeleteBehavior.Cascade);
-
-
-
-
-        builder.Entity<InventoryItemImage>()
-        .HasOne(x => x.InventoryItem)
-        .WithMany(x => x.InventoryItemImages)
-        .HasForeignKey(i => i.InventoryItemId);
-
 
 
         base.OnModelCreating(builder);

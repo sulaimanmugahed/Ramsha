@@ -21,6 +21,8 @@ using Ramsha.Application.Contracts.Persistence;
 using Ramsha.Persistence.Repositories;
 using System.Text.Json.Serialization;
 using Ramsha.Domain.Common.Events;
+using Ramsha.Domain.Settings;
+using Microsoft.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFile("appsettings.firebase.json", false, reloadOnChange: true);
@@ -41,13 +43,10 @@ builder.Services.AddControllers().AddJsonOptions(o =>
 builder.Services.AddAuthorization();
 
 
-DomainEventRegistrar.RegisterHandlers();
 
 
 builder.Services
-    .AddApplicationLayer();
-builder.Services
-
+    .AddApplicationLayer(appConfiguration)
 .AddPersistenceInfrastructure(appConfiguration)
 .AddIdentityInfrastructure(appConfiguration)
 .AddFileStorage(appConfiguration)
@@ -56,7 +55,8 @@ builder.Services
 
 builder.Services.AddScoped<IAuthenticatedUserService, AuthenticatedUserService>();
 
-builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+//builder.Services.AddTransient<IClaimsTransformation,MyClaimTransform>();
+
 
 
 

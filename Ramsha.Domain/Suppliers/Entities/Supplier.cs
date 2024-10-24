@@ -1,4 +1,5 @@
 ﻿using Ramsha.Domain.Common;
+using Ramsha.Domain.Products;
 using Ramsha.Domain.Products.Entities;
 
 
@@ -34,6 +35,14 @@ public class Supplier : BaseEntity, IAuditable, ISoftDeletable, IUser
 	public string Username { get; set; }
 	public List<Supply> Supplies { get; set; }
 
+	// public List<SupplierProduct> SupplierProducts { get; set; }
+
+	// public void AddProduct(ProductId productId, ProductVariantId? productVariantId = null)
+	// {
+	// 	var newProduct = SupplierProduct.Create(productId, Id);
+	// 	if (productVariantId is not null)
+	// 		newProduct.AddVariant(productVariantId);
+	// }
 
 
 }

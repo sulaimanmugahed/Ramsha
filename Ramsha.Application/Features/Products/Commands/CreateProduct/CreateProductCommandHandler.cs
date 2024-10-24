@@ -62,7 +62,7 @@ public class CreateProductCommandHandler(
         {
             foreach (var option in request.Options)
             {
-                var optionToAdd = await optionRepository.GetAsync(o => o.Id == new Domain.Products.OptionId(option.Value));
+                var optionToAdd = await optionRepository.GetAsync(o => o.Id == new Domain.Products.OptionId(option.Id));
                 if (optionToAdd is null)
                     return new Error(ErrorCode.RequestedDataNotExist, "invalid option", nameof(request.Options));
                 product.AddOption(optionToAdd, option.Priority);

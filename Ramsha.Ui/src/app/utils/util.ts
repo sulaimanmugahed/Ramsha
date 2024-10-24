@@ -21,7 +21,7 @@ export const sleep = (time: number) => new Promise(resolve => setTimeout(resolve
 
 
 export function serializeParams(params: PagedParams): string {
-    const { paginationParams, sortingParams, filterParams, variantParams, sku, variantId } = params;
+    const { paginationParams, sortingParams, filterParams, variantParams, sku, variantId, productId } = params;
 
     const serializedPagination = [
         paginationParams?.pageNumber ? `pageNumber=${paginationParams.pageNumber}` : '',
@@ -60,10 +60,12 @@ export function serializeParams(params: PagedParams): string {
         : '';
 
     const serializedVariantId = variantId ? `variantId=${encodeURIComponent(variantId)}` : '';
+    const serializedProductId = productId ? `productId=${encodeURIComponent(productId)}` : '';
+
 
     const serializedSku = sku ? `sku=${encodeURIComponent(sku)}` : '';
 
-    return `${serializedPagination}&${serializedSorting}&${serializedFilters}&${serializedVariants}&${serializedVariantId}&${serializedSku}`.replace(/^&/, '');
+    return `${serializedPagination}&${serializedSorting}&${serializedFilters}&${serializedVariants}&${serializedVariantId}&${serializedSku}&${serializedProductId}`.replace(/^&/, '');
 }
 
 
@@ -110,6 +112,8 @@ export function deserializeParams(searchParams: URLSearchParams): PagedParams {
     });
 
     const variantId: string | null = searchParams.get('variantId') || null;
+    const productId: string | undefined = searchParams.get('productId') || undefined;
+
 
     const sku: string | null = searchParams.get('sku') || null;
 
@@ -120,6 +124,7 @@ export function deserializeParams(searchParams: URLSearchParams): PagedParams {
         filterParams,
         variantParams,
         variantId,
+        productId,
         sku
     };
 }

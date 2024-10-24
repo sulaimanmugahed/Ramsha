@@ -6,6 +6,7 @@ namespace Ramsha.Application.Extensions;
 
 public static class CommonExtensions
 {
+
     public static OptionDto AsDto(this ProductOption option)
     =>
          new(

@@ -13,7 +13,6 @@ string InventorySKU,
 int Quantity,
 string Status,
 string? ImageUrl,
-string Supplier,
 VariantDetailDto Variant
 );
 

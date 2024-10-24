@@ -2,6 +2,8 @@
 using Ramsha.Domain.Common;
 using Ramsha.Domain.Inventory.Entities;
 using Ramsha.Domain.Products.Enums;
+using Ramsha.Domain.Products.Services;
+using Ramsha.Domain.Suppliers.Entities;
 
 
 namespace Ramsha.Domain.Products.Entities;
@@ -29,10 +31,14 @@ public sealed class Product : BaseEntity, IAuditable, ISoftDeletable
     public string Description { get; private set; }
     public string? ImageUrl { get; private set; }
     //public decimal AverageRating { get; set; }
+
+
     public ProductStatus Status { get; private set; }
     public CategoryId CategoryId { get; private set; }
     public Category Category { get; private set; }
     public List<InventoryItem> Inventories { get; private set; } = [];
+    public List<SupplierProduct> SupplierProducts { get; private set; } = [];
+    public List<SupplierVariant> SupplierVariants { get; private set; } = [];
     public List<ProductVariant> Variants { get; private set; } = [];
     public List<ProductOption> Options { get; private set; } = [];
     public List<ProductTag> Tags { get; set; } = [];
@@ -51,25 +57,16 @@ public sealed class Product : BaseEntity, IAuditable, ISoftDeletable
         SeoSettings = seoSettings;
     }
 
-    public void AddOrUpdateRating(string username, decimal value, string review = "")
+
+    public void UpdatePriceBasedOnStrategy(ProductPricingStrategy productPricingStrategy)
     {
-        var existingRating = Ratings.FirstOrDefault(r => r.RatingBy.Equals(username, StringComparison.OrdinalIgnoreCase));
-
-        if (existingRating != null)
-        {
-            existingRating.Value = value;
-            existingRating.Review = review;
-        }
-        else
-        {
-            var rating = new Rating(value, Id, username, review);
-            Ratings.Add(rating);
-        }
-
-        NumberOfRatings = Ratings.Count;
-        AverageRating = Ratings.Average(r => r.Value);
-
+        var strategy = ProductPricingStrategyFactory.Create(productPricingStrategy);
+        (decimal basePrice, decimal finalPrice) = strategy.CalculatePrice(Inventories) ?? (0, 0);
+        Price = basePrice;
+        FinalPrice = finalPrice;
     }
+
+
 
 
 
@@ -79,14 +76,14 @@ public sealed class Product : BaseEntity, IAuditable, ISoftDeletable
         FinalPrice = finalPrice;
     }
 
-    public void IncreaseQuantity(int value)
+    public void IncreaseQuantity(int? value = null)
     {
-        TotalQuantity += value;
+        TotalQuantity += value ?? 1;
     }
 
-    public void DecreaseQuantity(int value)
+    public void DecreaseQuantity(int? value = null)
     {
-        TotalQuantity -= value;
+        TotalQuantity -= value ?? 1;
     }
 
     public void SetName(string name)
@@ -175,7 +172,7 @@ public sealed class Product : BaseEntity, IAuditable, ISoftDeletable
     public void UpdateQuantityFromInventories()
     {
         if (Inventories.Count != 0)
-            TotalQuantity = Inventories.Select(x => x.Quantity).Sum();
+            TotalQuantity = Inventories.Select(x => x.TotalQuantity).Sum();
     }
 
     public void AdjustQuantity(int quantityChange)
@@ -196,8 +193,6 @@ public sealed class Product : BaseEntity, IAuditable, ISoftDeletable
             FinalPrice = variant?.FinalPrice;
         }
     }
-
-
 
 
     public Guid CreatedBy { get; set; }

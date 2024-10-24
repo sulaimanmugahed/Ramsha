@@ -1,5 +1,7 @@
 
 
+using Ramsha.Domain.Common;
+
 namespace Ramsha.Domain.Inventory.Services;
 
 public class DiscountChain
@@ -15,9 +17,9 @@ public class DiscountChain
         _discountStrategies.Add((discountStrategy, Criteria));
     }
 
-    public decimal ApplyDiscount(decimal price)
+    public Price ApplyDiscount(Price price)
     {
-        decimal finalPrice = price;
+        Price finalPrice = price;
         foreach (var (strategy, criteria) in _discountStrategies)
         {
             if (criteria == null || criteria())

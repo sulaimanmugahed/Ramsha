@@ -34,8 +34,6 @@ IInventoryItemRepository
         return await _items
         .Include(i => i.Product)
         .ThenInclude(x => x.Category)
-        .Include(x => x.Discounts)
-        .Include(x => x.Prices)
         .Where(criteria)
         .ToListAsync();
     }
@@ -46,7 +44,6 @@ IInventoryItemRepository
         .AsSplitQuery()
         .Include(i => i.Product)
         .ThenInclude(x => x.Category)
-        .Include(x => x.Discounts)
         .Include(x => x.ProductVariant)
         .ThenInclude(x => x.VariantValues)
         .ToListAsync();
@@ -57,15 +54,12 @@ IInventoryItemRepository
         return await _items
         .Include(i => i.Product)
         .ThenInclude(x => x.Category)
-        .Include(x => x.Discounts)
-        .Include(x => x.Prices)
         .ToListAsync();
     }
 
     public async Task<PaginationResponseDto<CatalogInventoryItemDetailDto>> GetCatalogItemsPagedListAsync(ProductId productId, ProductVariantId productVariantId, PaginationParams paginationParams, SortingParams? sortingParams = null, FilterParams? filterParams = null)
     {
         var query = _items
-        .Include(x => x.InventoryItemImages)
         .Where(x => x.ProductId == productId && x.ProductVariantId == productVariantId)
         .AsQueryable();
 
@@ -127,7 +121,7 @@ IInventoryItemRepository
     public async Task<int> GetVariantQuantity(ProductVariantId productVariantId)
     {
         var items = await _items.Where(i => i.ProductVariantId == productVariantId).ToListAsync();
-        return items.Select(x => x.Quantity).Sum();
+        return items.Select(x => x.AvailableQuantity).Sum();
     }
 
     public async Task<InventoryItem?> GetInventoryItemBySku(string sku)

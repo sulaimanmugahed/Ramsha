@@ -7,6 +7,7 @@ import { useAccount } from "./accountHooks"
 import { toast } from "sonner"
 import { SupplyRequest, SupplyRequestItem } from "../models/suppliers/supplyRequest"
 import AppError from "../utils/appError"
+import { SupplierInventoryItem } from "../models/suppliers/SupplierInventoryItem"
 
 
 
@@ -93,6 +94,19 @@ export const useSupplyRequestItem = (itemId: string) => {
 
     return {
         item: data,
+        isItemLoading: isLoading,
+        isItemError: isError
+    }
+}
+
+export const useSupplierInventoryItems = () => {
+    const { data, isLoading, isError } = useQuery<SupplierInventoryItem[]>({
+        queryKey: ['suppliersInventoryItems'],
+        queryFn: async () => await supplierService.getInventoryItems(),
+    })
+
+    return {
+        items: data,
         isItemLoading: isLoading,
         isItemError: isError
     }

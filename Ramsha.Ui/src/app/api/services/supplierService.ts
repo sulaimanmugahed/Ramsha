@@ -1,4 +1,5 @@
 import { PagedParams, PaginationResponse } from "../../models/common/commonModels"
+import { SupplierInventoryItem } from "../../models/suppliers/SupplierInventoryItem"
 import { Supply } from "../../models/suppliers/supply"
 import { SupplyRequest, SupplyRequestItem } from "../../models/suppliers/supplyRequest"
 import request from "../Request"
@@ -11,6 +12,13 @@ const getSupplies = async (params: PagedParams) => {
         url: `${BASE_URL}/supplies`,
         method: 'POST',
         data: params
+    })
+}
+
+const getInventoryItems = async () => {
+    return await request<SupplierInventoryItem[]>({
+        url: `${BASE_URL}/inventory/items`,
+        method: 'GET',
     })
 }
 
@@ -62,6 +70,7 @@ const getSupplyRequest = async () => {
 
 
 export const supplierService = {
+    getInventoryItems,
     getSupplies,
     getSupplyRequestItem,
     addSupplyRequestItem,

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Ramsha.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -325,7 +325,8 @@ namespace Ramsha.Persistence.Migrations
                 columns: table => new
                 {
                     OptionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Priority = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -401,27 +402,30 @@ namespace Ramsha.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Ratings",
+                name: "SupplierProducts",
                 schema: "Core",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Value = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
-                    RatingBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Review = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SupplierId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Ratings", x => x.Id);
+                    table.PrimaryKey("PK_SupplierProducts", x => new { x.SupplierId, x.ProductId });
                     table.ForeignKey(
-                        name: "FK_Ratings_Products_ProductId",
+                        name: "FK_SupplierProducts_Products_ProductId",
                         column: x => x.ProductId,
                         principalSchema: "Core",
                         principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_SupplierProducts_Suppliers_SupplierId",
+                        column: x => x.SupplierId,
+                        principalSchema: "Core",
+                        principalTable: "Suppliers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -473,71 +477,6 @@ namespace Ramsha.Persistence.Migrations
                         principalSchema: "Core",
                         principalTable: "Supply",
                         principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "InventoryItems",
-                schema: "Core",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Quantity = table.Column<int>(type: "int", nullable: false),
-                    InventorySKU = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ProductName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    WholesalePrice = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
-                    RetailPrice = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
-                    FinalPrice = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    ProductVariantId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    Supplier = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    LastModified = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_InventoryItems", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_InventoryItems_ProductVariant_ProductId_ProductVariantId",
-                        columns: x => new { x.ProductId, x.ProductVariantId },
-                        principalSchema: "Core",
-                        principalTable: "ProductVariant",
-                        principalColumns: new[] { "ProductId", "Id" },
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_InventoryItems_Products_ProductId",
-                        column: x => x.ProductId,
-                        principalSchema: "Core",
-                        principalTable: "Products",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ProductImage",
-                schema: "Core",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ProductVariantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Path = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsHome = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductImage", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ProductImage_ProductVariant_ProductId_ProductVariantId",
-                        columns: x => new { x.ProductId, x.ProductVariantId },
-                        principalSchema: "Core",
-                        principalTable: "ProductVariant",
-                        principalColumns: new[] { "ProductId", "Id" },
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -615,6 +554,207 @@ namespace Ramsha.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SupplierVariants",
+                schema: "Core",
+                columns: table => new
+                {
+                    SupplierId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProductVariantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AverageRating = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
+                    NumberOfRatings = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SupplierVariants", x => new { x.SupplierId, x.ProductId, x.ProductVariantId });
+                    table.ForeignKey(
+                        name: "FK_SupplierVariants_ProductVariant_ProductId_ProductVariantId",
+                        columns: x => new { x.ProductId, x.ProductVariantId },
+                        principalSchema: "Core",
+                        principalTable: "ProductVariant",
+                        principalColumns: new[] { "ProductId", "Id" },
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_SupplierVariants_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalSchema: "Core",
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_SupplierVariants_SupplierProducts_SupplierId_ProductId",
+                        columns: x => new { x.SupplierId, x.ProductId },
+                        principalSchema: "Core",
+                        principalTable: "SupplierProducts",
+                        principalColumns: new[] { "SupplierId", "ProductId" },
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_SupplierVariants_Suppliers_SupplierId",
+                        column: x => x.SupplierId,
+                        principalSchema: "Core",
+                        principalTable: "Suppliers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "InventoryItems",
+                schema: "Core",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AvailableQuantity = table.Column<int>(type: "int", nullable: false),
+                    TotalQuantity = table.Column<int>(type: "int", nullable: false),
+                    InventorySKU = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProductName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    WholesalePrice = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
+                    RetailPrice = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
+                    FinalPrice = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
+                    Currency = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProductVariantId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    SupplierId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    StockSelectionType = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_InventoryItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_InventoryItems_ProductVariant_ProductId_ProductVariantId",
+                        columns: x => new { x.ProductId, x.ProductVariantId },
+                        principalSchema: "Core",
+                        principalTable: "ProductVariant",
+                        principalColumns: new[] { "ProductId", "Id" },
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_InventoryItems_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalSchema: "Core",
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_InventoryItems_SupplierProducts_SupplierId_ProductId",
+                        columns: x => new { x.SupplierId, x.ProductId },
+                        principalSchema: "Core",
+                        principalTable: "SupplierProducts",
+                        principalColumns: new[] { "SupplierId", "ProductId" },
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_InventoryItems_SupplierVariants_SupplierId_ProductId_ProductVariantId",
+                        columns: x => new { x.SupplierId, x.ProductId, x.ProductVariantId },
+                        principalSchema: "Core",
+                        principalTable: "SupplierVariants",
+                        principalColumns: new[] { "SupplierId", "ProductId", "ProductVariantId" },
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_InventoryItems_Suppliers_SupplierId",
+                        column: x => x.SupplierId,
+                        principalSchema: "Core",
+                        principalTable: "Suppliers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductImage",
+                schema: "Core",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProductVariantId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    SupplierId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Path = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsHome = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductImage", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProductImage_ProductVariant_ProductId_ProductVariantId",
+                        columns: x => new { x.ProductId, x.ProductVariantId },
+                        principalSchema: "Core",
+                        principalTable: "ProductVariant",
+                        principalColumns: new[] { "ProductId", "Id" },
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProductImage_SupplierProducts_SupplierId_ProductId",
+                        columns: x => new { x.SupplierId, x.ProductId },
+                        principalSchema: "Core",
+                        principalTable: "SupplierProducts",
+                        principalColumns: new[] { "SupplierId", "ProductId" },
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ProductImage_SupplierVariants_SupplierId_ProductId_ProductVariantId",
+                        columns: x => new { x.SupplierId, x.ProductId, x.ProductVariantId },
+                        principalSchema: "Core",
+                        principalTable: "SupplierVariants",
+                        principalColumns: new[] { "SupplierId", "ProductId", "ProductVariantId" },
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ProductImage_Suppliers_SupplierId",
+                        column: x => x.SupplierId,
+                        principalSchema: "Core",
+                        principalTable: "Suppliers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Ratings",
+                schema: "Core",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Value = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
+                    RatingBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Review = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProductVariantId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    SupplierId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Ratings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Ratings_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalSchema: "Core",
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Ratings_SupplierProducts_SupplierId_ProductId",
+                        columns: x => new { x.SupplierId, x.ProductId },
+                        principalSchema: "Core",
+                        principalTable: "SupplierProducts",
+                        principalColumns: new[] { "SupplierId", "ProductId" },
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Ratings_SupplierVariants_SupplierId_ProductId_ProductVariantId",
+                        columns: x => new { x.SupplierId, x.ProductId, x.ProductVariantId },
+                        principalSchema: "Core",
+                        principalTable: "SupplierVariants",
+                        principalColumns: new[] { "SupplierId", "ProductId", "ProductVariantId" },
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Ratings_Suppliers_SupplierId",
+                        column: x => x.SupplierId,
+                        principalSchema: "Core",
+                        principalTable: "Suppliers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "BasketItems",
                 schema: "Core",
                 columns: table => new
@@ -643,11 +783,39 @@ namespace Ramsha.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Stocks",
+                schema: "Core",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    InventoryItemId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    StockWholesalePriceAmount = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
+                    StockWholesalePriceCurrency = table.Column<int>(type: "int", nullable: false),
+                    Supplied = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    StockRetailPriceAmount = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
+                    StockRetailPriceCurrency = table.Column<int>(type: "int", nullable: false),
+                    StockFinalPriceAmount = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
+                    StockPriceCurrency = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Stocks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Stocks_InventoryItems_InventoryItemId",
+                        column: x => x.InventoryItemId,
+                        principalSchema: "Core",
+                        principalTable: "InventoryItems",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Discount",
                 schema: "Core",
                 columns: table => new
                 {
-                    InventoryItemId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StockId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Type = table.Column<int>(type: "int", nullable: false),
@@ -657,65 +825,12 @@ namespace Ramsha.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Discount", x => new { x.InventoryItemId, x.Id });
+                    table.PrimaryKey("PK_Discount", x => new { x.StockId, x.Id });
                     table.ForeignKey(
-                        name: "FK_Discount_InventoryItems_InventoryItemId",
-                        column: x => x.InventoryItemId,
+                        name: "FK_Discount_Stocks_StockId",
+                        column: x => x.StockId,
                         principalSchema: "Core",
-                        principalTable: "InventoryItems",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "InventoryItemImage",
-                schema: "Core",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    InventoryItemId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Path = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsHome = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_InventoryItemImage", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_InventoryItemImage_InventoryItems_InventoryItemId",
-                        column: x => x.InventoryItemId,
-                        principalSchema: "Core",
-                        principalTable: "InventoryItems",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ProductPrice",
-                schema: "Core",
-                columns: table => new
-                {
-                    InventoryItemId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Value = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
-                    Currency = table.Column<int>(type: "int", nullable: false),
-                    Type = table.Column<int>(type: "int", nullable: false),
-                    EffectiveDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastModifiedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    LastModified = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductPrice", x => new { x.InventoryItemId, x.Id });
-                    table.ForeignKey(
-                        name: "FK_ProductPrice_InventoryItems_InventoryItemId",
-                        column: x => x.InventoryItemId,
-                        principalSchema: "Core",
-                        principalTable: "InventoryItems",
+                        principalTable: "Stocks",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -733,16 +848,18 @@ namespace Ramsha.Persistence.Migrations
                 column: "ParentCategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_InventoryItemImage_InventoryItemId",
-                schema: "Core",
-                table: "InventoryItemImage",
-                column: "InventoryItemId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_InventoryItems_ProductId_ProductVariantId",
                 schema: "Core",
                 table: "InventoryItems",
                 columns: new[] { "ProductId", "ProductVariantId" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_InventoryItems_SupplierId_ProductId_ProductVariantId",
+                schema: "Core",
+                table: "InventoryItems",
+                columns: new[] { "SupplierId", "ProductId", "ProductVariantId" },
+                unique: true,
+                filter: "[ProductVariantId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrderItem_OrderId",
@@ -761,6 +878,12 @@ namespace Ramsha.Persistence.Migrations
                 schema: "Core",
                 table: "ProductImage",
                 columns: new[] { "ProductId", "ProductVariantId" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductImage_SupplierId_ProductId_ProductVariantId",
+                schema: "Core",
+                table: "ProductImage",
+                columns: new[] { "SupplierId", "ProductId", "ProductVariantId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductOption_OptionId",
@@ -791,6 +914,30 @@ namespace Ramsha.Persistence.Migrations
                 schema: "Core",
                 table: "Ratings",
                 column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Ratings_SupplierId_ProductId_ProductVariantId",
+                schema: "Core",
+                table: "Ratings",
+                columns: new[] { "SupplierId", "ProductId", "ProductVariantId" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Stocks_InventoryItemId",
+                schema: "Core",
+                table: "Stocks",
+                column: "InventoryItemId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SupplierProducts_ProductId",
+                schema: "Core",
+                table: "SupplierProducts",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SupplierVariants_ProductId_ProductVariantId",
+                schema: "Core",
+                table: "SupplierVariants",
+                columns: new[] { "ProductId", "ProductVariantId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Supply_SupplierId",
@@ -843,10 +990,6 @@ namespace Ramsha.Persistence.Migrations
                 schema: "Core");
 
             migrationBuilder.DropTable(
-                name: "InventoryItemImage",
-                schema: "Core");
-
-            migrationBuilder.DropTable(
                 name: "OrderItem",
                 schema: "Core");
 
@@ -856,10 +999,6 @@ namespace Ramsha.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "ProductOption",
-                schema: "Core");
-
-            migrationBuilder.DropTable(
-                name: "ProductPrice",
                 schema: "Core");
 
             migrationBuilder.DropTable(
@@ -887,11 +1026,11 @@ namespace Ramsha.Persistence.Migrations
                 schema: "Core");
 
             migrationBuilder.DropTable(
-                name: "Orders",
+                name: "Stocks",
                 schema: "Core");
 
             migrationBuilder.DropTable(
-                name: "InventoryItems",
+                name: "Orders",
                 schema: "Core");
 
             migrationBuilder.DropTable(
@@ -911,15 +1050,11 @@ namespace Ramsha.Persistence.Migrations
                 schema: "Core");
 
             migrationBuilder.DropTable(
+                name: "InventoryItems",
+                schema: "Core");
+
+            migrationBuilder.DropTable(
                 name: "Customers",
-                schema: "Core");
-
-            migrationBuilder.DropTable(
-                name: "ProductVariant",
-                schema: "Core");
-
-            migrationBuilder.DropTable(
-                name: "Suppliers",
                 schema: "Core");
 
             migrationBuilder.DropTable(
@@ -927,7 +1062,23 @@ namespace Ramsha.Persistence.Migrations
                 schema: "Core");
 
             migrationBuilder.DropTable(
+                name: "SupplierVariants",
+                schema: "Core");
+
+            migrationBuilder.DropTable(
+                name: "ProductVariant",
+                schema: "Core");
+
+            migrationBuilder.DropTable(
+                name: "SupplierProducts",
+                schema: "Core");
+
+            migrationBuilder.DropTable(
                 name: "Products",
+                schema: "Core");
+
+            migrationBuilder.DropTable(
+                name: "Suppliers",
                 schema: "Core");
 
             migrationBuilder.DropTable(

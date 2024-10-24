@@ -1,3 +1,4 @@
+
 import * as React from 'react';
 import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
 import MuiDrawer from '@mui/material/Drawer';
@@ -132,6 +133,11 @@ export default function Header() {
             label: 'Dashboard',
             value: 'supplier/dashboard',
             icon: <AppDashboardIcon />,
+        },
+        {
+            label: 'Supply Products',
+            value: 'supplier/add-product-to-supply',
+            icon: <Add />,
         },
         {
             label: 'Supply Products',

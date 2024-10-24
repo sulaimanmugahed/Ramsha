@@ -1,9 +1,17 @@
+using Ramsha.Domain.Common;
+
 namespace Ramsha.Domain.Inventory.Services;
 
 public class FixedAmountDiscountStrategy(decimal amount) : IDiscountStrategy
 {
-    public decimal ApplyDiscount(decimal originalPrice)
+    public Price ApplyDiscount(Price originalPrice)
     {
-        return originalPrice <=  amount ? 0 : originalPrice - amount;
+        if (originalPrice.Amount <= amount)
+        {
+            return new Price(0, originalPrice.Currency);
+        }
+
+        var discountedAmount = originalPrice.Amount - amount;
+        return new Price(discountedAmount, originalPrice.Currency);
     }
 }

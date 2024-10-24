@@ -13,6 +13,8 @@ using Ramsha.Application.Features.Suppliers.Queries.GetCurrentSupplierSupplyRequ
 using Ramsha.Application.Features.Suppliers.Commands.UpdateSupplyRequestItem;
 using Ramsha.Application.Features.Suppliers.Commands.RemoveSupplyRequestItem;
 using Ramsha.Application.Features.Suppliers.Queries.GetSupplyRequestItem;
+using Ramsha.Application.Features.Suppliers.Queries.GetSupplierInventoryItems;
+using Ramsha.Application.Features.Suppliers.Commands.AddSupplierVariant;
 
 namespace Ramsha.Api.Controllers.v1;
 
@@ -20,6 +22,10 @@ namespace Ramsha.Api.Controllers.v1;
 
 public class SuppliersController : BaseApiController
 {
+	[HttpPost("products")]
+	public async Task<BaseResult> CreateProduct(AddSupplierVariantCommand command)
+	=> await Mediator.Send(command);
+
 
 	[HttpGet("supply-request")]
 	public async Task<BaseResult<SupplyRequestDto?>> SupplyRequest()
@@ -62,6 +68,10 @@ public class SuppliersController : BaseApiController
 	[HttpPost("supply-request/send")]
 	public async Task<BaseResult> SendSupplyRequest(SendSupplyRequestCommand command)
 	=> await Mediator.Send(command);
+
+	[HttpGet("inventory/items")]
+	public async Task<BaseResult> GetInventoryItems()
+	=> await Mediator.Send(new GetSupplierInventoryItemsQuery());
 
 
 }

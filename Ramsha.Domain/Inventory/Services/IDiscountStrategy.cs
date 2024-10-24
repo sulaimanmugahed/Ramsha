@@ -1,8 +1,10 @@
 
 
+using Ramsha.Domain.Common;
+
 namespace Ramsha.Domain.Inventory.Services;
 
 public interface IDiscountStrategy
 {
-    decimal ApplyDiscount(decimal originalPrice);
+    Price ApplyDiscount(Price originalPrice);
 }

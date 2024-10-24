@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Ramsha.Application.Dtos.Products;
 
 public record ProductOptionCommand(
-    Guid Value,
+    Guid Id,
     int Priority
     );
 

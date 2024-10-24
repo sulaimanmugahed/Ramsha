@@ -13,7 +13,7 @@ public static class InventoryExtensions
         item.WholesalePrice,
         item.RetailPrice,
         item.InventorySKU,
-        item.Quantity,
+        item.AvailableQuantity,
         item.Status.ToString(),
         item.ImageUrl
     );
@@ -25,10 +25,9 @@ public static class InventoryExtensions
       item.WholesalePrice,
       item.RetailPrice,
       item.InventorySKU,
-      item.Quantity,
+      item.AvailableQuantity,
       item.Status.ToString(),
       item.ImageUrl,
-      item.Supplier,
       item.ProductVariant.AsDetailsDto()
   );
 }

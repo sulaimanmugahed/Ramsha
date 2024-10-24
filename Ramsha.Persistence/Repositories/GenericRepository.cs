@@ -18,8 +18,18 @@ public class GenericRepository<TEntity, TId>(ApplicationDbContext context)
     where TEntity : BaseEntity
 
 {
+    public async Task<TEntity?> GetByIdAsync(TId id)
+    {
+        if (id is CompositeKey compositeKey)
+            return await context.Set<TEntity>()
+                    .FindAsync(compositeKey.Keys);
+
+        return await context.Set<TEntity>()
+            .FindAsync(id);
+    }
     public async Task<TEntity> AddAsync(TEntity entity)
     {
+
         await context.Set<TEntity>()
              .AddAsync(entity);
         return entity;
@@ -76,9 +86,7 @@ public class GenericRepository<TEntity, TId>(ApplicationDbContext context)
         => await context.Set<TEntity>()
             .ToListAsync();
 
-    public async Task<TEntity?> GetByIdAsync(TId id)
-        => await context.Set<TEntity>()
-             .FindAsync(id);
+
 
 
     protected async Task<PaginationResponseDto<T>> Paged<T>(IQueryable<T> query, PaginationParams paginationParams)

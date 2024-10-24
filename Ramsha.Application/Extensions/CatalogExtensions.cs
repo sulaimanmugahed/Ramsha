@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 using Ramsha.Application.Dtos.Catalog;
-using Ramsha.Application.Dtos.Suppliers;
 using Ramsha.Domain.Inventory.Entities;
 using Ramsha.Domain.Products.Entities;
 
@@ -46,7 +42,7 @@ public static class CatalogExtensions
     {
         return new CatalogInventoryItemDetailDto(
             item.Id.Value,
-            item.Quantity,
+            item.AvailableQuantity,
             item.InventorySKU,
             item.RetailPrice,
             item.FinalPrice,

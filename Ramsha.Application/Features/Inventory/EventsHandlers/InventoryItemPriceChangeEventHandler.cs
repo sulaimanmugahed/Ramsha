@@ -24,12 +24,12 @@ public class InventoryItemPriceChangeEventHandler(
             var variant = product.Variants.FirstOrDefault(x => x.Id == notification.ProductVariantId);
             if (variant == null) return;
 
-            variant.UpdatePrice(notification.RetailPrice, notification.FinalPrice);
+            variant.UpdatePrice(notification.RetailPrice.Amount, notification.FinalPrice.Amount);
             product.UpdatePriceFromVariants();
         }
         else
         {
-            product.UpdatePrice(notification.RetailPrice, notification.FinalPrice);
+            product.UpdatePrice(notification.RetailPrice.Amount, notification.FinalPrice.Amount);
         }
 
         await unitOfWork.SaveChangesAsync();

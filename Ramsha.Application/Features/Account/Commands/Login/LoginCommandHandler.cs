@@ -16,6 +16,7 @@ using System.Net.Http;
 namespace Ramsha.Application.Features.Account.Commands.Login;
 internal class LoginCommandHandler(
 	IAccountServices accountServices,
+	IAuthenticatedUserService authenticatedUserService,
 	IBasketRepository basketRepository,
 	ICookieService cookieService,
 	IUnitOfWork unitOfWork)
@@ -43,6 +44,7 @@ internal class LoginCommandHandler(
 					Secure = true,
 				});
 		}
+
 
 		return result.Data!.Role switch
 		{

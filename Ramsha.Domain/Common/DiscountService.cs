@@ -13,21 +13,7 @@ public class DiscountService : IDiscountService
     {
         decimal finalPrice = price;
 
-        if (discounts.Count > 0)
-        {
-            var discountChain = DiscountChain.Create();
 
-            foreach (var discount in discounts)
-            {
-                var strategy = DiscountStrategyFactory.Create(discount);
-
-                if (strategy is not null)
-                    discountChain.AddDiscount(strategy);
-
-            }
-            finalPrice = discountChain.ApplyDiscount(finalPrice);
-
-        }
         return finalPrice;
     }
 }

@@ -137,6 +137,7 @@ IOptionsSnapshot<JWTSettings> jwtSettings) : IAccountServices
         var jwToken = await GenerateJwtToken(user);
 
 
+
         AuthenticationResult response = new AuthenticationResult()
         {
             AccountId = user.Id,

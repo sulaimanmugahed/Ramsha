@@ -20,7 +20,7 @@ public class ApplyInventoryItemDiscountCommandHandler(
             return new Error(ErrorCode.RequestedDataNotExist);
 
         var discount = Discount.Create(request.DiscountValue, request.StartData, request.EndData, request.DiscountType);
-        inventoryItem.AddDiscount(discount);
+        //   inventoryItem.AddDiscount(discount);
 
         await unitOfWork.SaveChangesAsync();
 

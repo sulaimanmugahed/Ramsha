@@ -181,7 +181,7 @@ const CreateProductPage = ({ }: Props) => {
 
 
     const handleProductSubmission = async (data: ProductFormScheme) => {
-        const { file, variants, ...productData } = data
+        const { file, variants, options, ...productData } = data
 
 
 
@@ -197,7 +197,7 @@ const CreateProductPage = ({ }: Props) => {
             imageUrl = uploadResponse.url
         }
 
-        const productId = await submitProductBasic({ ...productData, variants: variantsToAdd, imageUrl })
+        const productId = await submitProductBasic({ ...productData, variants: variantsToAdd, options: options.map(o => ({ priority: o.priority, id: o.id })), imageUrl })
         return productId
     }
 

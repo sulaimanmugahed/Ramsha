@@ -1,12 +1,36 @@
 ﻿using Ramsha.Application.Dtos.Account.Responses;
 using Ramsha.Application.Dtos.Suppliers;
 using Ramsha.Application.DTOs.Account.Responses;
+using Ramsha.Domain.Inventory.Entities;
 using Ramsha.Domain.Suppliers.Entities;
 
 
 namespace Ramsha.Application.Extensions;
 public static class SupplierExtensions
 {
+
+	public static SupplierInventoryItemDto AsSupplierInventoryItemDto(this InventoryItem inventoryItem)
+	{
+		return new SupplierInventoryItemDto(
+			inventoryItem.Id.Value,
+			inventoryItem.ProductName,
+			inventoryItem.InventorySKU,
+			inventoryItem.AvailableQuantity,
+			inventoryItem.TotalQuantity,
+			new StockPriceDto(
+				inventoryItem.WholesalePrice,
+				inventoryItem.RetailPrice,
+				inventoryItem.FinalPrice,
+				inventoryItem.Currency
+			),
+			$"https://picsum.photos/200?random={inventoryItem.Id.Value}"
+
+
+		);
+	}
+
+
+
 	public static AuthenticatedSupplierDto AsAuthSupplierDto(this AuthenticationResult authenticationResult)
 	{
 		return new()

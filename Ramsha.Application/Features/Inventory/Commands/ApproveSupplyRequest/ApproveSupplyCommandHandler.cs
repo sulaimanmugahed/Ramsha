@@ -27,32 +27,28 @@ public class ApproveSupplyCommandHandler(
 
         foreach (var item in supplyReq.Items)
         {
+            var price = new Domain.Common.Price(item.WholesalePrice, supplyReq.Currency);
 
             var inventoryItem = await inventoryItemRepository.GetAsync(x =>
                 x.ProductId == item.ItemSupplied.ProductId &&
-                x.Supplier == supplyReq.Supplier &&
-                x.ProductVariantId == item.ItemSupplied.ProductVariantId);
+                //x.Supplier == supplyReq.Supplier &&
+                x.ProductVariantId == item.ItemSupplied.ProductVariantId,
+                x => x.Stocks);
 
-            var price = ProductPrice.Create(item.WholesalePrice, supplyReq.Currency, PriceType.Wholesale);
+            // if (inventoryItem is null)
+            // {
+            //     inventoryItem = InventoryItem.Create(
+            //         item.ItemSupplied.ProductId,
+            //         item.ItemSupplied.ProductVariantId,
+            //         supplyReq.Supplier,
+            //         item.ItemSupplied.Name,
+            //         item.ItemSupplied.Sku
 
-            if (inventoryItem is null)
-            {
-                inventoryItem = InventoryItem.Create(
-                    item.ItemSupplied.ProductId,
-                    item.ItemSupplied.ProductVariantId,
-                    supplyReq.Supplier,
-                    item.ItemSupplied.Name,
-                    item.Quantity,
-                    price,
-                    item.ItemSupplied.Sku
-                );
+            //     );
+            //     await inventoryItemRepository.AddAsync(inventoryItem);
+            // }
 
-                await inventoryItemRepository.AddAsync(inventoryItem);
-            }
-            else
-            {
-                inventoryItem.UpdateInventory(item.Quantity, price);
-            }
+            inventoryItem.AddStock(item.Quantity, price);
         }
 
         supplyReq.SetStatus(SupplyStatus.Approved);

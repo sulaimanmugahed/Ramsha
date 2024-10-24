@@ -39,7 +39,7 @@ public class SendSupplyRequestCommandHandler(
             var supplyItem = SupplyItem.Create(itemSupplied, item.WholesalePrice, item.Quantity);
             supply.AddItem(supplyItem);
             totalQuantity += item.Quantity;
-            totalPrice += item.WholesalePrice;
+            totalPrice += item.WholesalePrice * item.Quantity;
         }
         supply.SetTotal(totalPrice, totalQuantity);
 

@@ -379,7 +379,7 @@ const CatalogProductDetailPage = () => {
 
                         </Grid>
                         {
-                            productOptionsNames && (
+                            productOptionsNames && product.variants.length > 0 && (
                                 <VariantValuesSelector
                                     availableOptionsNames={productOptionsNames}
                                     onClose={() => setOpenVariantDialog(false)}
