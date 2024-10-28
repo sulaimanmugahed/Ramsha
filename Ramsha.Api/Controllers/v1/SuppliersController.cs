@@ -15,24 +15,52 @@ using Ramsha.Application.Features.Suppliers.Commands.RemoveSupplyRequestItem;
 using Ramsha.Application.Features.Suppliers.Queries.GetSupplyRequestItem;
 using Ramsha.Application.Features.Suppliers.Queries.GetSupplierInventoryItems;
 using Ramsha.Application.Features.Suppliers.Commands.AddSupplierVariant;
+using Ramsha.Application.Features.Suppliers.Queries.GetCurrentSupplierProducts;
+using Ramsha.Application.Features.Suppliers.Queries.GetCurrentSupplierProductVariant;
+using Ramsha.Application.Features.Suppliers.Queries.GetCurrentSupplierProductVariantList;
+using Ramsha.Application.Features.Suppliers.Commands.UpdateSupplierVariant;
 
 namespace Ramsha.Api.Controllers.v1;
 
 [ApiVersion("1.0")]
-
+[Authorize(Roles = Roles.Supplier)]
 public class SuppliersController : BaseApiController
 {
-	[HttpPost("products")]
-	public async Task<BaseResult> CreateProduct(AddSupplierVariantCommand command)
-	=> await Mediator.Send(command);
+	[HttpPost("products/{productId}/variants/{variantId}")]
+	public async Task<BaseResult> CreateProduct(Guid productId, Guid variantId, AddSupplierVariantCommand command)
+	{
+		command.ProductId = productId;
+		command.ProductVariantId = variantId;
+		return await Mediator.Send(command);
+	}
+
+	[HttpPost("products/paged")]
+	public async Task<BaseResult<List<SupplierProductDto>>> GetCurrentSupplierProducts(GetCurrentSupplierProductsQuery query)
+	=> await Mediator.Send(query);
+
+	[HttpGet("products/{productId}/variants/{variantId}")]
+	public async Task<BaseResult<SupplierVariantDto?>> GetCurrentSupplierVariant(Guid productId, Guid variantId)
+	=> await Mediator.Send(new GetCurrentSupplierProductVariantQuery { ProductId = productId, VariantId = variantId });
+
+	[HttpGet("products/{productId}/variants/")]
+	public async Task<BaseResult<List<SupplierVariantDto>>> GetCurrentSupplierVariants(Guid productId)
+	=> await Mediator.Send(new GetCurrentSupplierProductVariantListQuery { ProductId = productId });
+
+	[HttpPut("products/{productId}/variants/{variantId}")]
+	public async Task<BaseResult> UpdateVariant(Guid productId, Guid variantId, UpdateSupplierVariantCommand command)
+	{
+		command.ProductId = productId;
+		command.VariantId = variantId;
+		return await Mediator.Send(command);
+	}
+
 
 
 	[HttpGet("supply-request")]
 	public async Task<BaseResult<SupplyRequestDto?>> SupplyRequest()
 	=> await Mediator.Send(new GetCurrentSupplierSupplyRequestQuery());
 
-
-	[HttpPost]
+	[HttpPost, AllowAnonymous]
 	public async Task<ActionResult<BaseResult<string>>> Create(CreateSupplierCommand command)
 		=> await Mediator.Send(command);
 
@@ -40,16 +68,9 @@ public class SuppliersController : BaseApiController
 	public async Task<BaseResult<string?>> CreateSupplyRequest(CreateSupplyRequestCommand command)
 	=> await Mediator.Send(command);
 
-	[HttpPost(nameof(AddSupplyRequestItem))]
-	public async Task<BaseResult<SupplyRequestDto>> AddSupplyRequestItem(AddSupplyRequestItemCommand command)
+	[HttpPost("supply-request/items")]
+	public async Task<BaseResult<SupplyRequestDto>> AddOrUpdateSupplyRequestItem(AddOrUpdateSupplyRequestItemCommand command)
 	=> await Mediator.Send(command);
-
-	[HttpPut("supply-request/items/{id}")]
-	public async Task<BaseResult> UpdateSupplyRequestItem(Guid id, UpdateSupplyRequestItemCommand command)
-	{
-		command.SupplyRequestItemId = id;
-		return await Mediator.Send(command);
-	}
 
 
 	[HttpPost("supplies")]

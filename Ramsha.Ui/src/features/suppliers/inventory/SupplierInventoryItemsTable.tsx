@@ -1,6 +1,6 @@
 import { createColumnHelper } from "@tanstack/react-table"
 import { useServerDataTable } from "../../../app/hooks/tableHooks"
-import { SupplierInventoryItem } from "../../../app/models/suppliers/SupplierInventoryItem"
+import { SupplierInventoryItem } from "../../../app/models/suppliers/supplierInventoryItem"
 import AppTable from "../../../app/components/AppTable"
 import AppActionsMenu from "../../../app/components/table/AppActionsMenu"
 

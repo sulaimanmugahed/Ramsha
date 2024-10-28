@@ -13,9 +13,9 @@ const SupplierDashboard: React.FC = () => {
     const theme = useTheme();
 
     return (
-        <Box sx={{ flexGrow: 1, padding: 2 }}>
+        <Box sx={{ flexGrow: 1 }}>
 
-            <Grid container spacing={2} sx={{ my: 2 }}>
+            <Grid container spacing={2} sx={{ }}>
                 <Grid item xs={12} md={3}>
                     <Paper elevation={3} className="card" sx={{ border: '1px solid', borderColor: (theme) => alpha(theme.palette.primary.main, 0.5) }}>
                         <div className="card-container">

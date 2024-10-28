@@ -6,12 +6,13 @@ using Ramsha.Domain.Products.Entities;
 using Ramsha.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Ramsha.Application.Contracts;
 
 namespace Ramsha.Persistence.Seeds;
 
 public class DefaultData
 {
-    public static async Task SeedAsync(ApplicationDbContext context, ILogger<DefaultData> logger)
+    public static async Task SeedAsync(ApplicationDbContext context, ILogger<DefaultData> logger, ICodeGenerator codeGenerator)
     {
         context.Database.EnsureCreated();
 
@@ -64,10 +65,12 @@ public class DefaultData
             foreach (var category in categories.Keys)
             {
                 var categoryToAdd = Category.Create(category);
+                categoryToAdd.SetCode(codeGenerator.GenerateCategoryCode(categoryToAdd.Id.Value));
 
                 foreach (var child in categories[category])
                 {
                     var childTpAdd = Category.Create(child);
+                    childTpAdd.SetCode(codeGenerator.GenerateCategoryCode(childTpAdd.Id.Value));
                     categoryToAdd.AddChild(childTpAdd);
                 }
 

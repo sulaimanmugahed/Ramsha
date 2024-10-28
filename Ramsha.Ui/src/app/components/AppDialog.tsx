@@ -47,15 +47,20 @@ const AppDialog = ({
                     borderRadius: theme.shape.borderRadius * 1,
                     boxShadow: theme.shadows[10],
                     margin: 0,
-                    width: maxWidth === 'md' ? {
+                    width: maxWidth === 'sm' ? {
                         xs: '90%',
                         sm: '80%',
                         md: '60%',
                         lg: '40%',
+                    } : maxWidth === 'md' ? {
+                        xs: '90%',
+                        sm: '90%',
+                        md: '80%',
+                        lg: '60%',
                     } : undefined,
-                },
 
-                ...styles,
+                },
+                ...styles
             }}
             open={open}
             onClose={onClose}

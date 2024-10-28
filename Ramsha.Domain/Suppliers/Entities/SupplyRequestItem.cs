@@ -10,29 +10,21 @@ public class SupplyRequestItem
     {
 
     }
-    public SupplyRequestItem(SupplyRequestItemId id, ProductId productId, ProductVariantId? productVariantId, decimal wholesalePrice, int quantity)
+    public SupplyRequestItem(SupplyRequestItemId id, ProductId productId, ProductVariantId productVariantId, SupplierId supplierId, int quantity)
     {
         Id = id;
-        WholesalePrice = wholesalePrice;
         Quantity = quantity;
         ProductId = productId;
         ProductVariantId = productVariantId;
+        SupplierId = supplierId;
+
     }
 
-    public static SupplyRequestItem Create(ProductId productId, ProductVariantId? productVariantId, decimal wholesalePrice, int quantity)
+    public static SupplyRequestItem Create(ProductId productId, ProductVariantId productVariantId, SupplierId supplierId, int quantity)
     {
-        return new SupplyRequestItem(new SupplyRequestItemId(Guid.NewGuid()), productId, productVariantId, wholesalePrice, quantity);
+        return new SupplyRequestItem(new SupplyRequestItemId(Guid.NewGuid()), productId, productVariantId, supplierId, quantity);
     }
 
-    public void SetWholesalePrice(decimal newPrice)
-    {
-        WholesalePrice = newPrice;
-    }
-
-    public void SetSKU(string sku)
-    {
-        SKU = sku;
-    }
 
     public void SetQuantity(int quantity)
     {
@@ -49,13 +41,9 @@ public class SupplyRequestItem
     public SupplyRequestItemId Id { get; private set; }
     public SupplyRequestId SupplyRequestId { get; set; }
     public SupplyRequest SupplyRequest { get; set; }
-
     public ProductId ProductId { get; private set; }
-    public Product Product { get; private set; }
-
-    public ProductVariant? ProductVariant { get; private set; }
-    public ProductVariantId? ProductVariantId { get; private set; }
-    public string SKU { get; set; }
-    public decimal WholesalePrice { get; private set; }
+    public SupplierId SupplierId { get; private set; }
+    public ProductVariantId ProductVariantId { get; private set; }
+    public SupplierVariant SupplierVariant { get; private set; }
     public int Quantity { get; private set; }
 }

@@ -18,8 +18,7 @@ import AppLoadingWaves from '../../app/components/AppLoadingWaves'
 import { UploadResponse } from '../../app/models/common/commonModels'
 import { useNavigate } from 'react-router-dom'
 import ProductOptionsForm from './ProductOptionsForm'
-
-
+import { DevTool } from '@hookform/devtools'
 
 
 type Props = {
@@ -53,7 +52,7 @@ const CreateProductPage = ({ }: Props) => {
             name: '',
             description: '',
             category: '',
-            file: null,
+            productImage: null,
             variants: [],
             options: [{ id: '', priority: 1 }],
             seoSettings: null,
@@ -147,10 +146,6 @@ const CreateProductPage = ({ }: Props) => {
                 </Grid >
             )
         },
-
-
-
-
     ]
 
     const submitDisabled = () => {
@@ -158,17 +153,17 @@ const CreateProductPage = ({ }: Props) => {
             || (activeStep === commandSteps.length - 1 && !isSubmitSuccessful)
     }
 
-
-
     const handleVariantSubmission = async (variants: VariantScheme[]) => {
         const uploadedVariants = await Promise.all(
             variants.map(async (variant) => {
-                let uploadedImages: UploadResponse[] = []
-                const files = variant.variantImages?.map(x => x.file as File);
-                if (files)
-                    uploadedImages = await uploadVariantImages({ path: 'variants', files });
+                let imageUrl = variant.file?.preview
+                const newFile = variant.file?.file
+                if (newFile) {
+                    const uploadResponse = await uploadProductImage({ path: 'products', file: newFile })
+                    imageUrl = uploadResponse.url
+                }
 
-                return { ...variant, variantImages: uploadedImages };
+                return { ...variant, imageUrl };
             })
         );
 
@@ -181,17 +176,15 @@ const CreateProductPage = ({ }: Props) => {
 
 
     const handleProductSubmission = async (data: ProductFormScheme) => {
-        const { file, variants, options, ...productData } = data
-
-
+        const { productImage, variants, options, ...productData } = data
 
         let variantsToAdd: any[] = []
         if (variants.length > 0) {
             variantsToAdd = await handleVariantSubmission(variants);
         }
 
-        let imageUrl = file?.preview
-        const newFile = file?.file
+        let imageUrl = productImage?.preview
+        const newFile = productImage?.file
         if (newFile) {
             const uploadResponse = await uploadProductImage({ path: 'products', file: newFile })
             imageUrl = uploadResponse.url
@@ -298,6 +291,7 @@ const CreateProductPage = ({ }: Props) => {
                             </Grid>
                         </Grid>
                     </FormProvider>
+                    <DevTool control={methods.control} />
                 </LocalizationProvider>
             </DialogContent>
         </Dialog>

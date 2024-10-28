@@ -69,7 +69,7 @@ public class ProductVariant : BaseEntity
 
     public string Name { get; private set; }
     public string? Description { get; private set; }
-    public string SKU { get; private set; }
+    public string Code { get; private set; }
     public string? ImageUrl { get; private set; }
     public decimal Price { get; private set; }
     public decimal FinalPrice { get; private set; }
@@ -80,6 +80,11 @@ public class ProductVariant : BaseEntity
 
     public List<ProductImage> Images { get; set; } = [];
 
+
+    public void SetImage(string url)
+    {
+        ImageUrl = url;
+    }
 
 
     public void SetBasePrice(decimal price)
@@ -122,9 +127,9 @@ public class ProductVariant : BaseEntity
     }
 
 
-    public void SetSKU(string sku)
+    public void SetCode(string code)
     {
-        SKU = sku;
+        Code = code;
     }
 
     public void UpdatePriceBasedOnStrategy(ProductPricingStrategy productPricingStrategy, List<InventoryItem> inventories)

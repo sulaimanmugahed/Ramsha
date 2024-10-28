@@ -14,7 +14,8 @@ public class CreateProductCommandHandler(
     IBrandRepository brandRepository,
     IVariantService variantService,
     IOptionRepository optionRepository,
-    IUnitOfWork unitOfWork
+    IUnitOfWork unitOfWork,
+    ICodeGenerator codeGenerator
 ) : IRequestHandler<CreateProductCommand, BaseResult<string?>>
 {
     public async Task<BaseResult<string?>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
@@ -34,6 +35,8 @@ public class CreateProductCommandHandler(
 
         product.SetBrand(brand.Id);
 
+        var productCode = codeGenerator.GenerateProductCode(category.Code, product.Id.Value);
+        product.SetCode(productCode);
 
         if (!string.IsNullOrEmpty(request.ImageUrl))
             product.SetImage(request.ImageUrl);
@@ -78,11 +81,11 @@ public class CreateProductCommandHandler(
                     return new Error(ErrorCode.ThisDataAlreadyExist, "this variant is already exist");
 
                 var productVariant = ProductVariant.Create(product.Id,
-                 variant.Name ?? product.Name,
-                  variant.Description ?? product.Description);
+                product.Name,
+                product.Description);
 
-                if (variant.BasePrice.HasValue)
-                    productVariant.SetBasePrice(variant.BasePrice.Value);
+                if (!string.IsNullOrEmpty(variant.ImageUrl))
+                    productVariant.SetImage(variant.ImageUrl);
 
                 List<string> optionValuesNames = [];
 
@@ -105,24 +108,7 @@ public class CreateProductCommandHandler(
                     productVariant.AddValue(option.Id, value.Id);
                 }
 
-                var variantImage = variant.VariantImages;
-
-                if (variantImage is not null && variantImage.Count > 0)
-                {
-                    for (var index = 0; index < variantImage.Count; index++)
-                    {
-                        productVariant.AddImage(
-                            variantImage[index].Url,
-                            variantImage[index].FullPath,
-                            index == 0
-                        );
-                    }
-
-                }
-
-                var sku = variantService.GenerateSKU(product.Name, optionValuesNames);
-
-                productVariant.SetSKU(sku);
+                productVariant.SetCode(codeGenerator.GenerateVariantCode(product.Code, optionValuesNames));
 
                 product.AddVariant(productVariant);
             }

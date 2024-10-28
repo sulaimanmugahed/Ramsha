@@ -14,9 +14,10 @@ const schemaMultiImage = z.object({
 
 
 export const variantSchema = z.object({
-    name: z.string(),
-    description: z.string(),
-    basePrice: z.string(),
+    file: z.object({
+        file: z.any(),
+        preview: z.string().url({ message: "Invalid file format." }).nullable(),
+    }).nullable(),
     variantValues: z.array(z.object({
         option: z.string().min(1, "Option name is required"),
         value: z.string().min(1, "Option value is required"),
@@ -27,11 +28,7 @@ export const variantSchema = z.object({
     }, {
         message: "Duplicate option values are not allowed",
         path: [],
-    }),
-    variantImages: z.array(z.object({
-        file: z.any().optional(),
-        preview: z.string().url({ message: "Invalid file format." }).nullable(),
-    })).nullable()
+    })
 });
 
 
@@ -59,9 +56,8 @@ export const basicInfoSchema = z.object({
     name: z.string(),
     description: z.string(),
     brand: z.string().min(10),
-    basePrice: z.string(),
     category: z.string().min(10),
-    file: z.object({
+    productImage: z.object({
         file: z.any(),
         preview: z.string().url({ message: "Invalid file format." }).nullable(),
     }).nullable(),

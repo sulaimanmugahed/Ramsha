@@ -24,7 +24,6 @@ IUnitOfWork unitOfWork
         if (item is null)
             return new Error(ErrorCode.RequestedDataNotExist, "no item exist", nameof(request.SupplyRequestItemId));
 
-        item.SetWholesalePrice(request.WholesalePrice);
         item.SetQuantity(request.Quantity);
 
         await unitOfWork.SaveChangesAsync();

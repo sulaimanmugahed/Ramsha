@@ -183,6 +183,8 @@ public class ProductRepository(ApplicationDbContext context)
        );
    }
 
+  
+
 
    public async Task<PaginationResponseDto<ProductDto>> GetProductsPaged(PaginationParams paginationParams, FilterParams? filterParams = null, SortingParams? sortingParams = null)
    {

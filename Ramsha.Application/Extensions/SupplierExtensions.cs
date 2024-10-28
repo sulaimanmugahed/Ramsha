@@ -25,7 +25,19 @@ public static class SupplierExtensions
 			),
 			$"https://picsum.photos/200?random={inventoryItem.Id.Value}"
 
+		);
+	}
 
+	public static SupplierVariantDto AsSupplierVariantDto(this SupplierVariant sVariant)
+	{
+		return new SupplierVariantDto(
+			sVariant.ProductVariantId.Value,
+			sVariant.Code,
+			sVariant.WholesalePrice,
+			sVariant.RetailPrice,
+			sVariant.Description,
+			sVariant.SupplierProductImages.Select(x => new Dtos.Products.ProductImageDto(x.Url, x.IsHome)).ToList(),
+			sVariant.ProductVariant.VariantValues.Select(x => x.AsDto()).ToList()
 		);
 	}
 
@@ -60,9 +72,9 @@ public static class SupplierExtensions
 		x.Id.Value,
 		x.ProductId.Value,
 		x.ProductVariantId.Value,
-		x.SKU,
+		x.SupplierVariant.Code,
 		x.Quantity,
-		x.WholesalePrice
+		x.SupplierVariant.WholesalePrice
 	);
 
 	public static SupplyRequestDto AsSupplyRequestDto(this SupplyRequest supplyRequest)

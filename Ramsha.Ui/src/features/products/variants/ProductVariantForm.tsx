@@ -23,6 +23,7 @@ import AppFormError from '../../../app/components/AppFormError';
 import AppTextInput from '../../../app/components/AppTextInput';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { ProductOption } from '../../../app/models/products/product';
+import AppDropzone from '../../../app/components/AppDropzone';
 
 type Props = {
     name?: string;
@@ -56,48 +57,6 @@ const ProductVariantForm = ({ onSubmit, name, type, onClick, availableOptions }:
 
     return (
         <Grid container component={'form'} onSubmit={type === "submit" && onSubmit ? handleSubmit(onSubmit) : undefined} xs={12}>
-            <Grid container mb={2} sx={{ mb: 4 }} spacing={2}>
-                <Grid item xs={6}>
-                    <AppTextInput
-                        control={control}
-                        name={name ? `${name}.name` : 'name'}
-                        label={t('Name')}
-
-                        inputStyle={{ borderRadius: 1 }}
-                        fullWidth
-                    />
-                </Grid>
-                <Grid item xs={6}>
-                    <AppTextInput
-                        control={control}
-                        name={name ? `${name}.basePrice` : 'basePrice'}
-                        label={t('BasePrice')}
-                        type='number'
-
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <AttachMoney />
-                                </InputAdornment>
-                            ),
-                        }}
-                        inputStyle={{ borderRadius: 1 }}
-                        fullWidth
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <AppTextInput
-                        control={control}
-                        name={name ? `${name}.description` : 'description'}
-                        label={t('Description')}
-                        multiline
-                        inputStyle={{ borderRadius: 2 }}
-                        minRows={7}
-                        fullWidth
-                    />
-                </Grid>
-            </Grid>
-
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
                 <Typography variant="h6" gutterBottom color="text.secondary">
                     {t('Options for Variant')}
@@ -112,7 +71,6 @@ const ProductVariantForm = ({ onSubmit, name, type, onClick, availableOptions }:
                     const variantValueName = name ? `${name}.variantValues` : 'variantValues'
                     const variantOptionName = `${variantValueName}[${variantValueIndex}].option`
                     const variantOptionValueName = `${variantValueName}[${variantValueIndex}].value`
-
                     return (
                         <Grid item xs={12} sm={6} key={variantValue.id}>
                             <Card sx={{ mb: 2, bgcolor: 'inherit', borderRadius: 2 }}>
@@ -163,14 +121,13 @@ const ProductVariantForm = ({ onSubmit, name, type, onClick, availableOptions }:
                                             </IconButton>
                                         </Grid>
                                     </Grid>
-
-
                                 </CardContent>
                             </Card>
                         </Grid>
 
                     );
                 })}
+
 
                 <Grid item xs={12}>
                     <Button
@@ -186,21 +143,16 @@ const ProductVariantForm = ({ onSubmit, name, type, onClick, availableOptions }:
                 </Grid>
             </Grid>
 
-
-
-
-
             <Box sx={{ width: '100%', mb: 4 }}>
                 <Typography variant="h6" gutterBottom color="text.secondary">
-                    {t('Images for Variant')}
+                    {t('Variant Image')}
                 </Typography>
-
-                <AppMultiDropzone
-                    control={control}
-                    name={name ? `${name}.variantImages` : 'variantImages'}
-                />
             </Box>
-
+            <Grid item xs={12} sx={{ mb: 2 }}>
+                <Box sx={{ height: '100%' }}>
+                    <AppDropzone control={control} name="file" />
+                </Box>
+            </Grid>
 
             <LoadingButton sx={{ borderRadius: 20, width: 100 }} disabled={!isValid} loading={isSubmitting} variant='outlined' type={type} onClick={onClick}>
                 Save

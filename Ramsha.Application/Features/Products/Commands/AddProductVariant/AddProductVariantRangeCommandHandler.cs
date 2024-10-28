@@ -11,7 +11,9 @@ namespace Ramsha.Application.Features.Products.Commands.AddProductVariant;
 public class AddProductVariantRangeCommandHandler(
     IProductRepository productRepository,
     IUnitOfWork unitOfWork,
-    IOptionRepository optionRepository
+    IOptionRepository optionRepository,
+    ICodeGenerator codeGenerator
+
 ) : IRequestHandler<AddProductVariantRangeCommand, BaseResult>
 {
     public async Task<BaseResult> Handle(AddProductVariantRangeCommand request, CancellationToken cancellationToken)
@@ -26,11 +28,12 @@ public class AddProductVariantRangeCommandHandler(
                 return new Error(ErrorCode.ThisDataAlreadyExist, "this variant is already exist");
 
             var productVariant = ProductVariant.Create(product.Id,
-                 variant.Name ?? product.Name,
-                  variant.Description ?? product.Description);
+                product.Name,
+                product.Description);
 
-            if (variant.BasePrice.HasValue)
-                productVariant.SetBasePrice(variant.BasePrice.Value);
+            if (!string.IsNullOrEmpty(variant.ImageUrl))
+                productVariant.SetImage(variant.ImageUrl);
+
 
             List<string> optionValuesNames = [];
 
@@ -54,54 +57,13 @@ public class AddProductVariantRangeCommandHandler(
             }
 
 
-            var variantImage = variant.VariantImages;
 
-
-            if (variantImage is not null && variantImage.Count > 0)
-            {
-                for (var index = 0; index < variantImage.Count; index++)
-                {
-                    productVariant.AddImage(
-                        variantImage[index].Url,
-                        variantImage[index].FullPath,
-                        index == 0
-                    );
-                }
-            }
-
-
-
-            var sku = GenerateSKU(product.Name, optionValuesNames);
-
-            productVariant.SetSKU(sku);
+            productVariant.SetCode(codeGenerator.GenerateVariantCode(product.Code, optionValuesNames));
 
             product.AddVariant(productVariant);
 
         }
 
-
-
-        // var images = request.Images;
-
-        // if (images is not null)
-        // {
-        //     for (var index = 0; index < images.Count; index++)
-        //     {
-        //         var imagePath = await storageService.UploadFile(
-        //          images[index],
-        //          ApplicationFoldersNames.ProductImagesFolderName + $"/{sku}");
-        //         if (imagePath is null)
-        //             return new Error(ErrorCode.Exception);
-
-        //         var imageUrl = storageService.GetImageUrl(imagePath);
-
-        //         productVariant.AddImage(
-        //             imageUrl,
-        //             imagePath,
-        //             index == 0
-        //         );
-        //     }
-        // }
 
         await unitOfWork.SaveChangesAsync();
 

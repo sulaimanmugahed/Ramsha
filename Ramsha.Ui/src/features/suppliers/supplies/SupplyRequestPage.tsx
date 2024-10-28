@@ -1,64 +1,69 @@
 import React, { useState } from 'react';
 import {
-  TextField, Button, List, ListItem, Avatar, Select, MenuItem,
-  Table, TableBody, TableCell, TableHead, TableRow, IconButton, Box, Typography, Paper,
-  Chip
+  Select, MenuItem,
+  Table, TableBody, TableCell, TableHead, TableRow, IconButton, Box, Typography,
 } from '@mui/material';
-import { Search as SearchIcon, Delete as DeleteIcon } from '@mui/icons-material';
-import AppSearch from '../../../app/components/AppSearch';
-import SupplierProductList from './SupplierProductList';
-import { ProductDto } from '../../../app/models/products/product';
-import { useProducts, useProductVariants } from '../../../app/hooks/productHooks';
+import { Delete as DeleteIcon } from '@mui/icons-material';
 import { useNavigate, Outlet } from 'react-router-dom';
-import { useRemoveSupplyItem, useSendSupplyRequest, useSupplyRequest } from '../../../app/hooks/supplierHooks';
+import { useRemoveSupplyItem, useSendSupplyRequest, useSupplyRequest, useAddOrUpdateSupplyItem } from '../../../app/hooks/supplierHooks';
 import { AppEditIcon } from '../../../app/components/icons/AppEditIcon';
 import LoadingButton from '@mui/lab/LoadingButton';
+import QuantitySelectorDialog from '../../../app/components/QuantitySelectorDialog';
+import { SupplyRequestItem } from '../../../app/models/suppliers/supplyRequest';
 
 const SupplyRequestPage: React.FC = () => {
   const [currency, setCurrency] = useState('USD');
-  const { products } = useProducts({ paginationParams: { pageNumber: 1, pageSize: 10 } });
   const navigate = useNavigate();
   const { supplyRequest } = useSupplyRequest();
   const { removeItem } = useRemoveSupplyItem();
   const { send, isSendPending } = useSendSupplyRequest();
+  const [selectedItem, setSelectedItem] = useState<SupplyRequestItem | null>(null)
+  const { addOrUpdateItem } = useAddOrUpdateSupplyItem()
 
-  const handleProductSelect = (product: ProductDto) => {
-    navigate(`/supplier/supply-request/add-item/${product.id}`);
+
+  const handleItemEdit = (selectedItem: SupplyRequestItem) => {
+    console.log(selectedItem)
+    setSelectedItem(selectedItem)
   };
 
-  const handleItemEdit = (itemId: string) => {
-    navigate(`/supplier/supply-request/edit-item/${itemId}`);
-  };
+  const handleQuantityClose = () => {
+    setSelectedItem(null)
+  }
+
+  const handleDialogConfirm = async (quantity: number) => {
+    if (!selectedItem) return;
+    await addOrUpdateItem({
+      productVariantId: selectedItem.productVariantId,
+      productId: selectedItem.productId,
+      quantity
+    })
+    handleQuantityClose()
+  }
 
   const totalPrice = supplyRequest?.items.reduce((total, item) => total + item.wholesalePrice * item.quantity, 0) || 0;
 
   return (
-    <Box sx={{ display: 'flex', padding: 2, mt: 2, height: '100vh', }}>
-      <Paper sx={{ width: 400, padding: 2, marginRight: 2, borderRadius: 2, elevation: 3 }} elevation={3}>
-        <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>Product List</Typography>
-        <AppSearch onSubmit={() => { }} />
-        <SupplierProductList products={products} handleProductSelect={handleProductSelect} />
-      </Paper>
-
+    <Box sx={{ display: 'flex', padding: 2, mt: 2, height: '100vh' }}>
       <Box sx={{ flexGrow: 1, padding: 2, borderRadius: 2, boxShadow: 2 }}>
-        <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
-          Supply Request
-        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+          <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
+            Supply Request
+          </Typography>
+          <Select
 
-        <Select
-          fullWidth
-          value={currency}
-          onChange={(e) => setCurrency(e.target.value as string)}
-          displayEmpty
-          sx={{ marginBottom: 2 }}
-        >
-          <MenuItem value="">
-            <em>Select Currency</em>
-          </MenuItem>
-          <MenuItem value="USD">USD</MenuItem>
-          <MenuItem value="EUR">EUR</MenuItem>
-          <MenuItem value="GBP">GBP</MenuItem>
-        </Select>
+            value={currency}
+            onChange={(e) => setCurrency(e.target.value as string)}
+            displayEmpty
+            sx={{ width: 300 }}
+          >
+            <MenuItem value="">
+              <em>Select Currency</em>
+            </MenuItem>
+            <MenuItem value="USD">USD</MenuItem>
+            <MenuItem value="EUR">EUR</MenuItem>
+            <MenuItem value="GBP">GBP</MenuItem>
+          </Select>
+        </Box>
 
         {supplyRequest && supplyRequest.items.length > 0 ? (
           <>
@@ -81,7 +86,7 @@ const SupplyRequestPage: React.FC = () => {
                       <IconButton onClick={async () => await removeItem(item.id)} sx={{ color: 'error.main' }}>
                         <DeleteIcon />
                       </IconButton>
-                      <IconButton onClick={() => handleItemEdit(item.id)} sx={{ color: 'primary.main' }}>
+                      <IconButton onClick={() => handleItemEdit(item)} sx={{ color: 'primary.main' }}>
                         <AppEditIcon />
                       </IconButton>
                     </TableCell>
@@ -102,7 +107,7 @@ const SupplyRequestPage: React.FC = () => {
                 variant="contained"
 
                 onClick={async () => await send({ currency })}
-                sx={{ color: 'text.primary', borderRadius: 20 }}
+                sx={{ color: 'text.primary', borderRadius: 20, width: 180 }}
               >
                 Send
               </LoadingButton>
@@ -113,7 +118,17 @@ const SupplyRequestPage: React.FC = () => {
         )}
       </Box>
       <Outlet />
-    </Box>
+      {
+        selectedItem &&
+        <QuantitySelectorDialog
+          open={!!selectedItem}
+          onClose={handleQuantityClose}
+          onConfirm={handleDialogConfirm}
+          initialQuantity={selectedItem.quantity}
+          subTitle='Select the quantity to add this item to your supply request.'
+        />
+      }
+    </Box >
   );
 };
 

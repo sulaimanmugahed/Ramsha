@@ -7,6 +7,5 @@ public class UpdateSupplyRequestItemCommand:IRequest<BaseResult>
 {
     public Guid SupplyRequestItemId { get; set; }
     public int Quantity { get; set; }
-    public decimal WholesalePrice { get; set; }
 
 }

@@ -16,10 +16,7 @@ const VariantCommand = ({ variant, onSubmit, availableOptions }: { variant?: Pro
     const form = useForm<VariantScheme>({
         defaultValues:
         {
-            basePrice: variant?.basePrice ? variant?.basePrice.toString() : '',
-            description: variant?.description,
-            name: variant?.name,
-            variantImages: variant?.variantImages?.map(x => ({ preview: x.url })) || [],
+            file: null,
             variantValues: variant?.variantValues?.map(x => ({ option: x.optionId, value: x.optionValueId })) || []
         },
         resolver: zodResolver(variantSchema),

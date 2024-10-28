@@ -18,6 +18,7 @@ public static class ServiceRegistration
         services.AddMediatR(x => x.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
         services.AddScoped<IVariantService, VariantService>();
+        services.AddScoped<ICodeGenerator, CodeGenerator>();
 
         services.Configure<GlobalAppSettings>(configuration.GetSection(nameof(GlobalAppSettings)));
 

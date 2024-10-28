@@ -22,7 +22,7 @@ ISupplyRequestRepository
     {
         return await _requests
         .Include(r => r.Items)
-        .ThenInclude(r=> r.Product)
+        .ThenInclude(r => r.SupplierVariant)
         .SingleOrDefaultAsync(criteria);
     }
 }

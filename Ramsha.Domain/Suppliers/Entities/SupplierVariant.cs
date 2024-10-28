@@ -20,19 +20,41 @@ public class SupplierVariant : BaseEntity
         return new SupplierVariant(supplierId, productId, productVariantId);
     }
 
-    public SupplierId SupplierId { get; set; }
-    public Supplier? Supplier { get; set; }
+    public SupplierId SupplierId { get; private set; }
+    public Supplier? Supplier { get; private set; }
 
-    public ProductVariantId ProductVariantId { get; set; }
-    public SupplierProduct SupplierProduct { get; set; }
+    public ProductVariantId ProductVariantId { get; private set; }
+    public SupplierProduct SupplierProduct { get; private set; }
     public ProductId ProductId { get; set; }
-    public ProductVariant ProductVariant { get; set; }
-    public InventoryItem InventoryItem { get; set; }
-    public List<ProductImage> SupplierProductImages { get; set; } = [];
+    public ProductVariant ProductVariant { get; private set; }
+    public InventoryItem InventoryItem { get; private set; }
+    public List<ProductImage> SupplierProductImages { get; private set; } = [];
+    public string Code { get; private set; } = string.Empty;
+    public string Description { get; private set; }
+    public decimal WholesalePrice { get; private set; }
+    public decimal RetailPrice { get; private set; }
 
     public void SetVariant(ProductVariantId productVariantId)
     {
         ProductVariantId = productVariantId;
+    }
+
+    public void SetDescription(string? description)
+    {
+        if (!string.IsNullOrEmpty(description))
+            Description = description;
+    }
+
+
+    public void SetPrice(decimal wholesalePrice)
+    {
+        WholesalePrice = wholesalePrice;
+        RetailPrice = ApplyMarkupPercentage(wholesalePrice);
+    }
+
+    public void SetCode(string code)
+    {
+        Code = code;
     }
 
 
@@ -91,5 +113,12 @@ public class SupplierVariant : BaseEntity
     public List<Rating> Ratings { get; set; } = [];
     public decimal AverageRating { get; private set; }
     public int NumberOfRatings { get; private set; }
+
+    private decimal ApplyMarkupPercentage(decimal wholePrice)
+    {
+        decimal markupAmount = wholePrice * 0.03m;
+        return wholePrice + markupAmount;
+    }
+
 
 }

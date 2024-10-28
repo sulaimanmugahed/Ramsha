@@ -1,22 +1,20 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { SUPPLIES_QUERY_KEY, SUPPLY_REQUEST_QUERY_KEY } from "../constants/queriesKey"
-import { PagedParams, PaginationResponse } from "../models/common/commonModels"
+import { SUPPLIERS_MY_PRODUCTS_QUERY_KEY, SUPPLIERS_MY_VARIANTS_QUERY_KEY, SUPPLIES_QUERY_KEY, SUPPLY_REQUEST_QUERY_KEY } from "../constants/queriesKey"
+import { PagedParams, PaginationParams, PaginationResponse } from "../models/common/commonModels"
 import { Supply } from "../models/suppliers/supply"
 import { supplierService } from "../api/services/supplierService"
-import { useAccount } from "./accountHooks"
 import { toast } from "sonner"
 import { SupplyRequest, SupplyRequestItem } from "../models/suppliers/supplyRequest"
-import AppError from "../utils/appError"
-import { SupplierInventoryItem } from "../models/suppliers/SupplierInventoryItem"
+import { SupplierInventoryItem } from "../models/suppliers/supplierInventoryItem"
+import { SupplierProduct, SupplierVariant } from "../models/suppliers/supplierProduct"
 
 
 
 export const useSupplies = (params: PagedParams) => {
 
-    const { account } = useAccount()
 
     const { data, isError, isLoading } = useQuery<PaginationResponse<Supply[]>>({
-        queryKey: [SUPPLIES_QUERY_KEY, account?.username],
+        queryKey: [SUPPLIES_QUERY_KEY],
         queryFn: async () => await supplierService.getSupplies(params)
     })
 
@@ -28,12 +26,74 @@ export const useSupplies = (params: PagedParams) => {
     }
 }
 
+
+export const useMyProducts = (requestData: { paginationParams: PaginationParams }) => {
+
+    const { data, isError, isLoading } = useQuery<PaginationResponse<SupplierProduct[]>>({
+        queryKey: [SUPPLIERS_MY_PRODUCTS_QUERY_KEY],
+        queryFn: async () => await supplierService.getMyProducts(requestData)
+    })
+
+    return {
+        products: data?.items,
+        productsMeta: data?.metaData,
+        isProductsLoading: isLoading,
+        isProductsError: isError
+    }
+}
+
+export const useMyVariants = (productId?: string) => {
+
+    const { data, isError, isLoading } = useQuery<SupplierVariant[]>({
+        enabled: !!productId,
+        queryKey: [SUPPLIERS_MY_VARIANTS_QUERY_KEY, productId],
+        queryFn: async () => await supplierService.getMyVariants(productId)
+    })
+
+    return {
+        variants: data,
+        isVariantsLoading: isLoading,
+        isVariantsError: isError
+    }
+}
+
+export const useMyVariant = (productId?: string, variantId?: string) => {
+
+    const { data, isError, isLoading } = useQuery<SupplierVariant>({
+        enabled: !!productId && !!variantId,
+        queryKey: [SUPPLIERS_MY_VARIANTS_QUERY_KEY, productId, variantId],
+        queryFn: async () => await supplierService.getMyVariant(productId!, variantId!)
+    })
+
+    return {
+        variant: data,
+        isVariantLoading: isLoading,
+        isVariantError: isError
+    }
+}
+
+export const useUpdateMyVariant = (productId: string, variantId: string) => {
+    const queryClient = useQueryClient()
+
+
+    const { mutateAsync, isPending } = useMutation({
+        mutationFn: async (data: any) => await supplierService.updateMyVariant({ ...data, productId, variantId }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [SUPPLIERS_MY_VARIANTS_QUERY_KEY, productId, variantId] })
+            toast.success("variant Updated")
+        },
+    })
+
+    return {
+        updateVariant: mutateAsync,
+        isUpdateVariantPending: isPending
+    }
+}
+
 export const useSupplyRequest = () => {
 
-    const { account } = useAccount()
-
     const { data, isError, isLoading } = useQuery<SupplyRequest>({
-        queryKey: [SUPPLY_REQUEST_QUERY_KEY, account?.username],
+        queryKey: [SUPPLY_REQUEST_QUERY_KEY],
         queryFn: async () => await supplierService.getSupplyRequest()
     })
 
@@ -65,25 +125,6 @@ export const useRemoveSupplyItem = () => {
     }
 }
 
-export const useUpdateSupplyItem = () => {
-    const queryClient = useQueryClient()
-
-    const { mutateAsync, error } = useMutation({
-        mutationFn: async (itemId: string) => await supplierService.updateSupplyRequestItem(itemId),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: [SUPPLY_REQUEST_QUERY_KEY] })
-            toast.success("item Updated")
-        },
-        meta: {
-            ERROR_SOURCE: 'Update Supply Item',
-        }
-    })
-
-    return {
-        updateItem: mutateAsync,
-        updateItemError: error
-    }
-}
 
 export const useSupplyRequestItem = (itemId: string) => {
     const { data, isLoading, isError } = useQuery<SupplyRequestItem>({
@@ -134,11 +175,34 @@ export const useSendSupplyRequest = () => {
 }
 
 
-export const useAddSupplyItem = () => {
+export const useAddVariant = () => {
+    const queryClient = useQueryClient()
+
+    const { mutateAsync, error, isPending } = useMutation({
+        mutationFn: async (data: any) => await supplierService.addSupplierVariant(data),
+        onSuccess: () => {
+            toast.success("product added")
+            queryClient.invalidateQueries({ queryKey: [SUPPLIERS_MY_VARIANTS_QUERY_KEY, SUPPLIERS_MY_PRODUCTS_QUERY_KEY] })
+
+        },
+        meta: {
+            ERROR_SOURCE: 'Add Supplier product Item',
+        }
+    })
+
+    return {
+        addVariant: mutateAsync,
+        addVariantError: error,
+        isAddVariantPending: isPending
+    }
+}
+
+
+export const useAddOrUpdateSupplyItem = () => {
 
     const queryClient = useQueryClient()
-    const { mutateAsync, error } = useMutation<any>({
-        mutationFn: async (data: any) => await supplierService.addSupplyRequestItem(data),
+    const { mutateAsync, error } = useMutation({
+        mutationFn: async (data: any) => await supplierService.addOrUpdateSupplyRequestItem(data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: [SUPPLY_REQUEST_QUERY_KEY] })
             toast.success("item added")
@@ -149,7 +213,7 @@ export const useAddSupplyItem = () => {
     })
 
     return {
-        addItem: mutateAsync,
+        addOrUpdateItem: mutateAsync,
         addItemError: error
     }
 }

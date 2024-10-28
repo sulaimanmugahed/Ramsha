@@ -27,6 +27,7 @@ export interface ProductVariantDto {
     description: string;
     basePrice: number;
     sku: string;
+    imageUrl?: string;
     variantValues: VariantValuesDto[];
     variantImages: ProductImageDto[];
 }

@@ -146,9 +146,8 @@ const AdminProductPage = () => {
         ) :
             isProductsError ? (
                 <h1>error..</h1>
-
             ) :
-                <Box sx={{ p: 8 }}>
+                <Box sx={{ p: 2 }}>
                     <Grid item>
                     </Grid>
                     <Grid item>

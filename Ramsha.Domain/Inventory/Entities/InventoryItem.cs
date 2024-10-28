@@ -17,11 +17,10 @@ public class InventoryItem : BaseEntity, IAuditable
     {
 
     }
-    private InventoryItem(InventoryItemId id, ProductId productId, ProductVariantId? productVariantId, SupplierId supplierId, string productName)
+    private InventoryItem(InventoryItemId id, ProductId productId, ProductVariantId? productVariantId, SupplierId supplierId)
     {
         Id = id;
         ProductId = productId;
-        ProductName = productName;
         SupplierId = supplierId;
         ProductVariantId = productVariantId;
     }
@@ -30,16 +29,16 @@ public class InventoryItem : BaseEntity, IAuditable
           ProductId productId,
           ProductVariantId? productVariantId,
           SupplierId supplierId,
-          string productName,
-          string sku
+          string sku,
+          string productName
          )
     {
         var newItem = new InventoryItem(new InventoryItemId(Guid.NewGuid()),
         productId,
         productVariantId,
-        supplierId,
-        productName);
-        newItem.SetSKU(sku, supplierId.ToString());
+        supplierId);
+        newItem.SetSKU(sku);
+        newItem.SetName(productName);
         return newItem;
     }
 
@@ -47,12 +46,12 @@ public class InventoryItem : BaseEntity, IAuditable
     public int AvailableQuantity { get; set; }
     public int TotalQuantity { get; set; }
     public string InventorySKU { get; private set; }
-    public string ProductName { get; private set; }
     public string? ImageUrl { get; private set; }
     public decimal WholesalePrice { get; private set; }
     public decimal RetailPrice { get; private set; }
     public decimal FinalPrice { get; private set; }
     public string Currency { get; private set; }
+    public string ProductName { get; private set; }
 
     public InventoryStatus Status { get; set; }
     public ProductId ProductId { get; set; }
@@ -77,6 +76,11 @@ public class InventoryItem : BaseEntity, IAuditable
         UpdateInventoryBasedOnSelectionStockStrategy(StockSelectionType);
     }
 
+    public void SetName(string name)
+    {
+        ProductName = name;
+    }
+
     public void AddStock(int quantity, Price wholesalePrice)
     {
         var stock = Stock.Create(Id, quantity, new Price(wholesalePrice.Amount, wholesalePrice.Currency));
@@ -87,9 +91,9 @@ public class InventoryItem : BaseEntity, IAuditable
     }
 
 
-    public void UpdateInventoryBasedOnSelectionStockStrategy(StockSelectionType stockSelectionType)
+    public void UpdateInventoryBasedOnSelectionStockStrategy(StockSelectionType stockSelectionType = StockSelectionType.FIFO)
     {
-        var strategy = StockSelectionStrategyFactory.Create(StockSelectionType);
+        var strategy = StockSelectionStrategyFactory.Create(stockSelectionType);
         var stock = strategy.SelectStock(Stocks);
         if (stock.HasValue)
         {
@@ -107,19 +111,13 @@ public class InventoryItem : BaseEntity, IAuditable
         TotalQuantity += quantity;
     }
 
-
-    public void SetSKU(string sku, string username)
+    public void SetSKU(string sku)
     {
-        InventorySKU = GenerateInventorySKU(sku, username);
+        InventorySKU = sku;
     }
 
     public void SetVariant(ProductVariantId? productVariantId)
     {
         ProductVariantId = productVariantId;
-    }
-
-    private static string GenerateInventorySKU(string sku, string supplierUsername)
-    {
-        return $"{sku}-{supplierUsername[..Math.Min(6, supplierUsername.Length)].ToUpper().Replace(" ", "-")}";
     }
 }

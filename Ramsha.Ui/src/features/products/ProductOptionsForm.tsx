@@ -1,24 +1,28 @@
-import React from 'react';
 import { useFormContext, useFieldArray } from 'react-hook-form';
 import { Box, Button, Typography } from '@mui/material';
-import ProductOptionFields from './ProductOptionFields'; // The reusable component for option fields
+import ProductOptionFields from './ProductOptionFields';
 import { useOptions } from '../../app/hooks/optionHooks';
 
-
-
 const ProductOptionsForm = () => {
-    const { control, register, setValue, getValues } = useFormContext();
+    const { control } = useFormContext();
     const { fields, append, remove } = useFieldArray({
         control,
         name: 'options',
     });
 
-    const { options } = useOptions()
-
+    const { options } = useOptions();
 
     return (
-        <Box>
-            <Typography variant="h6" mb={3}>
+        <Box
+            sx={{
+                padding: 3,
+                borderRadius: 2,
+                boxShadow: 3,
+                backgroundColor: 'background.paper',
+                marginBottom: 4,
+            }}
+        >
+            <Typography variant="h5" gutterBottom>
                 Product Options
             </Typography>
 
@@ -34,8 +38,8 @@ const ProductOptionsForm = () => {
 
             <Button
                 variant="contained"
-                onClick={() => append({ name: '', priority: fields.length + 1 })}
-                sx={{ mt: 2 }}
+                onClick={() => append({ name: '', priority: (fields.length + 1).toString() })}
+                sx={{ color: 'text.primary', borderRadius: 20, mt: 2, backgroundColor: 'primary.main', '&:hover': { backgroundColor: 'primary.dark' } }}
             >
                 Add Option
             </Button>

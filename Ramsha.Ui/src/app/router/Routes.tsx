@@ -1,5 +1,3 @@
-
-//import AboutPage from "../../features/about/AboutPage";
 import LoginPage from "../../features/account/login/LoginPage";
 import CatalogPage from "../../features/catalog/CatalogPage";
 import ContactPage from "../../features/contact/ContactPage";
@@ -30,7 +28,10 @@ import SupplyRequestPage from "../../features/suppliers/supplies/SupplyRequestPa
 import AddSupplyRequestItemPage from "../../features/suppliers/supplies/AddSupplyRequestItemPage";
 import EditSupplyItemPage from "../../features/suppliers/supplies/EditSupplyItemPage";
 import SupplierInventoryPage from "../../features/suppliers/inventory/SupplierInventoryPage";
-import AddProductToSupplyPage from "../../features/suppliers/Products/AddProductToSupplyPage";
+import SupplierProductsPage from "../../features/suppliers/Products/SupplierProductsPage";
+import AddSupplierVariantPage from "../../features/suppliers/Products/Variants/AddSupplierVariantPage";
+import SupplierProductVariantsPage from "../../features/suppliers/Products/Variants/SupplierProductVariantsPage";
+import EditSupplierVariantPage from "../../features/suppliers/Products/Variants/EditSupplierVariantPage";
 //import AdminProductPage from "../../features/admin/products/AdminProductPage";
 
 export const router = createBrowserRouter([
@@ -160,8 +161,30 @@ export const router = createBrowserRouter([
                                 path: 'supplies'
                             },
                             {
-                                element: <AddProductToSupplyPage />,
-                                path: 'add-product-to-supply'
+                                element: <SupplierProductsPage />,
+                                path: 'products',
+                                children: [
+                                    {
+                                        element: <AddSupplierVariantPage depth={2} />,
+                                        path: ":productId/add-variant"
+                                    },
+                                    {
+                                        element: <SupplierProductVariantsPage />,
+                                        path: ":productId/variants",
+                                        children: [
+                                            {
+                                                element: <EditSupplierVariantPage />,
+                                                path: ':variantId/edit'
+                                            },
+                                            {
+                                                element: <AddSupplierVariantPage />,
+                                                path: "add"
+                                            },
+                                        ]
+                                    }
+
+
+                                ]
                             },
                             {
                                 element: <SupplyRequestPage />,

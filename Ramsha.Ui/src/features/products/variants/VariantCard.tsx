@@ -8,7 +8,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 type Props = {
-    variant: PreviewVariantType | ProductVariantDto;
+    variant: ProductVariantDto;
     onEdit: () => void;
     onDelete: () => void;
 };
@@ -43,18 +43,14 @@ const VariantCard = ({ variant, onEdit, onDelete }: Props) => {
                 '&:hover': {
                     boxShadow: 2,
                 },
-                maxWidth: { xs: 240, sm: 270, md: 310 }, // Adjust the width based on screen size
+                maxWidth: { xs: 240, sm: 270, md: 310 },
                 height: { xs: 350, sm: 370, md: 400 },
-                margin: 'auto', // Center the card
+                margin: 'auto',
             }}
         >
             <CardContent sx={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
                 <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-                    {'sku' in variant ? variant.sku : variant.name}
-                </Typography>
-
-                <Typography variant="body1" gutterBottom>
-                    ${variant.basePrice}
+                    {variant.sku}
                 </Typography>
 
                 <Stack
@@ -96,48 +92,46 @@ const VariantCard = ({ variant, onEdit, onDelete }: Props) => {
                         overflow: 'hidden',
                     }}
                 >
-                    {variant.variantImages?.length > 0 ? (
-                        <Slider {...sliderSettings}>
-                            {variant.variantImages.map((image) => (
-                                <Box
-                                    key={image.url}
+                    {
+                        variant.imageUrl ? (
+                            <Box
+
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <CardMedia
+                                    component="img"
+                                    src={variant.imageUrl}
+                                    alt={`Variant ${1}`}
+                                    loading="lazy"
                                     sx={{
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'cover',
                                     }}
-                                >
-                                    <CardMedia
-                                        component="img"
-                                        src={image.url}
-                                        alt={`Variant ${1}`}
-                                        loading="lazy"
-                                        sx={{
-                                            width: '100%',
-                                            height: '100%',
-                                            objectFit: 'cover',
-                                        }}
-                                    />
-                                </Box>
-                            ))}
-                        </Slider>
-                    ) : (
-                        <Box
-                            sx={{
-                                width: '100%',
-                                height: '100%',
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                backgroundColor: 'rgba(0, 0, 0, 0.1)',
-                                borderRadius: 1,
-                            }}
-                        >
-                            <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.75rem' }}>
-                                No images available
-                            </Typography>
-                        </Box>
-                    )}
+                                />
+                            </Box>
+
+                        ) : (
+                            <Box
+                                sx={{
+                                    width: '100%',
+                                    height: '100%',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                                    borderRadius: 1,
+                                }}
+                            >
+                                <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.75rem' }}>
+                                    No images available
+                                </Typography>
+                            </Box>
+                        )}
                 </Box>
 
                 <Box display="flex" sx={{ position: 'absolute', bottom: 8 }} mt={1}>

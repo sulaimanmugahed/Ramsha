@@ -54,10 +54,9 @@ const ProductEditModal = () => {
         defaultValues: {
             name: product?.name,
             category: product?.category.id,
-            basePrice: product?.basePrice.toString(),
             description: product?.description,
             brand: product?.brand.id,
-            file: {
+            productImage: {
                 preview: product?.imageUrl
             },
             seoSettings: product?.seoSettings,
@@ -72,10 +71,10 @@ const ProductEditModal = () => {
 
 
     const handleBasicDataSubmission = async (data: BasicInfoSchema) => {
-        const { file, brand, category, name, description } = data
+        const { productImage, brand, category, name, description } = data
         let imageUrl;
-        const newFile = file?.file;
-        if (newFile && dirtyFields.file) {
+        const newFile = productImage?.file;
+        if (newFile && dirtyFields.productImage) {
             const uploadResponse = await upload({ path: 'products', file: newFile })
             imageUrl = uploadResponse.url
         }

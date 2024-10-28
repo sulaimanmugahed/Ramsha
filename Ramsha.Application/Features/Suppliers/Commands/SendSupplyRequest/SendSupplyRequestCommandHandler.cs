@@ -35,11 +35,11 @@ public class SendSupplyRequestCommandHandler(
 
         foreach (var item in supplyRequest.Items)
         {
-            var itemSupplied = new ItemSupplied(item.ProductId, item.ProductVariantId, item.SKU, item.Product.Name);
-            var supplyItem = SupplyItem.Create(itemSupplied, item.WholesalePrice, item.Quantity);
+            var itemSupplied = new ItemSupplied(item.ProductId, item.ProductVariantId, item.SupplierVariant.Code);
+            var supplyItem = SupplyItem.Create(itemSupplied, item.SupplierVariant.WholesalePrice, item.Quantity);
             supply.AddItem(supplyItem);
             totalQuantity += item.Quantity;
-            totalPrice += item.WholesalePrice * item.Quantity;
+            totalPrice += item.SupplierVariant.WholesalePrice * item.Quantity;
         }
         supply.SetTotal(totalPrice, totalQuantity);
 

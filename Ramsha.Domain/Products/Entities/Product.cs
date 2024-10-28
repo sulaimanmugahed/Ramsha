@@ -24,14 +24,13 @@ public sealed class Product : BaseEntity, IAuditable, ISoftDeletable
 
     public ProductId Id { get; private set; }
     public string Name { get; private set; }
+    public string Code { get; private set; }
 
     public int TotalQuantity { get; private set; }
     public decimal? Price { get; private set; }
     public decimal? FinalPrice { get; private set; }
     public string Description { get; private set; }
     public string? ImageUrl { get; private set; }
-    //public decimal AverageRating { get; set; }
-
 
     public ProductStatus Status { get; private set; }
     public CategoryId CategoryId { get; private set; }
@@ -115,6 +114,11 @@ public sealed class Product : BaseEntity, IAuditable, ISoftDeletable
         BrandId = brandId;
     }
 
+    public void SetCode(string code)
+    {
+        Code = code;
+    }
+
     public void SetImage(string url)
     {
         if (!string.IsNullOrEmpty(url))
@@ -193,6 +197,8 @@ public sealed class Product : BaseEntity, IAuditable, ISoftDeletable
             FinalPrice = variant?.FinalPrice;
         }
     }
+
+
 
 
     public Guid CreatedBy { get; set; }

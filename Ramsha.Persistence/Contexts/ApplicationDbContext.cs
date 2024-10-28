@@ -193,16 +193,25 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             builder.HasOne(x => x.SupplyRequest)
             .WithMany(x => x.Items)
             .HasForeignKey(x => x.SupplyRequestId);
+            
 
-            builder.HasOne(x => x.Product)
+            builder.HasOne(x => x.SupplierVariant)
             .WithMany()
-            .HasForeignKey(x => x.ProductId);
+            .HasForeignKey(x => new { x.SupplierId, x.ProductId, x.ProductVariantId })
+               .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne(x => x.ProductVariant)
+            builder.HasOne<Supplier>()
+        .WithMany()
+        .HasForeignKey(x => x.SupplierId);
+
+            builder.HasOne<Product>()
+          .WithMany()
+          .HasForeignKey(x => x.ProductId);
+
+            builder.HasOne<ProductVariant>()
             .WithMany()
-            .HasForeignKey(x => new { x.ProductId, x.ProductVariantId });
-
-            builder.HasQueryFilter(x => !x.Product.IsDeleted);
+            .HasForeignKey(x => new { x.ProductId, x.ProductVariantId })
+               .OnDelete(DeleteBehavior.Restrict);
 
 
             builder.Property(sr => sr.Id)
@@ -311,7 +320,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
             entity.HasKey(x => new { x.SupplierId, x.ProductId });
 
-            entity.HasOne<Product>()
+            entity.HasOne(x => x.Product)
               .WithMany(x => x.SupplierProducts)
               .HasForeignKey(sp => sp.ProductId)
                    .OnDelete(DeleteBehavior.Restrict);

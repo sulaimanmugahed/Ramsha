@@ -10,14 +10,21 @@ public class SupplierProduct : BaseEntity
 {
     public ProductId ProductId { get; set; }
     public SupplierId SupplierId { get; set; }
+    public Product Product { get; set; }
     public List<SupplierVariant> SupplierVariants { get; set; } = [];
     public Supplier? Supplier { get; set; }
 
+    public string Code { get; private set; }
 
     private SupplierProduct(ProductId productId, SupplierId supplierId)
     {
         ProductId = productId;
         SupplierId = supplierId;
+    }
+
+    public void SetCode(string code)
+    {
+        Code = code;
     }
 
 
@@ -26,10 +33,11 @@ public class SupplierProduct : BaseEntity
         return new SupplierProduct(productId, supplierId);
     }
 
-    public void AddVariant(ProductVariantId productVariantId)
+    public void AddVariant(SupplierVariant supplierVariant)
     {
-        var newVariant = SupplierVariant.Create(SupplierId, ProductId, productVariantId);
-        SupplierVariants.Add(newVariant);
+        SupplierVariants.Add(supplierVariant);
     }
+
+
 
 }

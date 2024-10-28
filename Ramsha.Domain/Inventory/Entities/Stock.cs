@@ -61,7 +61,7 @@ public class Stock : BaseEntity
 
     private Price ApplyMarkupPercentage(Price wholePrice)
     {
-        decimal markupAmount = wholePrice.Amount * 0.30m;
+        decimal markupAmount = wholePrice.Amount * 0.03m;
         return new Price(wholePrice.Amount + markupAmount, wholePrice.Currency);
     }
 

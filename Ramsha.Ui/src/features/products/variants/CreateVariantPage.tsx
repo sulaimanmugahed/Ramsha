@@ -4,7 +4,7 @@ import VariantCommand from './VariantCommand';
 import { useNavigate, useParams } from 'react-router-dom';
 import { VariantScheme } from '../productFormValidations';
 import { UploadResponse } from '../../../app/models/common/commonModels';
-import { useUploadFiles } from '../../../app/hooks/storageHooks';
+import { useUploadFile } from '../../../app/hooks/storageHooks';
 import { useAddVariant, useProductOptions } from '../../../app/hooks/productHooks';
 
 
@@ -16,7 +16,7 @@ const CreateVariantPage = () => {
     const { addVariant } = useAddVariant()
     const { productOptions } = useProductOptions(productId)
 
-    const { upload } = useUploadFiles()
+    const { upload } = useUploadFile()
 
     const navigate = useNavigate()
 
@@ -26,13 +26,15 @@ const CreateVariantPage = () => {
 
     const onSubmit = async (variant: VariantScheme) => {
 
-        const { variantImages, ...others } = variant
-        let uploadedImages: UploadResponse[] = []
-        const files = variantImages?.map(x => x.file as File);
-        if (files)
-            uploadedImages = await upload({ path: 'variants', files });
+        const { file, ...others } = variant
+        let imageUrl = file?.preview
+        const newFile = file?.file
+        if (newFile) {
+            const uploadResponse = await upload({ path: 'products', file: newFile })
+            imageUrl = uploadResponse.url
+        }
 
-        await addVariant({ data: { ...others, variantImages: uploadedImages }, productId })
+        await addVariant({ data: { ...others, imageUrl }, productId })
         handleClose()
     }
 

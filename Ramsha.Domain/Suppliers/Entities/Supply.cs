@@ -15,7 +15,6 @@ public class Supply : BaseEntity
 
     public static Supply Create(string supplier, Currency currency = Currency.USD)
     {
-
         var supply = new Supply(new SupplyId(Guid.NewGuid()), supplier, currency);
         supply.SetStatus(SupplyStatus.Pending);
         return supply;
@@ -24,8 +23,6 @@ public class Supply : BaseEntity
     public DateTime Sent { get; set; }
     public DateTime? ApprovedAt { get; set; }
     public DateTime? RejectAt { get; set; }
-
-
     public decimal Total { get; private set; }
     public int TotalQuantity { get; private set; }
     public SupplyId Id { get; private set; }

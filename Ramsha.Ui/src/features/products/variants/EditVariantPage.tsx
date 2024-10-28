@@ -4,32 +4,26 @@ import VariantCommand from "./VariantCommand"
 import { VariantScheme } from "../productFormValidations"
 import { Close } from "@mui/icons-material"
 import { Box, Dialog, DialogTitle, IconButton, DialogContent } from "@mui/material"
-import { useProductVariant, useUpdateVariant } from "../../../app/hooks/productHooks"
-import { useUploadFiles } from "../../../app/hooks/storageHooks"
-import { UploadResponse } from "../../../app/models/common/commonModels"
-const useVariant = (a: string, b: string) => {
+import { useProductOptions, useProductVariant, useUpdateVariant } from "../../../app/hooks/productHooks"
+import { useUploadFile } from "../../../app/hooks/storageHooks"
 
-    const variant: ProductVariantDto = {} as ProductVariantDto
-    return {
-        variant
-    }
-}
+
 const EditVariantPage = () => {
     const { productId, variantId } = useParams()
     if ((!productId || !variantId)) return;
 
     const { variant } = useProductVariant(productId, variantId)
     const { updateVariant } = useUpdateVariant(productId, variantId)
-    const { upload } = useUploadFiles()
+
+    const { productOptions } = useProductOptions(productId)
+    const { upload } = useUploadFile()
 
 
     const onSubmit = async (updatedVariantData: VariantScheme) => {
 
-        const { variantValues: updatedVariantValues, variantImages: updatedVariantImages, ...others } = updatedVariantData
+        const { variantValues: updatedVariantValues, file, ...others } = updatedVariantData
 
         const existVariantValues = variant?.variantValues
-        const existVariantImages = variant?.variantImages
-
 
         const variantValuesToRemove = existVariantValues
             ?.filter(vv => !updatedVariantValues?.some(uvv => uvv.option === vv.optionId && uvv.value === vv.optionValueId))
@@ -38,33 +32,23 @@ const EditVariantPage = () => {
         const variantValuesToAdd = updatedVariantValues.filter(uvv => !existVariantValues
             ?.some(vv => vv.optionId === uvv.option && vv.optionValueId === uvv.value))
 
-        const variantImagesUrlToRemove = existVariantImages
-            ?.filter(vi => !updatedVariantImages?.some(uvi => uvi.preview === vi.url))
-            ?.map(vi => vi.url);
-
-
-        let variantImagesToAdd: UploadResponse[] = []
-
-        if (updatedVariantImages && updatedVariantImages.length > 0) {
-            const newImageFiles = updatedVariantImages.filter(i => i.file)
-                .map(x => x.file as File);
-                
-            if (newImageFiles.length > 0)
-                variantImagesToAdd = await upload({ files: newImageFiles, path: 'variants' })
+        let imageUrl;
+        const newFile = file?.file;
+        if (newFile) {
+            const uploadResponse = await upload({ path: 'products', file: newFile })
+            imageUrl = uploadResponse.url
         }
+
 
         const updateRequestData = {
             variantValuesToRemove,
             variantValuesToAdd,
-            variantImagesUrlToRemove,
-            variantImagesToAdd,
+            imageUrl,
             ...others
         }
 
-        console.log('updateRequestData: ', updateRequestData)
 
         await updateVariant(updateRequestData)
-
     }
 
     const navigate = useNavigate()
@@ -102,10 +86,11 @@ const EditVariantPage = () => {
                 </IconButton>
             </DialogTitle>
             <DialogContent sx={{ paddingY: 4, }}>
+
                 <Box sx={{ mt: 4, p: 2 }}>
                     {
-                        variant &&
-                        <VariantCommand onSubmit={onSubmit} variant={variant} />
+                        variant && productOptions &&
+                        <VariantCommand availableOptions={productOptions} onSubmit={onSubmit} variant={variant} />
 
                     }
 

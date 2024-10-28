@@ -23,6 +23,7 @@ using System.Text.Json.Serialization;
 using Ramsha.Domain.Common.Events;
 using Ramsha.Domain.Settings;
 using Microsoft.AspNetCore.Authentication;
+using System.CodeDom.Compiler;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFile("appsettings.firebase.json", false, reloadOnChange: true);
@@ -54,10 +55,6 @@ builder.Services
 
 
 builder.Services.AddScoped<IAuthenticatedUserService, AuthenticatedUserService>();
-
-//builder.Services.AddTransient<IClaimsTransformation,MyClaimTransform>();
-
-
 
 
 builder.Services.AddDistributedMemoryCache();
@@ -99,7 +96,9 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var logger = services.GetRequiredService<ILogger<DefaultData>>();
-    await DefaultData.SeedAsync(services.GetRequiredService<ApplicationDbContext>(), logger);
+    var codeGenerator = services.GetRequiredService<Ramsha.Application.Contracts.ICodeGenerator>();
+
+    await DefaultData.SeedAsync(services.GetRequiredService<ApplicationDbContext>(), logger,codeGenerator);
     await DefaultRoles.SeedAsync(services.GetRequiredService<RoleManager<ApplicationRole>>());
     await DefaultUser.SeedAsync(services.GetRequiredService<UserManager<Account>>());
 }

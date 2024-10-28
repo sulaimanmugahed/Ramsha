@@ -59,7 +59,7 @@ public static class CatalogExtensions
             variant.Id.Value,
             variant.Name,
             variant.Description,
-            variant.SKU,
+            variant.Code,
             variant.VariantValues.Select(x => new CatalogVariantValuesDto(x.Option.Name, x.OptionValue.Name)).ToList()
         );
     }

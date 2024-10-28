@@ -11,6 +11,8 @@ public record ProductVariantDto(
     string Description,
     decimal BasePrice,
     string SKU,
+string ImageUrl,
+
     List<VariantValuesDto> VariantValues,
     List<ProductImageDto> VariantImages);
 
@@ -23,9 +25,10 @@ string? ValueName
 
 
 public record VariantDetailDto(
-    
+
 Guid Id,
 string SKU,
+string ImageUrl,
 int Quantity,
 decimal BasePrice,
 decimal DiscountedPrice,
@@ -33,13 +36,9 @@ List<VariantValuesDto> Values,
 List<ProductImageDto> VariantImages);
 
 
-
-
 public record VariantValuesCommand(Guid Option, Guid Value);
-public record VariantCommand(string? Name, string? Description, decimal? BasePrice, List<VariantValuesCommand> VariantValues, List<ImageRequest> VariantImages);
 
-
-
+public record VariantCommand(List<VariantValuesCommand> VariantValues, string? ImageUrl);
 
 public class NewVariantDto
 {

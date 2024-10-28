@@ -13,6 +13,7 @@ public class Category : BaseEntity
 
     public CategoryId Id { get; set; }
     public string Name { get; set; }
+    public string Code { get; set; }
     public CategoryId? ParentCategoryId { get; set; }
     public Category? ParentCategory { get; set; }
     public List<Category> SubCategories { get; set; } = [];
@@ -27,6 +28,8 @@ public class Category : BaseEntity
     public void SetName(string name)
     {
         Name = name;
+
+
     }
 
     public void AddChild(Category childCategory)
@@ -38,4 +41,10 @@ public class Category : BaseEntity
     {
         ParentCategoryId = parentCategoryId;
     }
+
+    public void SetCode(string code)
+    {
+        Code = code;
+    }
+
 }

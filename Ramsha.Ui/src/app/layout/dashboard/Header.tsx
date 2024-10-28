@@ -136,8 +136,8 @@ export default function Header() {
         },
         {
             label: 'Supply Products',
-            value: 'supplier/add-product-to-supply',
-            icon: <Add />,
+            value: 'supplier/products',
+            icon: <AppGridIcon />,
         },
         {
             label: 'Supply Products',

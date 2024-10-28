@@ -3,7 +3,7 @@ import AppTextInput from '../../../app/components/AppTextInput';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { addSupplyRequestItemFormSchema } from './schemas';
 import { DevTool } from '@hookform/devtools';
-import { useAddSupplyItem, useUpdateSupplyItem } from '../../../app/hooks/supplierHooks';
+import { useAddOrUpdateSupplyItem } from '../../../app/hooks/supplierHooks';
 import ApiValidationError from '../../../app/utils/appError';
 import { useEffect } from 'react';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -20,9 +20,7 @@ type Props = {
 
 const SupplyRequestItemForm = ({ onSubmitComplete, productVariantId, productId, item }: Props) => {
 
-    const { addItem, addItemError } = useAddSupplyItem()
-
-    const { updateItem } = useUpdateSupplyItem()
+    const { addOrUpdateItem, addItemError } = useAddOrUpdateSupplyItem()
 
     const methods = useForm<FieldValues>({
         defaultValues: {
@@ -38,8 +36,7 @@ const SupplyRequestItemForm = ({ onSubmitComplete, productVariantId, productId, 
 
     const handleSubmission = async (data: any) => {
         console.log('data of supply item: ', data)
-        !item ? await addItem({ ...data, productVariantId, productId })
-            : await updateItem({ ...data, itemId: item.id })
+        await addOrUpdateItem({ ...data, productVariantId, productId })
 
         onSubmitComplete && onSubmitComplete()
     }

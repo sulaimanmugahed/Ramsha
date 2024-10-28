@@ -14,18 +14,7 @@ namespace Ramsha.Application.Services;
 
 public class VariantService : IVariantService
 {
-    public string GenerateSKU(string productName, List<string> optionValuesNames)
-    {
-        var sku = new StringBuilder(productName.Substring(0, Math.Min(5, productName.Length)).ToUpper().ReplaceSpaces());
 
-        foreach (var valueName in optionValuesNames)
-        {
-            char letter = valueName.First();
-            sku.Append($"-{letter}");
-        }
-
-        return sku.ToString().ToUpper();
-    }
 
 
     public bool IsVariantExists(List<ProductVariant> existingVariants, List<VariantValuesCommand> variantValues)

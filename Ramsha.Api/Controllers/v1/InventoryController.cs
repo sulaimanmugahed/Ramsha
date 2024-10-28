@@ -8,6 +8,7 @@ using Ramsha.Application.Features.Inventory.Queries.GetSupplyRequestList;
 using Ramsha.Application.Wrappers;
 using Microsoft.AspNetCore.Mvc;
 using Ramsha.Application.Features.Inventory.Commands.ApplyInventoryItemDiscount;
+using Ramsha.Application.Features.Inventory.Commands.ChangeStockStrategy;
 
 namespace Ramsha.Api.Controllers.v1;
 
@@ -23,6 +24,9 @@ public class InventoryController : BaseApiController
     public async Task<BaseResult> ApproveSupply(ApproveSupplyCommand command)
     => await Mediator.Send(command);
 
+    [HttpPost("change-stock-strategy")]
+    public async Task<BaseResult> ChangeStockStrategy(ChangeStockStrategyCommand command)
+    => await Mediator.Send(command);
 
     [HttpGet(nameof(GetSupplyList))]
     public async Task<BaseResult<List<SupplyDto>>> GetSupplyList(GetSupplyListQuery query)

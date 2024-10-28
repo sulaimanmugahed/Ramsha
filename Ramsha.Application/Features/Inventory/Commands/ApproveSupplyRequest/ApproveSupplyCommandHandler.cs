@@ -1,143 +1,67 @@
-
 using Ramsha.Application.Contracts;
 using Ramsha.Application.Contracts.Persistence;
 using Ramsha.Application.Wrappers;
 using Ramsha.Domain.Inventory.Entities;
-using Ramsha.Domain.Products.Enums;
 using Ramsha.Domain.Suppliers.Enums;
 using MediatR;
-using Ramsha.Domain.Products.Entities;
 
 namespace Ramsha.Application.Features.Inventory.Commands.ApproveSupplyRequest;
 
 public class ApproveSupplyCommandHandler(
     ISupplyRepository supplyRepository,
     IInventoryItemRepository inventoryItemRepository,
-    IUnitOfWork unitOfWork
+    IUnitOfWork unitOfWork,
+    ISupplierRepository supplierRepository,
+    IProductRepository productRepository
 ) : IRequestHandler<ApproveSupplyCommand, BaseResult>
 {
     public async Task<BaseResult> Handle(ApproveSupplyCommand request, CancellationToken cancellationToken)
     {
-        var supplyReq = await supplyRepository.GetWithDetails(x => x.Id == new Domain.Suppliers.SupplyId(request.SupplyId));
-        if (supplyReq is null)
-            return new Error(ErrorCode.NotFound);
+        var supply = await supplyRepository.GetWithDetails(x => x.Id == new Domain.Suppliers.SupplyId(request.SupplyId));
+        if (supply is null)
+            return new Error(ErrorCode.RequestedDataNotExist, "no supply exist");
 
-        if (supplyReq.Items.Count == 0)
+        if (supply.Items.Count == 0)
             return new Error(ErrorCode.EmptyData, "The request has no item");
 
-        foreach (var item in supplyReq.Items)
+        var supplier = await supplierRepository.GetAsync(x => x.Username == supply.Supplier);
+        if (supplier is null)
         {
-            var price = new Domain.Common.Price(item.WholesalePrice, supplyReq.Currency);
+            return new Error(ErrorCode.RequestedDataNotExist, "no supplier exist");
+        }
+
+        foreach (var item in supply.Items)
+        {
+            var product = await productRepository.GetByIdAsync(item.ItemSupplied.ProductId);
+            if (product is null)
+                return new Error(ErrorCode.EmptyData, "no product found with in the item");
+
+            var price = new Domain.Common.Price(item.WholesalePrice, supply.Currency);
 
             var inventoryItem = await inventoryItemRepository.GetAsync(x =>
                 x.ProductId == item.ItemSupplied.ProductId &&
-                //x.Supplier == supplyReq.Supplier &&
+                x.SupplierId == supplier.Id &&
                 x.ProductVariantId == item.ItemSupplied.ProductVariantId,
                 x => x.Stocks);
 
-            // if (inventoryItem is null)
-            // {
-            //     inventoryItem = InventoryItem.Create(
-            //         item.ItemSupplied.ProductId,
-            //         item.ItemSupplied.ProductVariantId,
-            //         supplyReq.Supplier,
-            //         item.ItemSupplied.Name,
-            //         item.ItemSupplied.Sku
-
-            //     );
-            //     await inventoryItemRepository.AddAsync(inventoryItem);
-            // }
+            if (inventoryItem is null)
+            {
+                inventoryItem = InventoryItem.Create(
+                    item.ItemSupplied.ProductId,
+                    item.ItemSupplied.ProductVariantId,
+                    supplier.Id,
+                    item.ItemSupplied.Sku,
+                    product.Name
+                );
+                await inventoryItemRepository.AddAsync(inventoryItem);
+            }
 
             inventoryItem.AddStock(item.Quantity, price);
         }
 
-        supplyReq.SetStatus(SupplyStatus.Approved);
+        supply.SetStatus(SupplyStatus.Approved);
         await unitOfWork.SaveChangesAsync();
 
         return BaseResult.Ok();
     }
 }
-
-
-
-// using Ramsha.Application.Contracts;
-// using Ramsha.Application.Contracts.Persistence;
-// using Ramsha.Application.Wrappers;
-// using Ramsha.Domain.Inventory.Entities;
-// using Ramsha.Domain.Products.Entities;
-// using Ramsha.Domain.Products.Enums;
-// using Ramsha.Domain.Suppliers.Enums;
-// using MediatR;
-
-// namespace Ramsha.Application.Features.Inventory.Commands.ApproveSupplyRequest;
-
-// public class ApproveSupplyCommandHandler(
-//     ISupplyRepository supplyRepository,
-//     IProductRepository productRepository,
-//     IInventoryItemRepository inventoryItemRepository,
-//     IUnitOfWork unitOfWork
-// ) : IRequestHandler<ApproveSupplyCommand, BaseResult>
-// {
-//     public async Task<BaseResult> Handle(ApproveSupplyCommand request, CancellationToken cancellationToken)
-//     {
-//         var supplyReq = await supplyRepository.GetWithDetails(x => x.Id == new Domain.Suppliers.SupplyId(request.SupplyId));
-//         if (supplyReq is null)
-//             return new Error(ErrorCode.NotFound);
-
-//         if (supplyReq.Items.Count == 0)
-//             return new Error(ErrorCode.EmptyData, "The request has no item");
-
-
-
-//         foreach (var item in supplyReq.Items)
-//         {
-//             var product = await productRepository.GetAsync(
-//                 x => x.Id == item.ItemSupplied.ProductId,
-//                 x => x.Variants
-//             );
-//             var variant = product?.Variants.FirstOrDefault(x => x.SKU == item.ItemSupplied.SKU);
-//             if (product is null || variant is null)
-//                 return new Error(ErrorCode.EmptyData, "The request has no item");
-
-
-
-//             var inventoryItem = await inventoryItemRepository.GetAsync(x =>
-//             x.ProductId == item.ItemSupplied.ProductId &&
-//             x.SupplierId == supplyReq.SupplierId &&
-//             x.ProductVariantId == variant.Id);
-
-//             var price = ProductPrice.Create(item.WholesalePrice, supplyReq.Currency, PriceType.Wholesale);
-
-//             if (inventoryItem is null)
-//             {
-//                 inventoryItem = InventoryItem.Create(
-//                                item.ItemSupplied.ProductId,
-//                                variant.Id,
-//                                supplyReq.SupplierId,
-//                                item.ItemSupplied.Name,
-//                                item.Quantity,
-//                                price,
-//                                item.ItemSupplied.SKU
-//                                );
-
-//                 await inventoryItemRepository.AddAsync(inventoryItem);
-//             }
-//             else
-//             {
-//                 inventoryItem.UpdateInventory(item.Quantity, price);
-//             }
-//         }
-
-//         supplyReq.SetStatus(SupplyStatus.Approved);
-//         await unitOfWork.SaveChangesAsync();
-
-//         return BaseResult.Ok();
-//     }
-
-
-
-
-
-
-// }
-

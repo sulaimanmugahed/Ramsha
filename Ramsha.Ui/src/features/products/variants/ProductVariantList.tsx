@@ -5,7 +5,7 @@ import AddVariantCard from './AddVariantCard';
 import { ProductVariantDto } from '../../../app/models/products/product';
 
 interface ProductVariantListProps {
-    variants: (PreviewVariantType | ProductVariantDto)[]
+    variants: ProductVariantDto[]
     onAddVariant?: () => void;
     onUpdateVariant?: (variant: PreviewVariantType | ProductVariantDto, index: number) => void;
     onDeleteVariant?: (variant: PreviewVariantType | ProductVariantDto, index: number) => void;
@@ -23,7 +23,7 @@ const ProductVariantList: React.FC<ProductVariantListProps> = ({
     return (
         <>
             <Grid container spacing={2}>
-                {variants.map((variant, index) => (
+                {variants?.map((variant, index) => (
                     <Grid item xs={12} sm={cardPerRow} key={variant.id || index}>
                         <VariantCard
                             variant={variant}
@@ -31,7 +31,6 @@ const ProductVariantList: React.FC<ProductVariantListProps> = ({
                                 onUpdateVariant && onUpdateVariant(variant, index);
                             }}
                             onDelete={() => onDeleteVariant && onDeleteVariant(variant, index)}
-
                         />
                     </Grid>
                 ))}
@@ -42,7 +41,6 @@ const ProductVariantList: React.FC<ProductVariantListProps> = ({
                         </Grid>
                     )
                 }
-
             </Grid>
         </>
     );

@@ -7,11 +7,14 @@ namespace Ramsha.Application.Extensions;
 public static class ProductExtensions
 {
 
+
+
    public static VariantDetailDto AsDetailsDto(this ProductVariant variant)
    {
       return new VariantDetailDto(
            variant.Id.Value,
-           variant.SKU,
+           variant.Code,
+           variant.ImageUrl,
            variant.TotalQuantity,
            variant.Price,
            variant.FinalPrice,
@@ -128,7 +131,8 @@ public static class ProductExtensions
          variant.Name,
          variant.Description,
          variant.Price,
-         variant.SKU,
+         variant.Code,
+         variant.ImageUrl,
          variant.VariantValues.Select(v => v.AsDto()).ToList(),
          variant.Images.Select(x => new ProductImageDto(x.Url, x.IsHome)).ToList()
       );

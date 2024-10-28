@@ -27,6 +27,17 @@ public class GenericRepository<TEntity, TId>(ApplicationDbContext context)
         return await context.Set<TEntity>()
             .FindAsync(id);
     }
+
+
+    public async Task<bool> IsExist(TId id)
+    {
+        if (id is CompositeKey compositeKey)
+            return await context.Set<TEntity>()
+                    .FindAsync(compositeKey.Keys) != null;
+
+        return await context.Set<TEntity>().FindAsync(id) != null;
+    }
+
     public async Task<TEntity> AddAsync(TEntity entity)
     {
 

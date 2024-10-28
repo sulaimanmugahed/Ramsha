@@ -33,7 +33,7 @@ const ProductBasicForm = ({ onSubmit }: { onSubmit?: (data: any) => void }) => {
                         />
                     </Grid>
                     <Grid item xs={12}>
-                        <AppDropzone control={control} name="file" />
+                        <AppDropzone control={control} name="productImage" />
                     </Grid>
 
                 </Grid>
@@ -41,23 +41,6 @@ const ProductBasicForm = ({ onSubmit }: { onSubmit?: (data: any) => void }) => {
 
             <Grid item xs={12} md={6}>
                 <Grid container spacing={3}>
-                    <Grid item xs={12}>
-                        <AppTextInput
-                            control={control}
-                            name="basePrice"
-                            label={t('BasePrice')}
-                            type='number'
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <AttachMoney />
-                                    </InputAdornment>
-                                ),
-                            }}
-                            inputStyle={{ borderRadius: 1 }}
-                            fullWidth
-                        />
-                    </Grid>
                     <Grid item xs={12}>
                         <AppControlCategorySelector
                             name="category"
@@ -80,8 +63,8 @@ const ProductBasicForm = ({ onSubmit }: { onSubmit?: (data: any) => void }) => {
                             label={t('description')}
                             multiline
                             inputStyle={{ borderRadius: 2 }}
-                            minRows={7}
-                            maxRows={7}
+                            minRows={10}
+                            maxRows={10}
                             fullWidth
                         />
                     </Grid>

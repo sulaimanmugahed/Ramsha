@@ -6,12 +6,21 @@ export const PRODUCT_TAGS_QUERY_KEY = 'productTags'
 export const BRANDS_QUERY_KEY = 'brands'
 export const BASKET_QUERY_KEY = 'basket'
 export const ACCOUNT_QUERY_KEY = 'account'
+export const PRODUCT_VARIANTS_QUERY_KEY = 'productVariants'
+export const PRODUCT_OPTIONS_QUERY_KEY = 'productOptions'
+
+
+
+//suppliers
+
 export const SUPPLIES_QUERY_KEY = 'supplies'
+export const SUPPLIERS_MY_PRODUCTS_QUERY_KEY = 'suppliers-my-products'
+export const SUPPLIERS_MY_VARIANTS_QUERY_KEY = 'suppliers-my-variants'
+
 export const SUPPLY_REQUEST_QUERY_KEY = 'supplyRequest'
 
 
-export const PRODUCT_VARIANTS_QUERY_KEY = 'productVariants'
-export const PRODUCT_OPTIONS_QUERY_KEY = 'productOptions'
+
 
 
 
