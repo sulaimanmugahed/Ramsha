@@ -4,7 +4,7 @@ namespace Ramsha.Domain.Orders.Entities;
 
 public class OrderItem
 {
-    public OrderItem(ProductItemOrdered itemOrdered, long price, int quantity)
+    public OrderItem(ProductItemOrdered itemOrdered, decimal price, int quantity)
     {
         ItemOrdered = itemOrdered;
         Price = price;

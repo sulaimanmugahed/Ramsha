@@ -1,5 +1,4 @@
 ﻿using Ramsha.Domain.Common;
-using Ramsha.Domain.Constants;
 
 namespace Ramsha.Domain.Customers.Entities;
 public class Customer : BaseEntity, IAuditable, ISoftDeletable, IUser
@@ -20,7 +19,12 @@ public class Customer : BaseEntity, IAuditable, ISoftDeletable, IUser
             new CustomerId(Guid.NewGuid()), username, firstName, lastName);
     }
 
-    public CustomerId Id { get; set; }
+    public void SetAddress(CustomerAddress customerAddress)
+    {
+        Address = customerAddress;
+    }
+
+    public CustomerId Id { get; private set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public Guid CreatedBy { get; set; }
@@ -31,5 +35,5 @@ public class Customer : BaseEntity, IAuditable, ISoftDeletable, IUser
     public DateTime? Deleted { get; set; }
     public Guid? DeletedBy { get; set; }
     public string Username { get; set; }
-    public CustomerAddress Address { get; set; }
+    public CustomerAddress Address { get; private set; }
 }

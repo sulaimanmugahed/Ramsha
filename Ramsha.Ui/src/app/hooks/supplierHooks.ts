@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { SUPPLIERS_MY_PRODUCTS_QUERY_KEY, SUPPLIERS_MY_VARIANTS_QUERY_KEY, SUPPLIES_QUERY_KEY, SUPPLY_REQUEST_QUERY_KEY } from "../constants/queriesKey"
+import { SUPPLIERS_INVENTORY_ITEMS_QUERY_KEY, SUPPLIERS_MY_PRODUCTS_QUERY_KEY, SUPPLIERS_MY_VARIANTS_QUERY_KEY, SUPPLIES_QUERY_KEY, SUPPLY_REQUEST_QUERY_KEY } from "../constants/queriesKey"
 import { PagedParams, PaginationParams, PaginationResponse } from "../models/common/commonModels"
 import { Supply } from "../models/suppliers/supply"
 import { supplierService } from "../api/services/supplierService"
@@ -140,9 +140,9 @@ export const useSupplyRequestItem = (itemId: string) => {
     }
 }
 
-export const useSupplierInventoryItems = () => {
+export const useMyInventoryItems = () => {
     const { data, isLoading, isError } = useQuery<SupplierInventoryItem[]>({
-        queryKey: ['suppliersInventoryItems'],
+        queryKey: [SUPPLIERS_INVENTORY_ITEMS_QUERY_KEY],
         queryFn: async () => await supplierService.getInventoryItems(),
     })
 

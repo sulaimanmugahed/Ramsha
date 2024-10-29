@@ -24,6 +24,7 @@ IInventoryItemRepository
     public async Task<InventoryItem?> GetWithDetails(Expression<Func<InventoryItem, bool>> criteria)
     {
         return await _items
+         .Include(i => i.Stocks)
         .Include(i => i.Product)
         .ThenInclude(x => x.Category)
         .FirstOrDefaultAsync(criteria);

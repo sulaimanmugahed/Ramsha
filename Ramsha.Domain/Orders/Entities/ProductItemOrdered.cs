@@ -9,11 +9,11 @@ public class ProductItemOrdered
     {
 
     }
-    public ProductItemOrdered(InventoryItemId inventoryItemId, string inventorySKU,string name, string pictureUrl)
+    public ProductItemOrdered(InventoryItemId inventoryItemId, string inventorySKU, string name, string pictureUrl)
     {
         InventoryItemId = inventoryItemId;
         Name = name;
-        PictureUrl = pictureUrl;
+        PictureUrl = pictureUrl ?? string.Empty;
         InventorySKU = inventorySKU;
     }
 

@@ -74,6 +74,8 @@ public class ProductVariant : BaseEntity
     public decimal Price { get; private set; }
     public decimal FinalPrice { get; private set; }
     public int TotalQuantity { get; private set; }
+    public int AvailableQuantity { get; private set; }
+
 
     public List<VariantValue> VariantValues { get; set; } = [];
     public List<InventoryItem> InventoryItems { get; set; } = [];
@@ -146,9 +148,10 @@ public class ProductVariant : BaseEntity
         FinalPrice = finalPrice;
     }
 
-    public void UpdateQuantity()
+    public void UpdateQuantity(int availableQuantity, int totalQuantity)
     {
-        TotalQuantity = InventoryItems.Select(x => x.TotalQuantity).Sum();
+        TotalQuantity = totalQuantity;
+        AvailableQuantity = availableQuantity;
     }
 
     public void IncreaseQuantity(int? value = null)

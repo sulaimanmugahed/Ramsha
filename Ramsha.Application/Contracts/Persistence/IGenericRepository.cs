@@ -11,7 +11,9 @@ public interface IGenericRepository<TEntity, TId> where TEntity : BaseEntity
 
     Task<IEnumerable<TEntity?>> GetAllWithIncludeAsync(params Expression<Func<TEntity, object>>[] includes);
 
-    Task<IEnumerable<TEntity?>> GetAllAsync(Expression<Func<TEntity, bool>> criteria, params Expression<Func<TEntity, object>>[] includes);
+    Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> criteria, params Expression<Func<TEntity, object>>[] includes);
+    Task<IReadOnlyList<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> criteria);
+
     Task<TEntity> AddAsync(TEntity entity);
     TEntity Delete(TEntity entity);
     Task<bool> IsExist(TId id);

@@ -4,11 +4,9 @@ using Ramsha.Domain.Products;
 
 namespace Ramsha.Domain.Inventory.Events;
 
-public record StockAddedEvent(
+public record StockUpdatedEvent(
      ProductId ProductId,
-     ProductVariantId? ProductVariantId,
-     Price SupplyItemPrice,
-     int Quantity
+     ProductVariantId? ProductVariantId
 ) : IDomainEvent
 { }
 

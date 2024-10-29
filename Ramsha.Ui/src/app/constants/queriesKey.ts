@@ -18,6 +18,11 @@ export const SUPPLIERS_MY_PRODUCTS_QUERY_KEY = 'suppliers-my-products'
 export const SUPPLIERS_MY_VARIANTS_QUERY_KEY = 'suppliers-my-variants'
 
 export const SUPPLY_REQUEST_QUERY_KEY = 'supplyRequest'
+export const SUPPLIERS_INVENTORY_ITEMS_QUERY_KEY = 'suppliersInventoryItems'
+
+export const CUSTOMERS_MY_ADDRESS = "customers-my-address"
+
+
 
 
 

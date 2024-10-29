@@ -2,7 +2,6 @@
 using Ramsha.Domain.Common;
 using Ramsha.Domain.Inventory.Entities;
 using Ramsha.Domain.Products.Enums;
-using Ramsha.Domain.Products.Services;
 using Ramsha.Domain.Suppliers.Entities;
 
 
@@ -27,6 +26,8 @@ public sealed class Product : BaseEntity, IAuditable, ISoftDeletable
     public string Code { get; private set; }
 
     public int TotalQuantity { get; private set; }
+    public int AvailableQuantity { get; private set; }
+
     public decimal? Price { get; private set; }
     public decimal? FinalPrice { get; private set; }
     public string Description { get; private set; }
@@ -57,10 +58,9 @@ public sealed class Product : BaseEntity, IAuditable, ISoftDeletable
     }
 
 
-    public void UpdatePriceBasedOnStrategy(ProductPricingStrategy productPricingStrategy)
+
+    public void UpdatePrice(decimal basePrice, decimal finalPrice)
     {
-        var strategy = ProductPricingStrategyFactory.Create(productPricingStrategy);
-        (decimal basePrice, decimal finalPrice) = strategy.CalculatePrice(Inventories) ?? (0, 0);
         Price = basePrice;
         FinalPrice = finalPrice;
     }
@@ -144,7 +144,11 @@ public sealed class Product : BaseEntity, IAuditable, ISoftDeletable
         }
     }
 
-
+    public void UpdateQuantity(int availableQuantity, int totalQuantity)
+    {
+        TotalQuantity = totalQuantity;
+        AvailableQuantity = availableQuantity;
+    }
 
 
 

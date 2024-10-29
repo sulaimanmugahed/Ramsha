@@ -13,12 +13,17 @@ namespace Ramsha.Application.Features.Suppliers.Queries.GetSupplierInventoryItem
 
 public class GetSupplierInventoryItemsQueryHandler(
     IInventoryItemRepository inventoryItemRepository,
-    IAuthenticatedUserService authenticatedUserService
+    IAuthenticatedUserService authenticatedUserService,
+    ISupplierRepository supplierRepository
 ) : IRequestHandler<GetSupplierInventoryItemsQuery, BaseResult<List<SupplierInventoryItemDto>>>
 {
     public async Task<BaseResult<List<SupplierInventoryItemDto>>> Handle(GetSupplierInventoryItemsQuery request, CancellationToken cancellationToken)
     {
-        var inventoryItems = await inventoryItemRepository.GetAllAsync();
+        var supplier = await supplierRepository.GetAsync(x => x.Username == authenticatedUserService.UserName);
+        if (supplier is null)
+            return new Error(ErrorCode.ErrorInIdentity);
+
+        var inventoryItems = await inventoryItemRepository.GetAllAsync(x => x.SupplierId == supplier.Id);
         return inventoryItems.Select(x => x.AsSupplierInventoryItemDto()).ToList();
     }
 }

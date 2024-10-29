@@ -4,6 +4,7 @@ import { BasketDropdownItem } from './BasketDropdownItem';
 import AppDivider from '../components/AppDivider';
 import AppBagIcon from '../components/icons/AppBagIcon';
 import { useBasket } from '../hooks/basketHooks';
+import { useNavigate } from 'react-router-dom';
 
 const StyledMenu = styled(Menu)(({ theme }) => ({
     '& .MuiPaper-root': {
@@ -15,6 +16,7 @@ const StyledMenu = styled(Menu)(({ theme }) => ({
 const BasketDropdown = () => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
+    const navigate = useNavigate()
 
     const { basket, isBasketLoading, isBasketError } = useBasket();
 
@@ -25,6 +27,8 @@ const BasketDropdown = () => {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+
 
     const subTotal = useMemo(() => basket?.items.reduce((sum, item) => sum + item.finalPrice * item.quantity, 0), [basket]);
 
@@ -98,7 +102,7 @@ const BasketDropdown = () => {
                                     </Button>
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <Button size='large' fullWidth sx={{ borderRadius: 20 }} variant='contained'>
+                                    <Button size='large' onClick={() => { navigate('/checkout'); handleClose(); }} fullWidth sx={{ borderRadius: 20 }} variant='contained'>
                                         Checkout
                                     </Button>
                                 </Grid>
@@ -106,7 +110,7 @@ const BasketDropdown = () => {
                         </Box>
                     )}
                 </Box>
-            </StyledMenu>
+            </StyledMenu >
         </>
     );
 };

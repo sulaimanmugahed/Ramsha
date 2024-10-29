@@ -70,7 +70,7 @@ public class GenericRepository<TEntity, TId>(ApplicationDbContext context)
 
 
 
-    public async Task<IEnumerable<TEntity?>> GetAllAsync(Expression<Func<TEntity, bool>> criteria, params Expression<Func<TEntity, object>>[] includes)
+    public async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> criteria, params Expression<Func<TEntity, object>>[] includes)
     {
         IQueryable<TEntity> query = context.Set<TEntity>();
 
@@ -79,6 +79,12 @@ public class GenericRepository<TEntity, TId>(ApplicationDbContext context)
             query = query.Include(include);
         }
         return await query.Where(criteria).ToListAsync();
+    }
+
+    public async Task<IReadOnlyList<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> criteria)
+    {
+        IQueryable<TEntity> query = context.Set<TEntity>();
+        return await query.Where(criteria).AsNoTracking().ToListAsync();
     }
 
     public async Task<IEnumerable<TEntity?>> GetAllWithIncludeAsync(params Expression<Func<TEntity, object>>[] includes)

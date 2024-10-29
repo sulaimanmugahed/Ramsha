@@ -38,6 +38,13 @@ public class Stock : BaseEntity
         return newStock;
     }
 
+    public void DecreaseQuantity(int quantity)
+    {
+        if (Quantity - quantity < 0)
+            throw new Exception("quantity not available");
+        Quantity -= quantity;
+    }
+
 
     public void SetPrice(Price wholesalePrice)
     {

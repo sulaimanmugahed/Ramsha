@@ -2,8 +2,7 @@ import { Typography, Button, Box, Grid } from "@mui/material"
 import { BasketItem } from "../models/basket"
 import AppQuantitySelector from "../components/ui/AppQuantitySelector"
 import { useBasketItemCommands } from "../hooks/basketHooks"
-import { Loading } from "react-flaticons"
-import LoadingButton from "@mui/lab/LoadingButton"
+
 
 
 
@@ -14,7 +13,6 @@ export const BasketDropdownItem = ({ item }: Props) => {
 
     const { addItem, removeItem, isAddPending, isRemovePending } = useBasketItemCommands()
 
-
     return (
         <Grid container>
             <Grid item xs={3}>
@@ -24,9 +22,9 @@ export const BasketDropdownItem = ({ item }: Props) => {
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
                     <Box>
                         <Typography variant='body1' fontWeight={'bold'}>{item.name}</Typography>
-                        <Typography variant='body2' color={'text.secondary'}>{item?.inventorySku?.slice(item.name.length + 1)}</Typography>
+                        <Typography variant='body2' color={'text.secondary'}>{item?.inventorySku}</Typography>
                     </Box>
-                    <Box sx={{ border: '2px solid', borderRadius: '10px', p: '5px', borderColor: 'primary.main' }}>
+                    <Box sx={{ border: '1px solid', borderRadius: '10px', p: '5px', borderColor: 'primary.main' }}>
                         <Typography variant='body1' fontWeight={'bold'} color={'primary'}>${item.finalPrice}</Typography>
                     </Box>
                 </Box>

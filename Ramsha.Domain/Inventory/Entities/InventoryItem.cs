@@ -5,6 +5,7 @@ using Ramsha.Domain.Inventory.Events;
 using Ramsha.Domain.Inventory.Services;
 using Ramsha.Domain.Products;
 using Ramsha.Domain.Products.Entities;
+using Ramsha.Domain.Products.Enums;
 using Ramsha.Domain.Suppliers;
 using Ramsha.Domain.Suppliers.Entities;
 
@@ -87,22 +88,20 @@ public class InventoryItem : BaseEntity, IAuditable
         Stocks.Add(stock);
         IncreaseTotalQuantity(quantity);
         UpdateInventoryBasedOnSelectionStockStrategy(StockSelectionType);
-        RaiseDomainEvent(new StockAddedEvent(ProductId, ProductVariantId, wholesalePrice, quantity));
+        RaiseDomainEvent(new StockUpdatedEvent(ProductId, ProductVariantId));
     }
 
 
     public void UpdateInventoryBasedOnSelectionStockStrategy(StockSelectionType stockSelectionType = StockSelectionType.FIFO)
     {
-        var strategy = StockSelectionStrategyFactory.Create(stockSelectionType);
-        var stock = strategy.SelectStock(Stocks);
-        if (stock.HasValue)
+        var stock = GetStock(stockSelectionType);
+        if (stock is not null)
         {
-            AvailableQuantity = stock.Value.quantity;
-            WholesalePrice = stock.Value.wholesalePrice;
-            RetailPrice = stock.Value.retailPrice;
-            FinalPrice = stock.Value.finalPrice;
-            Currency = stock.Value.currency;
-
+            AvailableQuantity = stock.Quantity;
+            WholesalePrice = stock.WholesalePrice.Amount;
+            RetailPrice = stock.RetailPrice.Amount;
+            FinalPrice = stock.FinalPrice.Amount;
+            Currency = stock.FinalPrice.Currency.ToString();
         }
     }
 
@@ -110,6 +109,42 @@ public class InventoryItem : BaseEntity, IAuditable
     {
         TotalQuantity += quantity;
     }
+
+    public void DecreaseTotalQuantity(int quantity)
+    {
+        TotalQuantity -= quantity;
+    }
+
+
+
+    public void DecreaseQuantity(int quantity)
+    {
+
+        var currentStock = GetStock(StockSelectionType);
+        if (currentStock is null)
+        {
+            throw new Exception("stock null");
+        }
+
+        currentStock.DecreaseQuantity(quantity);
+
+        if (currentStock.Quantity == 0)
+        {
+            Stocks.Remove(currentStock);
+        }
+
+        DecreaseTotalQuantity(quantity);
+        UpdateInventoryBasedOnSelectionStockStrategy(StockSelectionType);
+        RaiseDomainEvent(new StockUpdatedEvent(ProductId, ProductVariantId));
+    }
+
+    public Stock? GetStock(StockSelectionType stockSelectionType)
+    {
+        var strategy = StockSelectionStrategyFactory.Create(stockSelectionType);
+        return strategy.SelectStock(Stocks);
+    }
+
+
 
     public void SetSKU(string sku)
     {

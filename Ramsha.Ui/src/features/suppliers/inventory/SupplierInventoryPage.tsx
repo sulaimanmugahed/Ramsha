@@ -1,10 +1,10 @@
 import { Grid } from "@mui/material"
-import { useSupplierInventoryItems } from "../../../app/hooks/supplierHooks"
+import { useMyInventoryItems } from "../../../app/hooks/supplierHooks"
 import SupplierInventoryItemsTable from "./SupplierInventoryItemsTable"
 
 const SupplierInventoryPage = () => {
 
-    const { items } = useSupplierInventoryItems()
+    const { items } = useMyInventoryItems()
 
     return (
         <Grid container spacing={2}>

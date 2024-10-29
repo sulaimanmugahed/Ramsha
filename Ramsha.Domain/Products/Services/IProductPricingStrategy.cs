@@ -7,4 +7,5 @@ namespace Ramsha.Domain.Products.Services;
 public interface IProductPricingStrategy
 {
     (decimal, decimal)? CalculatePrice(List<InventoryItem> items);
+
 }
