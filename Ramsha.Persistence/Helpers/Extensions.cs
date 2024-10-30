@@ -15,10 +15,10 @@ public static class Extensions
 
         var entityType = typeof(T);
 
-       
+
         var parameter = Expression.Parameter(entityType, "x");
 
-       
+
         var orderByExpression = CreateOrderByExpression(entityType, parameter, columnsSort[0]);
         var methodCall = Expression.Call(
             typeof(Queryable),
@@ -29,7 +29,7 @@ public static class Extensions
 
         var result = source.Provider.CreateQuery<T>(methodCall);
 
-       
+
         for (int i = 1; i < columnsSort.Count; i++)
         {
             var column = columnsSort[i];
@@ -49,26 +49,26 @@ public static class Extensions
     }
 
     private static LambdaExpression CreateOrderByExpression(Type entityType, ParameterExpression parameter, ColumnSort column)
-{
-   
-    string[] propertyNames = column.SortColumn.Split('.');
-    Expression propertyAccess = parameter;
-    Type currentType = entityType;
-
-    
-    foreach (var propertyName in propertyNames)
     {
-        var property = currentType.GetProperty(propertyName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
-        if (property == null)
-            throw new ArgumentException($"Property '{propertyName}' not found on type '{currentType.Name}'", nameof(column.SortColumn));
 
-        propertyAccess = Expression.MakeMemberAccess(propertyAccess, property);
-        currentType = property.PropertyType;
+        string[] propertyNames = column.SortColumn.Split('.');
+        Expression propertyAccess = parameter;
+        Type currentType = entityType;
+
+
+        foreach (var propertyName in propertyNames)
+        {
+            var property = currentType.GetProperty(propertyName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+            if (property == null)
+                throw new ArgumentException($"Property '{propertyName}' not found on type '{currentType.Name}'", nameof(column.SortColumn));
+
+            propertyAccess = Expression.MakeMemberAccess(propertyAccess, property);
+            currentType = property.PropertyType;
+        }
+
+        return Expression.Lambda(propertyAccess, parameter);
     }
 
-    return Expression.Lambda(propertyAccess, parameter);
-}
-   
 
     public static IQueryable<T> FilterByColumn<T>(this IQueryable<T> query, List<ColumnFilter> columnsFilter)
     {
@@ -76,7 +76,7 @@ public static class Extensions
         if (columnsFilter == null || columnsFilter.Count == 0) return query;
 
         var parameter = Expression.Parameter(typeof(T), "x");
-        Expression? predicate = null;  
+        Expression? predicate = null;
 
         foreach (var column in columnsFilter)
         {
@@ -98,9 +98,9 @@ public static class Extensions
 
     private static Expression GetPropertyExpression<T>(Expression parameter, string columnName)
     {
-        string[] propertyNames = columnName.Split('.'); 
+        string[] propertyNames = columnName.Split('.');
         Expression propertyExpression = parameter;
-        Type currentType = typeof(T); 
+        Type currentType = typeof(T);
 
         foreach (var propertyName in propertyNames)
         {
@@ -118,7 +118,7 @@ public static class Extensions
         return propertyExpression;
     }
 
- 
+
 
     private static Expression BuildComparisonExpression(Expression propertyExpression, ColumnFilter column)
     {
@@ -153,7 +153,7 @@ public static class Extensions
         {
             ComparisonOperator.Equals => Expression.Equal(propertyToLower, filterValue),
             ComparisonOperator.Contains => Expression.Call(propertyToLower, containsMethod, filterValue),
-            _ => Expression.Call(propertyToLower, containsMethod, filterValue) 
+            _ => Expression.Call(propertyToLower, containsMethod, filterValue)
         };
     }
 

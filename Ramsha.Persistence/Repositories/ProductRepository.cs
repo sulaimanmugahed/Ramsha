@@ -26,7 +26,6 @@ public class ProductRepository(ApplicationDbContext context)
    private readonly DbSet<ProductOption> _options = context.Set<ProductOption>();
 
 
-
    public async Task<IEnumerable<Product>> GetAllProductsDetails()
    {
       return await _product
@@ -46,24 +45,38 @@ public class ProductRepository(ApplicationDbContext context)
   .ToListAsync();
    }
 
+
+
    public async Task<Product?> GetProductCatalogDetail(ProductId productId)
    {
       return await _product
      .AsSplitQuery()
      .Include(p => p.Brand)
      .Include(p => p.Category)
-     .Include(x => x.Variants)
-      .ThenInclude(p => p.SupplierVariants)
-     .Include(p => p.Variants)
-       .ThenInclude(v => v.Images)
-     .Include(p => p.Variants)
-       .ThenInclude(v => v.VariantValues)
-       .ThenInclude(vv => vv.Option)
-     .Include(p => p.Variants)
-       .ThenInclude(v => v.VariantValues)
-       .ThenInclude(vv => vv.OptionValue)
   .SingleOrDefaultAsync(x => x.Id == productId);
    }
+
+   public async Task<CatalogVariantDto?> GetCatalogProductVariant(ProductId productId, ProductVariantId? productVariantId = null)
+   {
+      var query = _productsVariants
+          .Include(v => v.VariantValues)
+              .ThenInclude(vv => vv.Option)
+          .Include(v => v.VariantValues)
+              .ThenInclude(vv => vv.OptionValue)
+          .Where(x => x.ProductId == productId)
+          .AsQueryable();
+
+      if (productVariantId is not null)
+      {
+         query = query.Where(x => x.Id == productVariantId);
+      }
+
+      return await query
+          .Select(x => x.AsCatalogVariantDto())
+          .FirstOrDefaultAsync();
+   }
+
+
 
    public async Task<Option?> GetProductOption(ProductId productId, OptionId optionId)
    => (await _options.Include(x => x.Option).SingleOrDefaultAsync(x => x.ProductId == productId && x.OptionId == optionId))?.Option;
@@ -120,6 +133,24 @@ public class ProductRepository(ApplicationDbContext context)
    public async Task<ProductVariant?> GetProductVariant(ProductId productId, ProductVariantId productVariantId)
    {
       return await _productsVariants.FindAsync(productId, productVariantId);
+   }
+
+   public async Task<ProductVariantSelectionDto?> GetProductVariantSelection(ProductId productId)
+   {
+      var query = _product
+      .AsSplitQuery()
+        .Include(x => x.Variants)
+        .ThenInclude(v => v.VariantValues)
+           .ThenInclude(vv => vv.Option)
+     .Include(x => x.Variants)
+        .ThenInclude(x => x.VariantValues)
+           .ThenInclude(x => x.OptionValue)
+           .AsQueryable();
+
+      return await query
+      .Where(x => x.Id == productId)
+      .Select(p => p.AsProductVariantSelectionDto())
+      .FirstOrDefaultAsync();
    }
 
    public async Task<ProductVariant?> GetVariantDetails(ProductId productId, ProductVariantId productVariantId)
@@ -183,7 +214,7 @@ public class ProductRepository(ApplicationDbContext context)
        );
    }
 
-  
+
 
 
    public async Task<PaginationResponseDto<ProductDto>> GetProductsPaged(PaginationParams paginationParams, FilterParams? filterParams = null, SortingParams? sortingParams = null)
@@ -277,3 +308,4 @@ public class ProductRepository(ApplicationDbContext context)
    }
 
 }
+

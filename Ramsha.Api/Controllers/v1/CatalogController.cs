@@ -8,6 +8,7 @@ using Ramsha.Application.Features.Catalog.Queries.GetCatalogProductDetail;
 using Ramsha.Application.Features.Products.Queries.GetCatalogProductsPaged;
 using Ramsha.Application.Wrappers;
 using Microsoft.AspNetCore.Authorization;
+using Ramsha.Application.Features.Catalog.Queries.GetCatalogProductVariant;
 
 
 namespace Ramsha.Api.Controllers.v1;
@@ -23,6 +24,11 @@ public class CatalogController : BaseApiController
     [HttpGet("products/{productId}")]
     public async Task<BaseResult<CatalogProductDetailDto>> GetProductCatalogDetail(Guid productId)
     => await Mediator.Send(new GetCatalogProductDetailQuery { ProductId = productId });
+
+    [HttpGet("products/{productId}/variants/{variantId?}")]
+    public async Task<BaseResult<CatalogVariantDto?>> GetCatalogProductVariant(Guid productId, Guid? variantId = null)
+    => await Mediator.Send(new GetCatalogProductVariantQuery { ProductId = productId, ProductVariantId = variantId });
+
 
     [HttpGet("categories")]
     public async Task<BaseResult<List<CatalogCategoryDto>>> GetCatalogCategories()

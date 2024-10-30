@@ -12,10 +12,15 @@ using Ramsha.Persistence.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Ramsha.Domain.Products;
 using Ramsha.Application.Dtos.Catalog;
+using Microsoft.Extensions.Options;
+using Ramsha.Domain.Settings;
+using Ramsha.Domain.Products.Enums;
 
 namespace Ramsha.Persistence.Repositories;
 
-public class InventoryItemRepository(ApplicationDbContext context)
+public class InventoryItemRepository(
+ApplicationDbContext context
+, IOptionsSnapshot<GlobalAppSettings> settings)
 : GenericRepository<InventoryItem, InventoryItemId>(context),
 IInventoryItemRepository
 {
@@ -63,10 +68,18 @@ IInventoryItemRepository
         var query = _items
         .Where(x => x.ProductId == productId && x.ProductVariantId == productVariantId)
         .AsQueryable();
-
         if (sortingParams is not null)
+        
         {
             query = query.OrderByColumnName(sortingParams.ColumnsSort);
+        }
+        else
+        {
+            query = settings.Value.ProductPricingStrategy switch
+            {
+                ProductPricingStrategy.MaxPrice => query.OrderByDescending(x => x.FinalPrice),
+                _ => query.OrderBy(x => x.FinalPrice),
+            };
         }
 
         if (filterParams is not null)
@@ -82,6 +95,7 @@ IInventoryItemRepository
                 query = query.FilterByColumn(filterParams.ColumnsFilter);
             }
         }
+
 
         return await Paged(
           query.Select(p => p.AsCatalogInventoryItemDetailDto()),

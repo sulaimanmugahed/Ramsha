@@ -17,7 +17,6 @@ type Props = {
     onApply?: (variantId?: string) => void
     onClose?: () => void
     dialog?: boolean
-
 }
 
 const VariantValuesSelector = ({ dialog = true, variants, availableOptionsNames, open, onApply, onClose }: Props) => {

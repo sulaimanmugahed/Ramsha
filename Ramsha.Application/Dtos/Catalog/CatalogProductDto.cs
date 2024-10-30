@@ -29,12 +29,14 @@ string Brand,
 string? ImageUrl,
 int TotalQuantity,
 decimal AverageRating,
-int NumberOfRatings,
-List<CatalogVariantDetailDto> Variants,
-List<string> AvailableOptions
+int NumberOfRatings
 );
 
 
+public record CatalogVariantDto(
+Guid Id,
+List<CatalogVariantValuesDto> VariantValues
+);
 
 public record CatalogVariantDetailDto(
 Guid Id,

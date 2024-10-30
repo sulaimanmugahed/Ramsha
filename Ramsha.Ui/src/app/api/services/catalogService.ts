@@ -1,5 +1,5 @@
 import { CatalogCategory } from "../../models/catalog/catalogCategory";
-import { CatalogProductDetailType } from "../../models/catalog/catalogProduct";
+import { CatalogProductDetailType, CatalogVariant } from "../../models/catalog/catalogProduct";
 import { PagedParams, PaginationResponse } from "../../models/common/commonModels";
 import request from "../Request";
 
@@ -21,6 +21,18 @@ const getProductDetail = async (productId: string) =>
     })
 
 
+    const getProductVariant = async (productId: string, productVariantId?: string | null) => {
+        const url = productVariantId 
+            ? `${BASE_URL}/products/${productId}/variants/${productVariantId}`
+            : `${BASE_URL}/products/${productId}/variants`;
+    
+        return await request<CatalogVariant>({
+            url,
+            method: 'GET'
+        });
+    };
+
+
 const getInventoryItems = async (productId: string, productVariantId: string, params: PagedParams) =>
     await request<any>({
         url: `${BASE_URL}/${productId}/${productVariantId}/inventoryItems`,
@@ -39,5 +51,6 @@ export const catalogService = {
     getProducts,
     getCategories,
     getProductDetail,
-    getInventoryItems
+    getInventoryItems,
+    getProductVariant
 }

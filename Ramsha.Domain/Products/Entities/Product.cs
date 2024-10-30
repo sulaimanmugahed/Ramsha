@@ -1,5 +1,6 @@
 ﻿
 using Ramsha.Domain.Common;
+using Ramsha.Domain.Inventory;
 using Ramsha.Domain.Inventory.Entities;
 using Ramsha.Domain.Products.Enums;
 using Ramsha.Domain.Suppliers.Entities;
@@ -32,7 +33,6 @@ public sealed class Product : BaseEntity, IAuditable, ISoftDeletable
     public decimal? FinalPrice { get; private set; }
     public string Description { get; private set; }
     public string? ImageUrl { get; private set; }
-
     public ProductStatus Status { get; private set; }
     public CategoryId CategoryId { get; private set; }
     public Category Category { get; private set; }

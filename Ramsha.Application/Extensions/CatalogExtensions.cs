@@ -52,6 +52,11 @@ public static class CatalogExtensions
     }
 
 
+    public static CatalogVariantDto AsCatalogVariantDto(this ProductVariant variant)
+    => new CatalogVariantDto(
+        variant.Id.Value,
+        variant.VariantValues.Select(x => new CatalogVariantValuesDto(x.Option.Name, x.OptionValue.Name)).ToList()
+    );
 
     public static CatalogVariantDetailDto AsCatalogVariantDetailDto(this ProductVariant variant)
     {
@@ -78,12 +83,7 @@ public static class CatalogExtensions
            product.ImageUrl,
            product.TotalQuantity,
            product.AverageRating,
-           product.NumberOfRatings,
-           product.Variants.Select(x => x.AsCatalogVariantDetailDto()).ToList(),
-           product.Variants
-           .SelectMany(x => x.VariantValues
-           .Select(x => x.Option.Name)
-           .Distinct()).ToList()
+           product.NumberOfRatings
         );
     }
 }

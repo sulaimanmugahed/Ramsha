@@ -20,6 +20,7 @@ using Ramsha.Application.Wrappers;
 using Microsoft.AspNetCore.Mvc;
 using Ramsha.Domain.Products.Enums;
 using Ramsha.Application.Features.Products.Commands.UpdateProduct;
+using Ramsha.Application.Features.Products.Queries.GetProductVariantSelection;
 
 namespace Ramsha.Api.Controllers.v1;
 
@@ -30,6 +31,10 @@ public class ProductsController : BaseApiController
     [HttpPost("paged")]
     public async Task<BaseResult<List<ProductDto>>> GetProductsPaged([FromBody] GetProductsPagedQuery query)
    => await Mediator.Send(query);
+
+    [HttpGet("{productId}/selection")]
+    public async Task<BaseResult<ProductVariantSelectionDto?>> GetProductVariantSelection(Guid productId)
+    => await Mediator.Send(new GetProductVariantSelectionQuery { ProductId = productId });
 
     [HttpGet("{productId}/options")]
     public async Task<BaseResult<List<ProductOptionDto>?>> GetProductOption(Guid productId)

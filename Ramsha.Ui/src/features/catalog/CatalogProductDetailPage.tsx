@@ -1,7 +1,7 @@
 import { Autocomplete, Box, Button, Card, CardMedia, Chip, Divider, Grid, LinearProgress, linearProgressClasses, styled, TextField, Typography } from '@mui/material'
 import AppDialog from '../../app/components/AppDialog'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useCatalogProductDetail } from '../../app/hooks/catalogHooks'
+import { useCatalogProductDetail, useCatalogProductVariant } from '../../app/hooks/catalogHooks'
 import AppDivider from '../../app/components/AppDivider'
 import { useEffect, useMemo, useState } from 'react'
 import { CatalogInventoryItem } from '../../app/models/catalog/catalogProduct'
@@ -16,7 +16,7 @@ import { Favorite, FavoriteBorder } from '@mui/icons-material'
 import LoadingButton from '@mui/lab/LoadingButton'
 import { useBasket, useBasketItemCommands } from '../../app/hooks/basketHooks'
 import VariantValuesSelector from '../products/variants/VariantValuesSelector'
-import { useProductOptions } from '../../app/hooks/productHooks'
+import { useProductVariantSelection } from '../../app/hooks/productHooks'
 
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
     height: 10,
@@ -50,13 +50,16 @@ const CatalogProductDetailPage = () => {
     const { productId } = useParams()
     if (!productId) return null;
 
+    const [params, setParams] = usePagedParams()
+    const { sku, variantId } = params
+
+
     const { product } = useCatalogProductDetail(productId)
 
-    const { productOptionsNames } = useProductOptions(productId)
+    const { variant } = useCatalogProductVariant(productId, variantId)
+
 
     const [selectedInventory, setSelectedInventory] = useState<CatalogInventoryItem | null>(null);
-    const [params, setParams] = usePagedParams()
-    const { sku, variantParams, variantId } = params
 
     const { addItem, removeItem, isAddPending, isRemovePending } = useBasketItemCommands()
 
@@ -122,7 +125,9 @@ const CatalogProductDetailPage = () => {
     };
 
     const hasDiscount = useMemo(() => selectedInventory && selectedInventory.finalPrice < selectedInventory.basePrice, [selectedInventory]);
-    const selectedVariant = useMemo(() => product?.variants.find(x => x.id === variantId), [product, variantParams])
+
+
+    const { variants, availableOptionsNames } = useProductVariantSelection(productId)
 
     const handleRateChange = (_: React.ChangeEvent<{}>, newValue: number | null) => {
         if (!rateModalOpen) {
@@ -231,9 +236,6 @@ const CatalogProductDetailPage = () => {
                                     <Typography gutterBottom variant="body2" color="text.secondary">
                                         <strong>Total Quantity:</strong> {product.totalQuantity}
                                     </Typography>
-                                    <Typography gutterBottom variant="body2" color="text.secondary">
-                                        <strong>Total Variants:</strong> {product.variants.length}
-                                    </Typography>
                                 </Box>
 
                                 <AppDivider />
@@ -249,7 +251,7 @@ const CatalogProductDetailPage = () => {
                                         </Button>
                                     </Box>
                                     {
-                                        selectedVariant?.variantValues.map(x => (
+                                        variant?.variantValues.map(x => (
                                             <Typography color={'text.secondary'} variant="body2">
                                                 <strong>{x.optionName}:</strong> {x.valueName}
                                             </Typography>
@@ -376,22 +378,19 @@ const CatalogProductDetailPage = () => {
                                     </Grid>
                                 </Grid>
                             </Grid>
-
                         </Grid>
                         {
-                            productOptionsNames && product.variants.length > 0 && (
+                            variants && availableOptionsNames && (
                                 <VariantValuesSelector
-                                    availableOptionsNames={productOptionsNames}
+                                    availableOptionsNames={availableOptionsNames}
                                     onClose={() => setOpenVariantDialog(false)}
                                     open={openVariantDialog}
-                                    variants={product.variants}
+                                    variants={variants}
                                 />
                             )
                         }
                     </Card>
                 </Grid>
-
-
 
                 <AppDialog maxWidth='md' onClose={handleCloseSupplierDetails} open={openSupplierDetails}>
                     <Box sx={{ p: 3 }}>

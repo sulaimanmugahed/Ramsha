@@ -1,4 +1,5 @@
 
+using System.Security.Cryptography.X509Certificates;
 using Ramsha.Application.Dtos.Products;
 using Ramsha.Domain.Products.Entities;
 
@@ -6,7 +7,24 @@ namespace Ramsha.Application.Extensions;
 
 public static class ProductExtensions
 {
+   public static SelectableVariantValuesDto AsSelectableVariantValuesDto(this VariantValue variantValue)
+   => new(variantValue.Option.Name, variantValue.OptionValue.Name);
 
+
+   public static SelectableVariantsDto AsSelectableVariantsDto(this ProductVariant productVariant)
+   => new SelectableVariantsDto(
+      productVariant.Id.Value,
+   productVariant.VariantValues.Select(x => x.AsSelectableVariantValuesDto()).ToList());
+
+
+   public static ProductVariantSelectionDto AsProductVariantSelectionDto(this Product product)
+   {
+      var variants = product.Variants;
+      return new(
+         variants.Select(x => x.AsSelectableVariantsDto()).ToList(),
+         variants.SelectMany(x => x.VariantValues).DistinctBy(x => x.Option.Name).Select(x => x.Option.Name).ToList()
+      );
+   }
 
 
    public static VariantDetailDto AsDetailsDto(this ProductVariant variant)

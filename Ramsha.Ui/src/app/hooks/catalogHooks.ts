@@ -3,7 +3,7 @@ import { PagedParams, PaginationResponse } from "../models/common/commonModels"
 import { CatalogCategory } from "../models/catalog/catalogCategory"
 
 import { catalogService } from "../api/services/catalogService"
-import { CatalogProductDetailType } from "../models/catalog/catalogProduct"
+import { CatalogProductDetailType, CatalogVariant } from "../models/catalog/catalogProduct"
 import { INVENTORY_ITEMS_QUERY_KEY } from "../constants/queriesKey"
 
 
@@ -20,6 +20,21 @@ export const useCatalogProducts = (params: PagedParams) => {
         isProductsError: isError
     }
 }
+
+export const useCatalogProductVariant = (productId: string, variantId?: string | null) => {
+    const { data, isLoading, isError } = useQuery<CatalogVariant>({
+        queryKey: ["catalogProductVariant", productId, variantId],
+        queryFn: async () => await catalogService.getProductVariant(productId, variantId),
+    })
+
+    return {
+        variant: data,
+        isVariantLoading: isLoading,
+        isVariantError: isError
+    }
+}
+
+
 
 export const useInfiniteInventoryItems = (productId: string, productVariantId: string, params: PagedParams, enabled: boolean = true) => {
 

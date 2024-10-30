@@ -43,6 +43,11 @@ export type ProductOption = {
     priority: number
 }
 
+export type ProductVariantSelection = {
+    variants: SelectableVariant[];
+    availableOptionsNames: string[]
+}
+
 
 export type SelectableVariant = {
     id: string;

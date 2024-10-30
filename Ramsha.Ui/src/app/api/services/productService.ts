@@ -1,5 +1,5 @@
 import { PagedParams, PaginationResponse } from "../../models/common/commonModels";
-import { BrandDto, ProductDetail, ProductDto, ProductOption, ProductVariantDto } from "../../models/products/product";
+import { BrandDto, ProductDetail, ProductDto, ProductOption, ProductVariantDto, ProductVariantSelection } from "../../models/products/product";
 
 import request from "../Request";
 
@@ -134,6 +134,13 @@ const changeProductStatus = async (productId: string, status: string) => {
 }
 
 
+const getProductVariantSelection = async (productId: string) =>
+    await request<ProductVariantSelection>({
+        url: `${BASE_URL}/${productId}/selection`
+    })
+
+
+
 
 export const productService = {
     getProduct,
@@ -151,5 +158,6 @@ export const productService = {
     getProductVariant,
     updateVariant,
     changeProductStatus,
-    getProductOptions
+    getProductOptions,
+    getProductVariantSelection
 }

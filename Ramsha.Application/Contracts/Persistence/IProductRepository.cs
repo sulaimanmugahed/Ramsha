@@ -1,5 +1,4 @@
 ﻿using Ramsha.Application.Dtos.Catalog;
-using Ramsha.Application.Dtos.Common;
 using Ramsha.Application.Dtos.Products;
 using Ramsha.Application.DTOs.Common;
 using Ramsha.Application.Wrappers;
@@ -11,6 +10,9 @@ public interface IProductRepository : IGenericRepository<Product, ProductId>
 {
     Task<Product?> GetProductWithOptions(ProductId productId);
     Task<Product?> GetProductWithVariantsAndOptions(ProductId productId);
+    Task<CatalogVariantDto?> GetCatalogProductVariant(ProductId productId, ProductVariantId? productVariantId = null);
+
+    Task<ProductVariantSelectionDto?> GetProductVariantSelection(ProductId productId);
 
     Task<PaginationResponseDto<ProductDto>> GetProductsPaged(PaginationParams paginationParams, FilterParams? filterParams = null, SortingParams? sortingParams = null);
     Task<IEnumerable<Product>> GetAllProductsDetails();

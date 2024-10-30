@@ -34,7 +34,4 @@ export interface CatalogProductDetailType {
     totalQuantity: number;
     averageRating: number;
     numberOfRatings: number;
-    basePrice: number;
-    finalPrice: number;
-    variants: CatalogVariant[];
 }

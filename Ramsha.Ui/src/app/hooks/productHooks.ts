@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { productService } from "../api/services/productService"
 import { BrandDto, ProductDetail, ProductDto, ProductOption, ProductStatus, ProductTag, ProductVariantDto } from "../models/products/product"
 import { toast } from "sonner"
-import { BRANDS_QUERY_KEY, PRODUCT_TAGS_QUERY_KEY, PRODUCTS_QUERY_KEY, PRODUCT_VARIANTS_QUERY_KEY, PRODUCT_OPTIONS_QUERY_KEY } from "../constants/queriesKey"
+import { BRANDS_QUERY_KEY, PRODUCT_TAGS_QUERY_KEY, PRODUCTS_QUERY_KEY, PRODUCT_VARIANTS_QUERY_KEY, PRODUCT_OPTIONS_QUERY_KEY, PRODUCT_SELECTION_QUERY_KEY } from "../constants/queriesKey"
 import { PagedParams, PaginationResponse } from "../models/common/commonModels"
 import { Option } from "../models/options/option"
 import AppError from "../utils/appError"
@@ -244,5 +244,17 @@ export const useAddVariant = () => {
     })
     return {
         addVariant: mutateAsync
+    }
+}
+
+export const useProductVariantSelection = (productId: string) => {
+    const { data } = useQuery({
+        queryKey: [PRODUCT_SELECTION_QUERY_KEY, productId],
+        queryFn: async () => await productService.getProductVariantSelection(productId)
+    })
+
+    return {
+        variants: data?.variants,
+        availableOptionsNames: data?.availableOptionsNames
     }
 }
