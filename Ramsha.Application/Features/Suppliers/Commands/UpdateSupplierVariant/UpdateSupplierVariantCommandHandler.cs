@@ -40,6 +40,8 @@ IUnitOfWork unitOfWork
         }
 
 
+
+
         if (request.VariantImagesUrlToRemove.HasItems())
         {
             foreach (var imageUrl in request.VariantImagesUrlToRemove)

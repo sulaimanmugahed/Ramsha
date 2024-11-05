@@ -16,6 +16,7 @@ namespace Ramsha.Api.Controllers.v1;
 
 public class CustomersController : BaseApiController
 {
+	[AllowAnonymous]
 	[HttpPost]
 	public async Task<ActionResult<BaseResult<string>>> Create(CreateCustomerCommand command)
 		=> await Mediator.Send(command);

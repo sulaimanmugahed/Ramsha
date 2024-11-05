@@ -97,8 +97,8 @@ const BasketDropdown = () => {
 
                             <Grid container spacing={2} mt={2}>
                                 <Grid item xs={6}>
-                                    <Button size='large' fullWidth sx={{ borderRadius: 20 }} variant='outlined'>
-                                        View Basket
+                                    <Button size='large' onClick={() => { navigate('/basket/detail'); handleClose(); }} fullWidth sx={{ borderRadius: 20 }} variant='outlined'>
+                                        Basket Detail
                                     </Button>
                                 </Grid>
                                 <Grid item xs={6}>

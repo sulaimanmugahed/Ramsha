@@ -7,8 +7,6 @@ namespace Ramsha.Application.Dtos.Products;
 
 public record ProductVariantDto(
     Guid Id,
-    string Name,
-    string Description,
     decimal BasePrice,
     string SKU,
 string ImageUrl,

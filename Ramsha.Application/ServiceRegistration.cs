@@ -21,6 +21,8 @@ public static class ServiceRegistration
         services.AddScoped<ICodeGenerator, CodeGenerator>();
 
         services.Configure<GlobalAppSettings>(configuration.GetSection(nameof(GlobalAppSettings)));
+        services.AddScoped<DeliveryFeeService>();
+        services.AddScoped<BasketService>();
 
 
         return services;

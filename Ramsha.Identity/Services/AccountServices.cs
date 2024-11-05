@@ -12,6 +12,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using Ramsha.Domain.Common;
 
 
 namespace Ramsha.Identity.Services;
@@ -99,6 +100,7 @@ IOptionsSnapshot<JWTSettings> jwtSettings) : IAccountServices
             AccountId = user.Id,
             Role = rolesList.FirstOrDefault(),
             IsVerified = user.EmailConfirmed,
+            Address = user.Address
         };
     }
 
@@ -122,7 +124,7 @@ IOptionsSnapshot<JWTSettings> jwtSettings) : IAccountServices
         var user = await userManager.FindByNameAsync(request.UserName);
         if (user == null)
         {
-            return new Error(ErrorCode.NotFound, "Not found", nameof(request.UserName));
+            return new Error(ErrorCode.ErrorInIdentity, "no user found");
         }
         var result = await signInManager.PasswordSignInAsync(user.UserName, request.Password, false, lockoutOnFailure: false);
         if (!result.Succeeded)
@@ -146,6 +148,7 @@ IOptionsSnapshot<JWTSettings> jwtSettings) : IAccountServices
             Username = user.UserName,
             Role = rolesList.FirstOrDefault(),
             IsVerified = user.EmailConfirmed,
+            Address = user.Address
         };
 
         if (user.RefreshTokens.Any(t => t.IsActive))
@@ -180,7 +183,7 @@ IOptionsSnapshot<JWTSettings> jwtSettings) : IAccountServices
         var user = await userManager.FindByNameAsync(authenticatedUser.UserName);
         if (user == null)
         {
-            return new Error(ErrorCode.NotFound, "Not Found");
+            return new Error(ErrorCode.ErrorInIdentity, "no user found");
         }
 
         var rolesList = await userManager.GetRolesAsync(user).ConfigureAwait(false);
@@ -289,7 +292,13 @@ IOptionsSnapshot<JWTSettings> jwtSettings) : IAccountServices
         return result.Claims.ToList();
     }
 
-
-
-
+    public async Task UpdateAddress(string userName, Address address)
+    {
+        var user = await userManager.FindByNameAsync(userName);
+        if (user is not null)
+        {
+            user.Address = address;
+            await userManager.UpdateAsync(user);
+        }
+    }
 }

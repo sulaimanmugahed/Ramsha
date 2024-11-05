@@ -72,47 +72,47 @@ public class CreateProductCommandHandler(
             }
         }
 
-        if (request.Variants.HasItems())
-        {
-            foreach (var variant in request.Variants)
-            {
-                var IsVariantExists = variantService.IsVariantExists(product.Variants, variant.VariantValues);
-                if (IsVariantExists)
-                    return new Error(ErrorCode.ThisDataAlreadyExist, "this variant is already exist");
+        // if (request.Variants.HasItems())
+        // {
+        //     foreach (var variant in request.Variants)
+        //     {
+        //         var IsVariantExists = variantService.IsVariantExists(product.Variants, variant.VariantValues);
+        //         if (IsVariantExists)
+        //             return new Error(ErrorCode.ThisDataAlreadyExist, "this variant is already exist");
 
-                var productVariant = ProductVariant.Create(product.Id,
-                product.Name,
-                product.Description);
+        //         var productVariant = ProductVariant.Create(product.Id,
+        //         product.Name,
+        //         product.Description);
 
-                if (!string.IsNullOrEmpty(variant.ImageUrl))
-                    productVariant.SetImage(variant.ImageUrl);
+        //         if (!string.IsNullOrEmpty(variant.ImageUrl))
+        //             productVariant.SetImage(variant.ImageUrl);
 
-                List<string> optionValuesNames = [];
+        //         List<string> optionValuesNames = [];
 
-                foreach (var variantValue in variant.VariantValues)
-                {
-                    var option = product.Options.SingleOrDefault(x => x.OptionId.Value == variantValue.Option)?.Option;
-                    if (option is null)
-                    {
-                        option = await optionRepository.GetAsync(o => o.Id == new Domain.Products.OptionId(variantValue.Option), o => o.OptionValues);
-                        if (option is null)
-                            return new Error(ErrorCode.RequestedDataNotExist, "invalid option", nameof(variant.VariantValues));
-                        product.AddOption(option);
-                    }
+        //         foreach (var variantValue in variant.VariantValues)
+        //         {
+        //             var option = product.Options.SingleOrDefault(x => x.OptionId.Value == variantValue.Option)?.Option;
+        //             if (option is null)
+        //             {
+        //                 option = await optionRepository.GetAsync(o => o.Id == new Domain.Products.OptionId(variantValue.Option), o => o.OptionValues);
+        //                 if (option is null)
+        //                     return new Error(ErrorCode.RequestedDataNotExist, "invalid option", nameof(variant.VariantValues));
+        //                 product.AddOption(option);
+        //             }
 
-                    var value = option?.OptionValues.SingleOrDefault(v => v.Id.Value == variantValue.Value);
-                    if (value is null)
-                        return new Error(ErrorCode.EmptyData, "invalid option value", nameof(variant.VariantValues));
+        //             var value = option?.OptionValues.SingleOrDefault(v => v.Id.Value == variantValue.Value);
+        //             if (value is null)
+        //                 return new Error(ErrorCode.EmptyData, "invalid option value", nameof(variant.VariantValues));
 
-                    optionValuesNames.Add(value.Name);
-                    productVariant.AddValue(option.Id, value.Id);
-                }
+        //             optionValuesNames.Add(value.Name);
+        //             productVariant.AddValue(option.Id, value.Id);
+        //         }
 
-                productVariant.SetCode(codeGenerator.GenerateVariantCode(product.Code, optionValuesNames));
+        //         productVariant.SetCode(codeGenerator.GenerateVariantCode(product.Code, optionValuesNames));
 
-                product.AddVariant(productVariant);
-            }
-        }
+        //         product.AddVariant(productVariant);
+        //     }
+        // }
 
         await productRepository.AddAsync(product);
 

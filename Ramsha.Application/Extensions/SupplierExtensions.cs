@@ -9,6 +9,24 @@ namespace Ramsha.Application.Extensions;
 public static class SupplierExtensions
 {
 
+	public static FulfillmentRequestItemDto AsFulfillmentRequestItemDto(this FulfillmentRequestItem item)
+	=> new FulfillmentRequestItemDto(
+		item.InventoryItemId.Value,
+		item.Name,
+		item.ImageUrl,
+		item.Quantity,
+		item.Price,
+		item.Sku
+		);
+
+	public static FulfillmentRequestDto AsFulfillmentRequestDto(this FulfillmentRequest request)
+	=> new FulfillmentRequestDto(
+		request.Id.Value,
+		request.OrderId.Value,
+		request.Status.ToString(),
+		request.Created
+	);
+
 	public static SupplierInventoryItemDto AsSupplierInventoryItemDto(this InventoryItem inventoryItem)
 	{
 		return new SupplierInventoryItemDto(

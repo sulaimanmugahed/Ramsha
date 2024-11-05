@@ -53,20 +53,18 @@ public class InventoryItem : BaseEntity, IAuditable
     public decimal FinalPrice { get; private set; }
     public string Currency { get; private set; }
     public string ProductName { get; private set; }
-
     public InventoryStatus Status { get; set; }
     public ProductId ProductId { get; set; }
+
     public ProductVariantId? ProductVariantId { get; set; }
     public ProductVariant ProductVariant { get; set; }
     public Product Product { get; set; }
     public SupplierId SupplierId { get; set; }
     public Supplier Supplier { get; set; }
-
     public Guid CreatedBy { get; set; }
     public DateTime Created { get; set; }
     public Guid? LastModifiedBy { get; set; }
     public DateTime? LastModified { get; set; }
-
     public StockSelectionType StockSelectionType { get; private set; }
 
     public List<Stock> Stocks { get; private set; } = [];

@@ -1,12 +1,10 @@
 import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import { router } from "../router/Routes";
-import { toast } from "sonner";
 import { PaginationResponse } from "../models/common/commonModels";
 import { sleep } from "../utils/util";
 import { queryClient } from "../providers/AppQueryProvider";
 import { ACCOUNT_QUERY_KEY, BASKET_QUERY_KEY } from "../constants/queriesKey";
 import { Account } from "../models/account";
-import AppError from '../utils/appError';
 import { BaseResult, BaseError } from '../models/common/commonModels';
 
 export const refresh = async () => {
@@ -21,7 +19,7 @@ export const refresh = async () => {
         const { basket, ...account } = responseAccount;
         setTokenToHeader(account.accessToken);
         queryClient.setQueryData([ACCOUNT_QUERY_KEY], account);
-        queryClient.setQueryData([BASKET_QUERY_KEY], basket);
+        //  queryClient.setQueryData([BASKET_QUERY_KEY], basket);
         return account.accessToken;
     } catch (error) {
         queryClient.setQueryData([ACCOUNT_QUERY_KEY], null);

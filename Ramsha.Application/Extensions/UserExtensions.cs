@@ -15,6 +15,7 @@ public static class UserExtensions
 			IsVerified = authenticationResponse.IsVerified,
 			AccessToken = authenticationResponse.AccessToken,
 			RefreshTokenExpiration = authenticationResponse.RefreshTokenExpiration,
+			Address = authenticationResponse.Address
 		};
 	}
 }

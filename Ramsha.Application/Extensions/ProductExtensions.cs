@@ -146,8 +146,6 @@ public static class ProductExtensions
    {
       return new ProductVariantDto(
          variant.Id.Value,
-         variant.Name,
-         variant.Description,
          variant.Price,
          variant.Code,
          variant.ImageUrl,

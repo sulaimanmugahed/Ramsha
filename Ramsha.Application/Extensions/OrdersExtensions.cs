@@ -9,22 +9,37 @@ namespace Ramsha.Application.Extensions;
 
 public static class OrdersExtensions
 {
-    public static OrderDto AsDto(this Order order)
-    {
-        return new OrderDto(
-         order.Subtotal,
-         order.DeliveryFee,
-         order.GetTotal(),
-         order.OrderStatus.ToString(),
-         order.OrderItems.Select(x =>
-          new OrderItemDto(
+    public static OrderItemDto AsDto(this OrderItem x)
+    => new OrderItemDto(
              x.ItemOrdered.InventoryItemId.Value,
              x.ItemOrdered.Name,
              x.ItemOrdered.InventorySKU,
              x.ItemOrdered.PictureUrl,
              x.Price,
              x.Quantity
-             )).ToList(),
+             );
+
+    public static OrderDto AsDto(this Order order)
+    {
+        return new OrderDto(
+            order.Id.Value,
+         order.Subtotal,
+         order.DeliveryFee,
+         order.GetTotal(),
+         order.OrderStatus.ToString(),
+         order.OrderDate
+        );
+    }
+
+    public static OrderDetailDto AsDetailDto(this Order order)
+    {
+        return new OrderDetailDto(
+            order.Id.Value,
+         order.Subtotal,
+         order.DeliveryFee,
+         order.GetTotal(),
+         order.OrderStatus.ToString(),
+         order.OrderItems.Select(x => x.AsDto()).ToList(),
          order.ShippingAddress,
          order.OrderDate
         );

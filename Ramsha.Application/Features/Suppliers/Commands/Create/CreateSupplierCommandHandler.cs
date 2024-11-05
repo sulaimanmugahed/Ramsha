@@ -12,6 +12,7 @@ using MediatR;
 namespace Ramsha.Application.Features.Customers.Commands.Create;
 internal class CreateSupplierCommandHandler(
 	IUserService userService,
+	IGeocodingService geocodingService,
 	ISupplierRepository supplierRepository,
 	IUnitOfWork unitOfWork)
 	: IRequestHandler<CreateSupplierCommand, BaseResult<string>>
@@ -23,7 +24,7 @@ internal class CreateSupplierCommandHandler(
 			Email = request.Email,
 			Password = request.Password,
 			Username = request.Username
-		},Roles.Supplier);
+		}, Roles.Supplier);
 
 		if (!registerResult.Success)
 

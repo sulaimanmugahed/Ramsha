@@ -53,8 +53,11 @@ builder.Services
 .AddFileStorage(appConfiguration)
 .AddEmialServices(appConfiguration);
 
+builder.Services.Configure<DeliveryFeeSettings>(appConfiguration.GetSection(nameof(DeliveryFeeSettings)));
+
 
 builder.Services.AddScoped<IAuthenticatedUserService, AuthenticatedUserService>();
+builder.Services.AddScoped<IGeocodingService, GeocodingService>();
 
 
 builder.Services.AddDistributedMemoryCache();
@@ -98,7 +101,7 @@ using (var scope = app.Services.CreateScope())
     var logger = services.GetRequiredService<ILogger<DefaultData>>();
     var codeGenerator = services.GetRequiredService<Ramsha.Application.Contracts.ICodeGenerator>();
 
-    await DefaultData.SeedAsync(services.GetRequiredService<ApplicationDbContext>(), logger,codeGenerator);
+    await DefaultData.SeedAsync(services.GetRequiredService<ApplicationDbContext>(), logger, codeGenerator);
     await DefaultRoles.SeedAsync(services.GetRequiredService<RoleManager<ApplicationRole>>());
     await DefaultUser.SeedAsync(services.GetRequiredService<UserManager<Account>>());
 }

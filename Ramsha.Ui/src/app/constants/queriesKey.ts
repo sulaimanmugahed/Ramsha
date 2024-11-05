@@ -13,6 +13,8 @@ export const OPTIONS_QUERY_KEY = 'options'
 export const INVENTORY_ITEMS_QUERY_KEY = 'inventoryItems'
 export const BRANDS_QUERY_KEY = 'brands'
 export const BASKET_QUERY_KEY = 'basket'
+export const BASKET_DELIVERY_DETAIL_QUERY_KEY = 'basket-delivery-detail'
+
 export const ACCOUNT_QUERY_KEY = 'account'
 
 
@@ -23,11 +25,15 @@ export const ACCOUNT_QUERY_KEY = 'account'
 export const SUPPLIES_QUERY_KEY = 'supplies'
 export const SUPPLIERS_MY_PRODUCTS_QUERY_KEY = 'suppliers-my-products'
 export const SUPPLIERS_MY_VARIANTS_QUERY_KEY = 'suppliers-my-variants'
-
 export const SUPPLY_REQUEST_QUERY_KEY = 'supplyRequest'
 export const SUPPLIERS_INVENTORY_ITEMS_QUERY_KEY = 'suppliersInventoryItems'
-
 export const CUSTOMERS_MY_ADDRESS = "customers-my-address"
+
+
+//orders
+export const ORDERS_QUERY_KEY = "orders"
+export const MY_ORDERS_QUERY_KEY = "my-orders"
+
 
 
 

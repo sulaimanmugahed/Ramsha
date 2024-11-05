@@ -1,3 +1,4 @@
+import { AddressInfo } from "../components/maps/mapUtils";
 
 
 
@@ -8,9 +9,16 @@ export type Account = {
     isVerified: boolean;
     accessToken: string;
     refreshTokenExpiration: Date;
+    address: Address | null
 }
 
 export type loginRequest = {
     username: string;
     password: string;
 }
+
+
+export type Address = {
+    fullName: string;
+    description: string
+} & AddressInfo

@@ -11,6 +11,7 @@ public class ApproveSupplyCommandHandler(
     ISupplyRepository supplyRepository,
     IInventoryItemRepository inventoryItemRepository,
     IUnitOfWork unitOfWork,
+    ISupplierProductRepository supplierProductRepository,
     ISupplierRepository supplierRepository,
     IProductRepository productRepository
 ) : IRequestHandler<ApproveSupplyCommand, BaseResult>
@@ -35,6 +36,12 @@ public class ApproveSupplyCommandHandler(
             var product = await productRepository.GetByIdAsync(item.ItemSupplied.ProductId);
             if (product is null)
                 return new Error(ErrorCode.EmptyData, "no product found with in the item");
+
+            var supplierVariant = await supplierProductRepository.GetVariant(
+            supplier.Id, product.Id, item.ItemSupplied.ProductVariantId);
+
+            if (supplierVariant is null)
+                return new Error(ErrorCode.EmptyData, "no supplier Variant found with in the item");
 
             var price = new Domain.Common.Price(item.WholesalePrice, supply.Currency);
 

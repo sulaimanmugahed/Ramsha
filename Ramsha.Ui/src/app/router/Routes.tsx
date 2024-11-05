@@ -8,7 +8,7 @@ import AdminDashboard from "../../features/admin/AdminDashboard";
 import SupplierDashboard from "../../features/suppliers/SupplierDashboard";
 import CheckoutPage from "../../features/checkout/CheckoutPage";
 import RegisterPage from "../../features/account/register/RegisterPage";
-import BasketPage from "../../features/basket/BasketPage";
+import BasketDetailPage from "../../features/basket/BasketDetailPage";
 import ProfilePage from "../../features/profile/ProfilePage";
 import SearchPage from "../../features/search/SearchPage";
 import DashboardLayout from "../layout/dashboard/DashboardLayout";
@@ -32,6 +32,14 @@ import SupplierProductsPage from "../../features/suppliers/Products/SupplierProd
 import AddSupplierVariantPage from "../../features/suppliers/Products/Variants/AddSupplierVariantPage";
 import SupplierProductVariantsPage from "../../features/suppliers/Products/Variants/SupplierProductVariantsPage";
 import EditSupplierVariantPage from "../../features/suppliers/Products/Variants/EditSupplierVariantPage";
+import MyOrdersPage from "../../features/orders/MyOrdersPage";
+import OrderDetailPage from "../../features/orders/OrderDetailPage";
+import { SavedItems } from '../../features/profile/ProfilePage'
+import OrderHistory from '../../features/profile/OrderHistory'
+import ManageAddressPage from "../../features/profile/settings/ManageAddressPage";
+import AccountSettings from "../../features/profile/settings/AccountSettings";
+
+
 //import AdminProductPage from "../../features/admin/products/AdminProductPage";
 
 export const router = createBrowserRouter([
@@ -46,8 +54,46 @@ export const router = createBrowserRouter([
                         element: <PrivateRoutes allowedRoles={['Supplier', 'Admin', 'SuperAdmin', 'Customer']} />,
                         children: [
                             {
+                                element: <ProfilePage />,
+                                path: 'profile',
+                                children: [
+                                    { index: true, element: <OrderHistory /> },
+                                    {
+                                        path: 'orders',
+                                        element: <OrderHistory />,
+                                        children: [
+                                            {
+                                                element: <OrderDetailPage />,
+                                                path: ':orderId'
+                                            }
+                                        ]
+                                    },
+                                    { path: 'saved-items', element: <SavedItems /> },
+                                    {
+                                        path: 'settings',
+                                        element: <AccountSettings />,
+                                        children: [
+                                            {
+                                                element: <ManageAddressPage />,
+                                                path: 'manage-address'
+                                            }
+                                        ]
+                                    },
+                                ],
+                            },
+                            {
                                 element: <CheckoutPage />,
                                 path: 'checkout'
+                            },
+                            {
+                                element: <MyOrdersPage />,
+                                path: 'my-orders',
+                                children: [
+                                    {
+                                        element: <OrderDetailPage />,
+                                        path: ':orderId'
+                                    }
+                                ]
                             }
                         ]
                     },
@@ -76,14 +122,10 @@ export const router = createBrowserRouter([
                                 path: ':productId'
                             }
                         ]
-
                     },
                     {
-                        element: <BasketPage />,
-                        path: 'basket'
-                    }, {
-                        element: <ProfilePage />,
-                        path: 'profile'
+                        element: <BasketDetailPage />,
+                        path: 'basket/detail'
                     },
                     {
                         element: <SearchPage />,

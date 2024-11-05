@@ -30,8 +30,8 @@ public class AddProductVariantCommandHandler(
             return new Error(ErrorCode.ThisDataAlreadyExist, "this variant is already exist");
 
         var productVariant = ProductVariant.Create(product.Id,
-                product.Name,
-                product.Description);
+                new DimensionalWeight(request.Length,request.Width,request.Height),
+                request.Weight);
 
         if (!string.IsNullOrEmpty(request.ImageUrl))
             productVariant.SetImage(request.ImageUrl);

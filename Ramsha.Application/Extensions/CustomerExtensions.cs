@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Ramsha.Application.Extensions;
 public static class CustomerExtensions
 {
-	public static AuthenticatedCustomerDto AsAuthCustomerDto(this AuthenticationResult authenticationResult,Basket? basket)
+	public static AuthenticatedCustomerDto AsAuthCustomerDto(this AuthenticationResult authenticationResult, Basket? basket)
 	{
 		return new AuthenticatedCustomerDto
 		{
@@ -22,6 +22,7 @@ public static class CustomerExtensions
 			Role = authenticationResult.Role,
 			RefreshTokenExpiration = authenticationResult.RefreshTokenExpiration,
 			Basket = basket?.ToDto(),
+			Address = authenticationResult.Address
 		};
 
 	}

@@ -1,6 +1,4 @@
-﻿
-
-namespace Ramsha.Application.Dtos.Baskets;
+﻿namespace Ramsha.Application.Dtos.Baskets;
 public record BasketItemDto(
 	Guid InventoryItemId,
 	int Quantity,

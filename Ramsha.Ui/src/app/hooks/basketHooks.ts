@@ -1,10 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { basketService } from "../api/services/basketService"
 import { toast } from "sonner"
-import { BASKET_QUERY_KEY } from "../constants/queriesKey"
-import { Basket, BasketItem } from "../models/basket"
+import { BASKET_QUERY_KEY, BASKET_DELIVERY_DETAIL_QUERY_KEY } from "../constants/queriesKey"
+import { Basket, BasketDetail, BasketItem } from "../models/baskets/basket"
 import { getCookie } from "../utils/util"
 import AppError from "../utils/appError"
+import { useAccount } from "./accountHooks"
 
 export const useBasketItemCommands = () => {
 
@@ -81,11 +82,25 @@ export const useBasketItemCommands = () => {
 }
 
 
+export const useBasketDetail = () => {
+    const { data, isLoading } = useQuery<BasketDetail>({
+        queryKey: [BASKET_DELIVERY_DETAIL_QUERY_KEY, 'detail'],
+        queryFn: async () => await basketService.getBasketDetail()
+    })
+
+    return {
+        basketDetail: data,
+        isLoading
+    }
+}
+
+
 export const useBasket = () => {
+    const { account } = useAccount()
     const { data, isLoading, isError } = useQuery<Basket>({
         queryKey: [BASKET_QUERY_KEY],
         queryFn: async () => await basketService.getBasket(),
-        enabled: !!getCookie('buyer')
+        enabled: !!getCookie('buyer') || account?.role === 'Customer'
     })
 
     return {

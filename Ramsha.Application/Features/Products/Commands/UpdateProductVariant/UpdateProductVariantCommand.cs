@@ -13,10 +13,6 @@ public class UpdateProductVariantCommand : IRequest<BaseResult>
 {
     public Guid ProductId { get; set; }
     public Guid VariantId { get; set; }
-
-    public string? Name { get; set; }
-    public string? Description { get; set; }
-    public decimal? BasePrice { get; set; }
      public List<VariantValuesCommand> VariantValuesToAdd { get; set; } = [];
     public List<VariantValuesCommand> VariantValuesToRemove { get; set; } = [];
 

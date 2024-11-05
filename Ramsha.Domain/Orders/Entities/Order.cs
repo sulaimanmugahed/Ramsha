@@ -2,6 +2,7 @@
 using Ramsha.Domain.Common;
 using Ramsha.Domain.Customers;
 using Ramsha.Domain.Customers.Entities;
+using Ramsha.Domain.Orders.Events;
 
 namespace Ramsha.Domain.Orders.Entities;
 
@@ -13,8 +14,8 @@ public class Order : BaseEntity
 
     }
 
-    
-    public Order(OrderId id, CustomerId customerId, List<OrderItem> items,ShippingAddress shippingAddress)
+
+    public Order(OrderId id, CustomerId customerId, List<OrderItem> items, ShippingAddress shippingAddress)
     {
         Id = id;
         CustomerId = customerId;
@@ -25,10 +26,12 @@ public class Order : BaseEntity
         ShippingAddress = shippingAddress;
     }
 
-    public static Order Create(CustomerId customerId, List<OrderItem> items,ShippingAddress shippingAddress, decimal deliveryFee)
+    public static Order Create(CustomerId customerId, List<OrderItem> items, ShippingAddress shippingAddress, decimal deliveryFee)
     {
-        var order = new Order(new OrderId(Guid.NewGuid()), customerId, items,shippingAddress);
+        var order = new Order(new OrderId(Guid.NewGuid()), customerId, items, shippingAddress);
         order.SetDeliveryFee(deliveryFee);
+        
+        order.RaiseDomainEvent(new NewOrderCreatedEvent(order.Id, order.ShippingAddress, order.OrderItems));
         return order;
     }
 

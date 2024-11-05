@@ -1,3 +1,4 @@
+import { Order, OrderDetailType } from "../../models/orders/order";
 import request from "../Request";
 
 
@@ -10,7 +11,21 @@ const createOrder = async (data: any) =>
         data
     })
 
+const getOrderDetail = async (orderId: string) => {
+    return await request<OrderDetailType>({
+        url: `${BASE_URL}/${orderId}/detail`
+    })
+}
+
+const getMyOrders = async () => {
+    return await request<Order[]>({
+        url: `${BASE_URL}`
+    })
+}
+
 export const orderService = {
-    createOrder
+    createOrder,
+    getMyOrders,
+    getOrderDetail
 }
 

@@ -1,4 +1,5 @@
 import request from "../Request"
+import { Address } from "../../models/account"
 
 const BASE_URL = "account"
 
@@ -13,6 +14,14 @@ const login = async (data: any) =>
     await request({
         url: `${BASE_URL}/login`,
         method: 'POST',
+        data
+    })
+
+
+const updateAddress = async (data: Address) =>
+    await request({
+        url: `${BASE_URL}/address`,
+        method: 'PUT',
         data
     })
 
@@ -40,6 +49,7 @@ export const accountService = {
     login,
     refresh,
     logout,
-    register
+    register,
+    updateAddress
 }
 

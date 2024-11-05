@@ -24,6 +24,8 @@ public class Customer : BaseEntity, IAuditable, ISoftDeletable, IUser
         Address = customerAddress;
     }
 
+
+
     public CustomerId Id { get; private set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
@@ -36,4 +38,5 @@ public class Customer : BaseEntity, IAuditable, ISoftDeletable, IUser
     public Guid? DeletedBy { get; set; }
     public string Username { get; set; }
     public CustomerAddress Address { get; private set; }
+
 }

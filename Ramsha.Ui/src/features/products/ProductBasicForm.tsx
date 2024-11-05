@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 import AppDropzone from '../../app/components/AppDropzone';
 import AppControlCategorySelector from '../categories/AppControlCategorySelector';
 import AppSelector from '../../app/components/AppSelector';
-import { AttachMoney } from '@mui/icons-material';
 import { useCategories } from '../../app/hooks/categoryHooks';
 import { useProductBrands } from '../../app/hooks/productHooks';
 import LoadingButton from '@mui/lab/LoadingButton';

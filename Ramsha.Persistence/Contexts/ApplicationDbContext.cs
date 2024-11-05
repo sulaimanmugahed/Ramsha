@@ -193,7 +193,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             builder.HasOne(x => x.SupplyRequest)
             .WithMany(x => x.Items)
             .HasForeignKey(x => x.SupplyRequestId);
-            
+
 
             builder.HasOne(x => x.SupplierVariant)
             .WithMany()
@@ -325,6 +325,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
               .HasForeignKey(sp => sp.ProductId)
                    .OnDelete(DeleteBehavior.Restrict);
 
+            entity.HasQueryFilter(x => !x.Product.IsDeleted);
+
         });
 
 
@@ -348,7 +350,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                    .HasForeignKey(x => new { x.ProductId, x.ProductVariantId })
                    .OnDelete(DeleteBehavior.Restrict);
 
-
+             entity.HasQueryFilter(x => !x.ProductVariant.Product.IsDeleted);
          });
 
         builder.Entity<ProductImage>(entity =>
@@ -451,6 +453,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             {
                 item.Property(i => i.InventoryItemId)
                 .HasConversion(id => id.Value, value => new Domain.Inventory.InventoryItemId(value));
+                item.Property(i => i.SupplierId)
+               .HasConversion(id => id.Value, value => new Domain.Suppliers.SupplierId(value));
             });
         });
 
@@ -471,8 +475,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
          });
 
 
-
-
         // Category
         builder.Entity<Category>()
         .Property(sr => sr.Id)
@@ -491,6 +493,38 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
           .HasForeignKey(pi => new { pi.ProductId, pi.ProductVariantId })
           .OnDelete(DeleteBehavior.Cascade);
 
+        builder.Entity<ProductVariant>()
+        .OwnsOne(x => x.Dimensions, x =>
+        {
+            x.Property(x => x.Height).HasColumnName("HeightDimension");
+            x.Property(x => x.Width).HasColumnName("WidthDimension");
+            x.Property(x => x.Length).HasColumnName("LengthDimension");
+            x.Property(x => x.DimensionalFactor).HasColumnName("DimensionalFactor");
+        });
+
+
+
+        builder.Entity<FulfillmentRequest>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.Id)
+            .HasConversion(id => id.Value, value => new FulfillmentRequestId(value));
+
+            entity.HasOne<Order>()
+            .WithMany()
+            .HasForeignKey(x => x.OrderId);
+
+            entity.HasOne<Supplier>()
+            .WithMany(x => x.FulfillmentRequests)
+            .HasForeignKey(x => x.SupplierId);
+
+            entity.OwnsMany(x => x.Items, fi =>
+            {
+                fi.WithOwner();
+                fi.Property(x => x.InventoryItemId)
+                .HasConversion(id => id.Value, value => new InventoryItemId(value));
+            });
+        });
 
         base.OnModelCreating(builder);
     }

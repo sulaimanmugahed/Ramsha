@@ -14,6 +14,10 @@ const schemaMultiImage = z.object({
 
 
 export const variantSchema = z.object({
+    length: z.string().transform(val => parseInt(val)),
+    width: z.string().transform(val => parseInt(val)),
+    height: z.string().transform(val => parseInt(val)),
+    weight: z.string().transform(val => parseInt(val)),
     file: z.object({
         file: z.any(),
         preview: z.string().url({ message: "Invalid file format." }).nullable(),

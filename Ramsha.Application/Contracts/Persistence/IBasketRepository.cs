@@ -10,4 +10,5 @@ namespace Ramsha.Application.Contracts.Persistence;
 public interface IBasketRepository:IGenericRepository<Basket,BasketId>
 {
 	Task<Basket?> FindByBuyer(string buyer);
+	Task<Basket?> GetDetail(string buyer);
 }

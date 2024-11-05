@@ -22,47 +22,47 @@ public class AddProductVariantRangeCommandHandler(
         if (product is null)
             return new Error(ErrorCode.EmptyData, nameof(request.ProductId));
 
-        foreach (var variant in request.Variants)
-        {
-            if (IsVariantExists(product.Variants, variant.VariantValues))
-                return new Error(ErrorCode.ThisDataAlreadyExist, "this variant is already exist");
+        // foreach (var variant in request.Variants)
+        // {
+        //     if (IsVariantExists(product.Variants, variant.VariantValues))
+        //         return new Error(ErrorCode.ThisDataAlreadyExist, "this variant is already exist");
 
-            var productVariant = ProductVariant.Create(product.Id,
-                product.Name,
-                product.Description);
+        //     var productVariant = ProductVariant.Create(product.Id,
+        //         product.Name,
+        //         product.Description);
 
-            if (!string.IsNullOrEmpty(variant.ImageUrl))
-                productVariant.SetImage(variant.ImageUrl);
-
-
-            List<string> optionValuesNames = [];
-
-            foreach (var variantValue in variant.VariantValues)
-            {
-                var option = product.Options.SingleOrDefault(x => x.OptionId.Value == variantValue.Option)?.Option;
-                if (option is null)
-                {
-                    option = await optionRepository.GetAsync(o => o.Id == new Domain.Products.OptionId(variantValue.Option), o => o.OptionValues);
-                    if (option is null)
-                        return new Error(ErrorCode.RequestedDataNotExist, "invalid option", nameof(variant.VariantValues));
-                    product.AddOption(option);
-                }
-
-                var value = option?.OptionValues.SingleOrDefault(v => v.Id.Value == variantValue.Value);
-                if (value is null)
-                    return new Error(ErrorCode.EmptyData, "invalid option value", nameof(variant.VariantValues));
-
-                optionValuesNames.Add(value.Name);
-                productVariant.AddValue(option.Id, value.Id);
-            }
+        //     if (!string.IsNullOrEmpty(variant.ImageUrl))
+        //         productVariant.SetImage(variant.ImageUrl);
 
 
+        //     List<string> optionValuesNames = [];
 
-            productVariant.SetCode(codeGenerator.GenerateVariantCode(product.Code, optionValuesNames));
+        //     foreach (var variantValue in variant.VariantValues)
+        //     {
+        //         var option = product.Options.SingleOrDefault(x => x.OptionId.Value == variantValue.Option)?.Option;
+        //         if (option is null)
+        //         {
+        //             option = await optionRepository.GetAsync(o => o.Id == new Domain.Products.OptionId(variantValue.Option), o => o.OptionValues);
+        //             if (option is null)
+        //                 return new Error(ErrorCode.RequestedDataNotExist, "invalid option", nameof(variant.VariantValues));
+        //             product.AddOption(option);
+        //         }
 
-            product.AddVariant(productVariant);
+        //         var value = option?.OptionValues.SingleOrDefault(v => v.Id.Value == variantValue.Value);
+        //         if (value is null)
+        //             return new Error(ErrorCode.EmptyData, "invalid option value", nameof(variant.VariantValues));
 
-        }
+        //         optionValuesNames.Add(value.Name);
+        //         productVariant.AddValue(option.Id, value.Id);
+        //     }
+
+
+
+        //     productVariant.SetCode(codeGenerator.GenerateVariantCode(product.Code, optionValuesNames));
+
+        //     product.AddVariant(productVariant);
+
+        // }
 
 
         await unitOfWork.SaveChangesAsync();

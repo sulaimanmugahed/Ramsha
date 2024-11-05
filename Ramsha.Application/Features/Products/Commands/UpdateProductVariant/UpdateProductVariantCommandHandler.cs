@@ -32,11 +32,6 @@ public class UpdateProductVariantCommandHandler(
         if (variant is null)
             return new Error(ErrorCode.RequestedDataNotExist);
 
-        variant.Update(request.Name, request.Description);
-
-        if (request.BasePrice.HasValue)
-            variant.SetBasePrice(request.BasePrice.Value);
-
         if (request.VariantValuesToRemove.HasItems())
         {
             foreach (var variantValue in request.VariantValuesToRemove)

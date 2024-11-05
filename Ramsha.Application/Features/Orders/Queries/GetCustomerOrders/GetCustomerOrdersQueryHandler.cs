@@ -17,13 +17,12 @@ public class GetCustomerOrdersQueryHandler(
 {
     public async Task<BaseResult<List<OrderDto>>> Handle(GetCustomerOrdersQuery request, CancellationToken cancellationToken)
     {
-
         var customer = await customerRepository.FindByUsername(authenticatedUser.UserName);
         if (customer is null)
             return new Error(ErrorCode.ErrorInIdentity);
 
 
-        var orders = await orderRepository.FindOrdersWithDetails(x => x.CustomerId == customer.Id);
+        var orders = await orderRepository.GetAllAsync(x => x.CustomerId == customer.Id);
         return orders.Select(o => o.AsDto()).ToList();
     }
 }

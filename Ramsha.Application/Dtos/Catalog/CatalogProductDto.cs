@@ -40,8 +40,6 @@ List<CatalogVariantValuesDto> VariantValues
 
 public record CatalogVariantDetailDto(
 Guid Id,
-string Name,
-string Description,
 string Sku,
 List<CatalogVariantValuesDto> VariantValues
 );

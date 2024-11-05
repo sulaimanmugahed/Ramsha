@@ -1,11 +1,8 @@
 
 
 using Ramsha.Domain.Common;
-using Ramsha.Domain.Common.Events;
 using Ramsha.Domain.Inventory.Entities;
-using Ramsha.Domain.Inventory.Services;
 using Ramsha.Domain.Products.Enums;
-using Ramsha.Domain.Products.Events;
 using Ramsha.Domain.Products.Services;
 using Ramsha.Domain.Suppliers.Entities;
 
@@ -13,22 +10,18 @@ namespace Ramsha.Domain.Products.Entities;
 
 public class ProductVariant : BaseEntity
 {
-    public ProductVariant(ProductVariantId id, ProductId productId, string name, string description)
+    private ProductVariant()
+    {
+
+    }
+    public ProductVariant(ProductVariantId id, ProductId productId, DimensionalWeight dimensionalWeight, decimal weight)
     {
         Id = id;
         ProductId = productId;
-        Name = name;
-        Description = description;
+        Dimensions = dimensionalWeight;
+        Weight = weight;
     }
 
-    public void Update(string? name, string? description)
-    {
-        if (name is not null)
-            Name = name;
-
-        if (description is not null)
-            Description = description;
-    }
 
     public void RemoveValue(OptionId optionId, OptionValueId valueId)
     {
@@ -58,7 +51,6 @@ public class ProductVariant : BaseEntity
     public ProductImage? GetImageByUrl(string url)
     {
         return Images.FirstOrDefault(x => x.Url == url);
-
     }
 
 
@@ -66,21 +58,29 @@ public class ProductVariant : BaseEntity
     public ProductId ProductId { get; set; }
     public Product Product { get; set; }
     public List<SupplierVariant> SupplierVariants { get; private set; } = [];
-
-    public string Name { get; private set; }
-    public string? Description { get; private set; }
     public string Code { get; private set; }
     public string? ImageUrl { get; private set; }
     public decimal Price { get; private set; }
     public decimal FinalPrice { get; private set; }
     public int TotalQuantity { get; private set; }
     public int AvailableQuantity { get; private set; }
-
+    public decimal Weight { get; private set; }
+    public DimensionalWeight Dimensions { get; private set; }
 
     public List<VariantValue> VariantValues { get; set; } = [];
     public List<InventoryItem> InventoryItems { get; set; } = [];
 
     public List<ProductImage> Images { get; set; } = [];
+
+    public void SetDimensional(DimensionalWeight dimensionalWeight)
+    {
+        Dimensions = dimensionalWeight;
+    }
+
+    public void SetWeight(decimal weight)
+    {
+        Weight = weight;
+    }
 
 
     public void SetImage(string url)
@@ -104,9 +104,9 @@ public class ProductVariant : BaseEntity
     }
 
 
-    public static ProductVariant Create(ProductId productId, string name, string description)
+    public static ProductVariant Create(ProductId productId, DimensionalWeight dimensionalWeight, decimal weight)
     {
-        return new(new ProductVariantId(Guid.NewGuid()), productId, name, description);
+        return new(new ProductVariantId(Guid.NewGuid()), productId, dimensionalWeight, weight);
     }
 
     public void AddValue(OptionId optionId, OptionValueId optionValueId)
@@ -162,6 +162,11 @@ public class ProductVariant : BaseEntity
     public void DecreaseQuantity(int? value = null)
     {
         TotalQuantity -= value ?? 1;
+    }
+
+    public decimal CalculateShippingWeight(int quantity)
+    {
+        return Math.Max(Weight, Dimensions.Calculate()) * quantity;
     }
 
 

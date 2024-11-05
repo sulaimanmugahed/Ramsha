@@ -5,7 +5,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 interface MenuItemProps<T> {
   label: string;
   icon?: React.ReactNode;
-  action: (row: T) => void;
+  action?: (row: T) => void;
 }
 
 interface ActionsMenuProps<T> {
@@ -44,7 +44,7 @@ const AppActionsMenu = <T extends any>({ row, icon, menuItems }: ActionsMenuProp
           <MenuItem
             key={index}
             onClick={() => {
-              item.action(row);
+              item.action && item.action(row);
               handleMenuClose();
             }}
           >

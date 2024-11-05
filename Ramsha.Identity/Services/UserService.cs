@@ -2,17 +2,12 @@
 using Ramsha.Application.Dtos.Account.Requests;
 using Ramsha.Application.Dtos.Account.Responses;
 using Ramsha.Application.Wrappers;
-using Ramsha.Domain.Constants;
 using Ramsha.Identity.Models;
 using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Ramsha.Domain.Common;
 
 namespace Ramsha.Identity.Services;
-public class UserService(UserManager<Account> userManager):IUserService
+public class UserService(UserManager<Account> userManager) : IUserService
 {
 	public async Task<BaseResult> DeleteAccount(string username)
 	{
@@ -23,6 +18,12 @@ public class UserService(UserManager<Account> userManager):IUserService
 		await userManager.DeleteAsync(user);
 
 		return BaseResult.Ok();
+	}
+
+	public async Task<Address?> GetUserAddress(string userName)
+	{
+		var user = await userManager.FindByNameAsync(userName);
+		return user?.Address;
 	}
 
 
@@ -40,7 +41,7 @@ public class UserService(UserManager<Account> userManager):IUserService
 		};
 	}
 
-	public async Task<BaseResult<RegisterResponse>> CreateAccount(RegisterRequest request,string? role=null)
+	public async Task<BaseResult<RegisterResponse>> CreateAccount(RegisterRequest request, string? role = null)
 	{
 		var account = new Account
 		{
@@ -56,7 +57,7 @@ public class UserService(UserManager<Account> userManager):IUserService
 			return new List<Error>(errors);
 		}
 
-		if(role is not null)
+		if (role is not null)
 		{
 			var addToRoleResult = await userManager.AddToRoleAsync(account, role);
 			if (!addToRoleResult.Succeeded)
@@ -65,8 +66,8 @@ public class UserService(UserManager<Account> userManager):IUserService
 				return new List<Error>(addToRoleError);
 			}
 		}
-		
 
-		return new RegisterResponse { Id = account.Id};
+
+		return new RegisterResponse { Id = account.Id };
 	}
 }

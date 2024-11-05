@@ -6,6 +6,7 @@ using Ramsha.Application.Extensions;
 using Ramsha.Application.Wrappers;
 using Ramsha.Domain.Customers.Entities;
 using MediatR;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Ramsha.Application.Features.Baskets.Commands.AddItem;
 internal class AddItemToBasketCommandHandler(
@@ -19,7 +20,7 @@ internal class AddItemToBasketCommandHandler(
 	public async Task<BaseResult<BasketItemDto>> Handle(AddItemToBasketCommand request, CancellationToken cancellationToken)
 	{
 		var inventoryItem = await inventoryItemRepository
-		.GetByIdAsync(new Domain.Inventory.InventoryItemId(request.InventoryItemId));
+		.GetAsync(x => x.Id == new Domain.Inventory.InventoryItemId(request.InventoryItemId));
 
 		if (inventoryItem is null)
 			return new Error(ErrorCode.NotFound);

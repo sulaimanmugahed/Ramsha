@@ -18,7 +18,6 @@ import { useTranslation } from 'react-i18next';
 import { useOptions } from '../../../app/hooks/optionHooks';
 import { Add, AttachMoney } from '@mui/icons-material';
 import { AppDeleteIcon } from '../../../app/components/icons/AppDeleteIcon';
-import AppMultiDropzone from '../../../app/components/AppMultiDropzone';
 import AppFormError from '../../../app/components/AppFormError';
 import AppTextInput from '../../../app/components/AppTextInput';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -55,8 +54,52 @@ const ProductVariantForm = ({ onSubmit, name, type, onClick, availableOptions }:
     };
 
 
+
+
     return (
         <Grid container component={'form'} onSubmit={type === "submit" && onSubmit ? handleSubmit(onSubmit) : undefined} xs={12}>
+
+            <Grid item md={6}>
+                <AppTextInput
+                    control={control}
+                    type='number'
+                    name="width"
+                    label={t('width')}
+                    inputStyle={{ borderRadius: 2 }}
+                    fullWidth
+                />
+            </Grid>
+            <Grid item md={6}>
+                <AppTextInput
+                    control={control}
+                    type='number'
+                    name="height"
+                    label={t('height')}
+                    inputStyle={{ borderRadius: 2 }}
+                    fullWidth
+                />
+            </Grid>
+            <Grid item md={6}>
+                <AppTextInput
+                    control={control}
+                    type='number'
+                    name="length"
+                    label={t('length')}
+                    inputStyle={{ borderRadius: 2 }}
+                    fullWidth
+                />
+            </Grid>
+            <Grid item md={6}>
+                <AppTextInput
+                    control={control}
+                    type='number'
+                    name="weight"
+                    label={t('weight')}
+                    inputStyle={{ borderRadius: 2 }}
+                    fullWidth
+                />
+            </Grid>
+
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
                 <Typography variant="h6" gutterBottom color="text.secondary">
                     {t('Options for Variant')}

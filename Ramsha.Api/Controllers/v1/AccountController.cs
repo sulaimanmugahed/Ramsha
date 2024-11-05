@@ -11,6 +11,7 @@ using Ramsha.Application.Wrappers;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Ramsha.Application.Features.Account.Commands.UpdateAddress;
 
 
 namespace Ramsha.Api.Controllers.v1;
@@ -39,6 +40,10 @@ public class AccountController(IStorageService storageService, IAuthenticatedUse
 
 	[HttpPost("logout")]
 	public async Task<BaseResult> LogoutUser(LogoutCommand command)
+	=> await Mediator.Send(command);
+
+	[HttpPut("address")]
+	public async Task<BaseResult> UpdateAddress(UpdateAddressCommand command)
 	=> await Mediator.Send(command);
 
 }

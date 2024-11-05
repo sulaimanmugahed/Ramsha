@@ -14,6 +14,9 @@ public class SupplierProduct : BaseEntity
     public List<SupplierVariant> SupplierVariants { get; set; } = [];
     public Supplier? Supplier { get; set; }
 
+    
+    
+
     public string Code { get; private set; }
 
     private SupplierProduct(ProductId productId, SupplierId supplierId)

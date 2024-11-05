@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { accountService } from "../api/services/accountService"
 import { toast } from "sonner"
-import { Account, loginRequest } from "../models/account"
+import { Account, Address, loginRequest } from "../models/account"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import { ACCOUNT_QUERY_KEY, BASKET_QUERY_KEY } from "../constants/queriesKey"
@@ -21,6 +21,16 @@ export const useLogOut = () => {
     return {
 
         logoutUser: mutateAsync
+    }
+}
+
+export const useUpdateAddress = () => {
+    const { mutateAsync } = useMutation({
+        mutationFn: async (address: Address) => await accountService.updateAddress(address)
+    })
+
+    return {
+        updateAddress: mutateAsync
     }
 }
 

@@ -62,8 +62,6 @@ public static class CatalogExtensions
     {
         return new CatalogVariantDetailDto(
             variant.Id.Value,
-            variant.Name,
-            variant.Description,
             variant.Code,
             variant.VariantValues.Select(x => new CatalogVariantValuesDto(x.Option.Name, x.OptionValue.Name)).ToList()
         );

@@ -1,98 +1,68 @@
 ﻿
 
-using System.Linq.Expressions;
-using System.Reflection;
+
+using Ramsha.Application.Services;
+
+const decimal BaseDeliveryFee = 1.00m;
+const decimal DistanceRate = 0.10m;
+const decimal WeightRate = 0.50m;
+const decimal ExpressSurcharge = 2.00m;
+
+
+var taizCoord = (13.575392728091156, 44.02151487642243);
+var ibbCoord = (13.971916812653864, 44.16244421103169);
+
+
+var distance = CalculateDistance(taizCoord, ibbCoord);
+Console.WriteLine($"distance {distance}");
+
+
+var fee = CalculateDeliveryFee(0.0108m, distance);
+
+Console.WriteLine($"fee {fee}");
 
 
 
 
-var user = new User();
 
-List<User> list = [
-    new (){
-        Age = 1,
-        Name="ali"
-    },
-    new (){
-        Age = 2,
-        Name="sad"
-    },
-];
-
-
-var prop = user.GetType().GetProperty("Age");
-
-
-
-var param = Expression.Parameter(typeof(User), "user");
-
-var propExp = Expression.Property(param, prop);
-
-var con = Expression.Constant(1, typeof(int));
-
-var body = Expression.Equal(propExp ,con);
-
-var lampda = Expression.Lambda<Func<User, bool>>(
-    body,
-    param
-);
-
-//lampda.p();
-
-var compiled = lampda.Compile();
-//compiled.p();
-
-var test = list.Where(compiled);
-
-//test.p();
-
-foreach (var Age in test)
+double CalculateDistance((double Latitude, double Longitude) coord1, (double Latitude, double Longitude) coord2)
 {
-    // Age.p();
-    Console.WriteLine($"age {Age.Name}");
+    var R = 6371e3; // metres
+    var lat1 = coord1.Latitude * Math.PI / 180;
+    var lat2 = coord2.Latitude * Math.PI / 180;
+    var deltaLat = (coord2.Latitude - coord1.Latitude) * Math.PI / 180;
+    var deltaLon = (coord2.Longitude - coord1.Longitude) * Math.PI / 180;
+
+    var a = Math.Sin(deltaLat / 2) * Math.Sin(deltaLat / 2) +
+            Math.Cos(lat1) * Math.Cos(lat2) *
+            Math.Sin(deltaLon / 2) * Math.Sin(deltaLon / 2);
+    var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+
+    var distance = R * c; // in meters
+    return distance / 1000; // return distance in meters
 }
 
+//  "BaseDeliveryFee": 1.00,
+//     "WeightRate": 0.50,
+//     "DistanceRate": 0.10,
+//     "ExpressSurcharge": 2.00
 
 
 
 
-
-
-
-
-//exp.p();
-
-
-class User
+decimal CalculateDeliveryFee(decimal shippingWeight, double distance, bool isExpress = false)
 {
-    public int Age { get; set; }
-    public string Name { get; set; }
+    decimal totalFee = BaseDeliveryFee;
+    totalFee += shippingWeight * WeightRate;
+    totalFee += (decimal)distance * DistanceRate;
 
-}
-
-
-
-
-
-public static class o
-{
-    public static void p(this object obj)
+    if (isExpress)
     {
-        if (obj == null)
-        {
-            Console.WriteLine("null");
-            return;
-        }
-
-        Type type = obj.GetType();
-        Console.WriteLine($"Type: {type.FullName}");
-        foreach (PropertyInfo property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
-        {
-            Console.WriteLine($"{property.Name}: {property.GetValue(obj)}");
-        }
-        foreach (FieldInfo field in type.GetFields(BindingFlags.Public | BindingFlags.Instance))
-        {
-            Console.WriteLine($"{field.Name}: {field.GetValue(obj)}");
-        }
+        totalFee += ExpressSurcharge;
     }
+
+    return totalFee;
 }
+
+
+

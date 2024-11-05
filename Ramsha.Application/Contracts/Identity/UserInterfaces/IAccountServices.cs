@@ -2,6 +2,7 @@
 using Ramsha.Application.DTOs.Account.Requests;
 using Ramsha.Application.DTOs.Account.Responses;
 using Ramsha.Application.Wrappers;
+using Ramsha.Domain.Common;
 
 namespace Ramsha.Application.Contracts.Identity
 {
@@ -15,6 +16,7 @@ namespace Ramsha.Application.Contracts.Identity
         Task<BaseResult<AuthenticationResult>> Refresh(string token, string? accessToken = null);
         Task<BaseResult> Revoke(string token);
         Task LogoutCurrentUser();
+        Task UpdateAddress(string userName, Address address);
 
     }
 }

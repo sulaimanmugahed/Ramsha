@@ -21,6 +21,12 @@ internal class SupplierConfigurations : IEntityTypeConfiguration<Supplier>
 			.Property(p => p.Id)
 			.HasConversion(id => id.Value, value => new SupplierId(value));
 
+		builder.HasOne(x => x.Address)
+		.WithOne()
+		.HasForeignKey<SupplierAddress>(x => x.Id)
+		.OnDelete(DeleteBehavior.Restrict);
+
+
 		builder
 			.HasQueryFilter(p => !p.IsDeleted);
 	}

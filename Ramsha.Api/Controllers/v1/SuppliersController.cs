@@ -10,7 +10,6 @@ using Ramsha.Domain.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ramsha.Application.Features.Suppliers.Queries.GetCurrentSupplierSupplyRequest;
-using Ramsha.Application.Features.Suppliers.Commands.UpdateSupplyRequestItem;
 using Ramsha.Application.Features.Suppliers.Commands.RemoveSupplyRequestItem;
 using Ramsha.Application.Features.Suppliers.Queries.GetSupplyRequestItem;
 using Ramsha.Application.Features.Suppliers.Queries.GetSupplierInventoryItems;
@@ -19,6 +18,7 @@ using Ramsha.Application.Features.Suppliers.Queries.GetCurrentSupplierProducts;
 using Ramsha.Application.Features.Suppliers.Queries.GetCurrentSupplierProductVariant;
 using Ramsha.Application.Features.Suppliers.Queries.GetCurrentSupplierProductVariantList;
 using Ramsha.Application.Features.Suppliers.Commands.UpdateSupplierVariant;
+using Ramsha.Application.Features.Suppliers.Queries.GetCurrentSupplierFulfillmentRequests;
 
 namespace Ramsha.Api.Controllers.v1;
 
@@ -53,8 +53,6 @@ public class SuppliersController : BaseApiController
 		command.VariantId = variantId;
 		return await Mediator.Send(command);
 	}
-
-
 
 	[HttpGet("supply-request")]
 	public async Task<BaseResult<SupplyRequestDto?>> SupplyRequest()
@@ -93,6 +91,12 @@ public class SuppliersController : BaseApiController
 	[HttpGet("inventory/items")]
 	public async Task<BaseResult> GetInventoryItems()
 	=> await Mediator.Send(new GetSupplierInventoryItemsQuery());
+
+	[HttpGet("fulfillment-requests")]
+	public async Task<BaseResult<List<FulfillmentRequestDto>>> Getfulfillments()
+	=> await Mediator.Send(new GetCurrentSupplierFulfillmentRequestsQuery());
+
+
 
 
 }

@@ -18,6 +18,7 @@ public class IdentityContext : IdentityDbContext<Account, ApplicationRole, Guid>
         {
             entity.ToTable(name: "Account");
             entity.OwnsMany(x => x.RefreshTokens);
+            entity.OwnsOne(x => x.Address);
         });
 
         builder.Entity<ApplicationRole>(entity =>

@@ -1,4 +1,4 @@
-import { Basket, BasketItem } from "../../models/basket"
+import { Basket, BasketDetail, BasketItem } from "../../models/baskets/basket"
 import request from "../Request"
 
 
@@ -25,9 +25,17 @@ const removeBasketItem = async (data: { inventoryItemId: string, quantity: numbe
         data
     })
 
+const getBasketDetail = async () => {
+    return await request<BasketDetail>({
+        url: `${BASE_URL}/detail`,
+        method: 'GET',
+    })
+}
+
 export const basketService = {
     getBasket,
     addBasketItem,
-    removeBasketItem
+    removeBasketItem,
+    getBasketDetail
 }
 

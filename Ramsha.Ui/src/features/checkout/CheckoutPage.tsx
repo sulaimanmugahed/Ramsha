@@ -1,20 +1,18 @@
 import LoadingButton from "@mui/lab/LoadingButton";
 import { Paper, Box, Typography, Stepper, Step, StepLabel, Button } from "@mui/material";
 import { FieldValues, FormProvider, useForm } from "react-hook-form";
-import AddressForm from "./forms/AddressForm";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckoutSchemas, checkoutSchemas } from "./forms/checkoutSchemas";
 import { useEffect, useState } from "react";
 import { useCreateOrder } from "../../app/hooks/orderHooks";
-import { useMyAddress } from "../../app/hooks/customerHooks";
 import AppDialog from "../../app/components/AppDialog";
 
 import { useGoToParent } from "../../app/hooks/routeHooks";
 import CheckoutReview from "./CheckoutReview";
 import PaymentForm from "./forms/PaymentForm";
 import { DevTool } from "@hookform/devtools";
+import { useAccount } from "../../app/hooks/accountHooks";
 
-const steps = ['Shipping address', 'Review your order', 'Payment details'];
+const steps = ['Review your order', 'Payment details'];
 
 const CheckoutPage = () => {
     const [activeStep, setActiveStep] = useState(0);
@@ -23,10 +21,8 @@ const CheckoutPage = () => {
     function getStepContent(step: number) {
         switch (step) {
             case 0:
-                return <AddressForm />;
-            case 1:
                 return <CheckoutReview />;
-            case 2:
+            case 1:
                 return <PaymentForm />;
             default:
                 throw new Error('Unknown step');
@@ -35,39 +31,19 @@ const CheckoutPage = () => {
 
 
 
-
     const methods = useForm<CheckoutSchemas>({
         defaultValues: {
-            fullName: '',
-            address1: '',
-            address2: '',
-            city: '',
-            state: '',
-            zip: '',
-            country: '',
-            saveAddress: false
         },
-        resolver: activeStep === 0 ? zodResolver(checkoutSchemas[activeStep]) : undefined,
         mode: 'all'
-
-
     })
 
-    const { myAddress } = useMyAddress()
+    const { account } = useAccount()
 
     const back = useGoToParent()
 
 
-    useEffect(() => {
-        if (myAddress) {
-            methods.reset({ ...methods.getValues(), ...myAddress, saveAddress: false })
-        }
-    }, [methods, myAddress]);
-
     const submitOrder = async (data: CheckoutSchemas) => {
-        console.log('from submitOrder: ', data)
-        const { saveAddress, ...shippingAddress } = data
-        await createOrder({ saveAddress, shippingAddress })
+        await createOrder({ shippingAddress: account?.address })
     }
 
 

@@ -1,4 +1,5 @@
 ﻿using Ramsha.Domain.Common;
+using Ramsha.Domain.Orders;
 using Ramsha.Domain.Products;
 using Ramsha.Domain.Products.Entities;
 
@@ -12,7 +13,6 @@ public class Supplier : BaseEntity, IAuditable, ISoftDeletable, IUser
 		Username = username;
 		FirstName = firstName;
 		LastName = lastName;
-
 	}
 
 
@@ -34,16 +34,30 @@ public class Supplier : BaseEntity, IAuditable, ISoftDeletable, IUser
 	public Guid? DeletedBy { get; set; }
 	public string Username { get; set; }
 	public List<Supply> Supplies { get; set; }
+	public SupplierAddress Address { get; private set; }
+	public List<FulfillmentRequest> FulfillmentRequests { get; set; } = [];
 
-	
+
 
 	private List<SupplierProduct> _supplierProducts = [];
 	public IReadOnlyCollection<SupplierProduct> SupplierProducts => _supplierProducts.AsReadOnly();
+
+	public void SetAddress(SupplierAddress supplierAddress)
+	{
+		Address = supplierAddress;
+	}
+
 
 	public void AddProduct(ProductId productId)
 	{
 		var newProduct = SupplierProduct.Create(productId, Id);
 		_supplierProducts.Add(newProduct);
+	}
+
+	public void AddFulfillmentRequest(OrderId orderId, List<FulfillmentRequestItem> Items)
+	{
+		var newFulfillment = FulfillmentRequest.Create(Id, orderId, Items);
+		FulfillmentRequests.Add(newFulfillment);
 	}
 
 

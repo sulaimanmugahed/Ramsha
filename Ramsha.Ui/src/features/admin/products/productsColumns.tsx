@@ -3,6 +3,7 @@ import { ProductDto, ProductStatus } from "../../../app/models/products/product"
 import { Box, Checkbox } from "@mui/material";
 import dayjs from "dayjs";
 import AppActionsMenu from "../../../app/components/table/AppActionsMenu";
+import { displayDateTime } from "../../../app/utils/dateTimeUtils";
 
 
 const columnHelper = createColumnHelper<ProductDto>();
@@ -87,7 +88,7 @@ export const getProductsColumns = (
         }),
         columnHelper.accessor('created', {
             id: 'created',
-            cell: info => dayjs(new Date(info.getValue())).format('DD/MM/YYYY'),
+            cell: info => displayDateTime(info.getValue()),
             header: "Created",
             meta: {
                 filterVariant: 'DatePicker',

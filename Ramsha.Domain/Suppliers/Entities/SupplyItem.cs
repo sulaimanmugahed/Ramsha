@@ -22,7 +22,6 @@ public class SupplyItem
     }
 
     public SupplyItemId Id { get; set; }
-
     public ItemSupplied ItemSupplied { get; set; }
     public decimal WholesalePrice { get; set; }
     public int Quantity { get; set; }

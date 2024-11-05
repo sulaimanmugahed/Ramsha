@@ -18,6 +18,7 @@ function App() {
     <div>
 
       <AppRouteProvider />
+      
       <Toaster richColors />
 
     </div>

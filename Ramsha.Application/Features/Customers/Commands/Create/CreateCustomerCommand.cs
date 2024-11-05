@@ -3,9 +3,9 @@ using MediatR;
 
 
 namespace Ramsha.Application.Features.Customers.Commands.Create;
-public class CreateCustomerCommand:IRequest<BaseResult<string>>
+public class CreateCustomerCommand : IRequest<BaseResult<string>>
 {
-	public string FirstName { get; set;}
+	public string FirstName { get; set; }
 	public string LastName { get; set; }
 	public string Email { get; set; }
 	public string Username { get; set; }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using Ramsha.Domain.Common;
 
 namespace Ramsha.Application.DTOs.Account.Responses
 {
@@ -14,5 +15,6 @@ namespace Ramsha.Application.DTOs.Account.Responses
         [JsonIgnore]
         public string RefreshToken { get; set; }
         public DateTime RefreshTokenExpiration { get; set; }
+        public Address? Address { get; set; }
     }
 }

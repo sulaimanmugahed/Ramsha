@@ -22,7 +22,6 @@ public class SupplierVariant : BaseEntity
 
     public SupplierId SupplierId { get; private set; }
     public Supplier? Supplier { get; private set; }
-
     public ProductVariantId ProductVariantId { get; private set; }
     public SupplierProduct SupplierProduct { get; private set; }
     public ProductId ProductId { get; set; }
@@ -30,9 +29,11 @@ public class SupplierVariant : BaseEntity
     public InventoryItem InventoryItem { get; private set; }
     public List<ProductImage> SupplierProductImages { get; private set; } = [];
     public string Code { get; private set; } = string.Empty;
+
     public string Description { get; private set; }
     public decimal WholesalePrice { get; private set; }
     public decimal RetailPrice { get; private set; }
+
 
     public void SetVariant(ProductVariantId productVariantId)
     {
@@ -44,7 +45,6 @@ public class SupplierVariant : BaseEntity
         if (!string.IsNullOrEmpty(description))
             Description = description;
     }
-
 
     public void SetPrice(decimal wholesalePrice)
     {

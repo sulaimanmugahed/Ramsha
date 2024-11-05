@@ -1,5 +1,5 @@
 import { Typography, Button, Box, Grid } from "@mui/material"
-import { BasketItem } from "../models/basket"
+import { BasketItem } from "../models/baskets/basket"
 import AppQuantitySelector from "../components/ui/AppQuantitySelector"
 import { useBasketItemCommands } from "../hooks/basketHooks"
 
