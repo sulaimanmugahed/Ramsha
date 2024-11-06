@@ -5,11 +5,12 @@ using System.Threading.Tasks;
 using MediatR;
 using Ramsha.Application.Contracts;
 using Ramsha.Application.Contracts.Persistence;
+using Ramsha.Application.Dtos.Orders;
 using Ramsha.Application.Dtos.Suppliers;
 using Ramsha.Application.Extensions;
 using Ramsha.Application.Wrappers;
 
-namespace Ramsha.Application.Features.Suppliers.Queries.GetCurrentSupplierFulfillmentRequests;
+namespace Ramsha.Application.Features.Orders.Queries.GetCurrentSupplierFulfillmentRequests;
 
 public class GetCurrentSupplierFulfillmentRequestsQueryHandler(
     IFulfillmentRequestRepository fulfillmentRequestRepository,

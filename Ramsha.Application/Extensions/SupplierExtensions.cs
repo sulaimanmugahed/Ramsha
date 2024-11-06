@@ -2,6 +2,7 @@
 using Ramsha.Application.Dtos.Suppliers;
 using Ramsha.Application.DTOs.Account.Responses;
 using Ramsha.Domain.Inventory.Entities;
+using Ramsha.Domain.Orders.Entities;
 using Ramsha.Domain.Suppliers.Entities;
 
 
@@ -9,23 +10,23 @@ namespace Ramsha.Application.Extensions;
 public static class SupplierExtensions
 {
 
-	public static FulfillmentRequestItemDto AsFulfillmentRequestItemDto(this FulfillmentRequestItem item)
-	=> new FulfillmentRequestItemDto(
-		item.InventoryItemId.Value,
-		item.Name,
-		item.ImageUrl,
-		item.Quantity,
-		item.Price,
-		item.Sku
-		);
+	// public static FulfillmentRequestItemDto AsFulfillmentRequestItemDto(this FulfillmentRequestItem item)
+	// => new FulfillmentRequestItemDto(
+	// 	item.InventoryItemId.Value,
+	// 	item.Name,
+	// 	item.ImageUrl,
+	// 	item.Quantity,
+	// 	item.Price,
+	// 	item.Sku
+	// 	);
 
-	public static FulfillmentRequestDto AsFulfillmentRequestDto(this FulfillmentRequest request)
-	=> new FulfillmentRequestDto(
-		request.Id.Value,
-		request.OrderId.Value,
-		request.Status.ToString(),
-		request.Created
-	);
+	// public static FulfillmentRequestDto AsFulfillmentRequestDto(this FulfillmentRequest request)
+	// => new FulfillmentRequestDto(
+	// 	request.Id.Value,
+	// 	request.OrderId.Value,
+	// 	request.Status.ToString(),
+	// 	request.Created
+	// );
 
 	public static SupplierInventoryItemDto AsSupplierInventoryItemDto(this InventoryItem inventoryItem)
 	{

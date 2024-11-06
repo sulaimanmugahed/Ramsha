@@ -3,6 +3,7 @@ using Ramsha.Application.Contracts.Identity.UserInterfaces;
 using Ramsha.Application.Contracts.Persistence;
 using Ramsha.Application.Dtos.Baskets;
 using Ramsha.Application.Dtos.Common;
+using Ramsha.Domain.Baskets.Entities;
 using Ramsha.Domain.Common;
 using Ramsha.Domain.Customers.Entities;
 
@@ -85,6 +86,24 @@ DeliveryFeeService deliveryFeeService)
             supplierGroups.Sum(x => x.TotalPrice)
         );
     }
+
+
+    public decimal CalculateFulfillmentRequestDeliveryFees(Address supplierAddress, Address customerAddress, List<BasketItem> items)
+    {
+        decimal totalFee = 0;
+        var supplierCoordinates = (supplierAddress.Latitude, supplierAddress.Longitude);
+        var customerCoordinates = (customerAddress.Latitude, customerAddress.Longitude);
+
+        foreach (var supplierItem in items)
+        {
+            var itemWight = supplierItem.InventoryItem.ProductVariant.CalculateShippingWeight(supplierItem.Quantity);
+            var distance = geocodingService.CalculateDistance(supplierCoordinates, customerCoordinates);
+            var deliveryFee = deliveryFeeService.CalculateDeliveryFee(itemWight, distance);
+            totalFee += deliveryFee;
+        }
+        return totalFee;
+    }
+
 
 
 

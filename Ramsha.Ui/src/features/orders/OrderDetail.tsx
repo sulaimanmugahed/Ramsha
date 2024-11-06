@@ -1,21 +1,16 @@
 import {
     Box,
-    Grid,
-    Typography,
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Avatar,
     Chip,
-    Divider
+    Divider,
+    Grid,
+    Paper,
+    Typography
 } from '@mui/material';
 
 import { OrderDetailType } from '../../app/models/orders/order';
 import { displayDateTime } from '../../app/utils/dateTimeUtils';
+import OrderItemsTable from './OrderItemsTable';
+import OrderShippingAddress from './OrderShippingAddress';
 
 type Props = {
     order: OrderDetailType
@@ -68,16 +63,7 @@ const OrderDetail = ({ order }: Props) => {
                     <Divider sx={{ my: 2 }} />
 
                     {/* Shipping Address */}
-                    <Typography variant="h6" gutterBottom>
-                        Shipping Address
-                    </Typography>
-                    <Typography variant="body2">{order.shippingAddress.fullName}</Typography>
-                    <Typography variant="body2">
-                        {`${order.shippingAddress.address1}, ${order.shippingAddress.address2}`}
-                    </Typography>
-                    <Typography variant="body2">
-                        {`${order.shippingAddress.city}, ${order.shippingAddress.state} ${order.shippingAddress.zip}, ${order.shippingAddress.country}`}
-                    </Typography>
+                    <OrderShippingAddress address={order.shippingAddress}/>
                 </Paper>
             </Grid>
 
@@ -88,34 +74,7 @@ const OrderDetail = ({ order }: Props) => {
                         Order Items
                     </Typography>
                     <Divider sx={{ mb: 2 }} />
-                    <TableContainer>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>Image</TableCell>
-                                    <TableCell>Name</TableCell>
-                                    <TableCell>SKU</TableCell>
-                                    <TableCell>Price</TableCell>
-                                    <TableCell>Quantity</TableCell>
-                                    <TableCell>Total</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {order.items.map((item) => (
-                                    <TableRow key={item.inventoryItemId}>
-                                        <TableCell>
-                                            <Avatar src={item.imageUrl} alt={item.name} variant="square" sx={{ width: 48, height: 48, borderRadius: '50%' }} />
-                                        </TableCell>
-                                        <TableCell>{item.name}</TableCell>
-                                        <TableCell>{item.sku}</TableCell>
-                                        <TableCell>${item.price.toFixed(2)}</TableCell>
-                                        <TableCell>{item.quantity}</TableCell>
-                                        <TableCell>${(item.price * item.quantity).toFixed(2)}</TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                    <OrderItemsTable items={order.items} />
                 </Paper>
             </Grid>
         </Grid>

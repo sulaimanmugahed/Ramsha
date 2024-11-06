@@ -11,6 +11,7 @@ using Ramsha.Domain.Suppliers;
 using Ramsha.Domain.Orders.Entities;
 using MediatR;
 using Ramsha.Domain.Inventory;
+using Ramsha.Domain.Orders;
 
 
 namespace Ramsha.Persistence.Contexts;
@@ -449,12 +450,16 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
         builder.Entity<OrderItem>(builder =>
         {
+            builder.HasOne<Order>()
+            .WithMany(x=> x.OrderItems)
+            .HasForeignKey(x=> x.OrderId);
+
             builder.OwnsOne(x => x.ItemOrdered, item =>
             {
                 item.Property(i => i.InventoryItemId)
                 .HasConversion(id => id.Value, value => new Domain.Inventory.InventoryItemId(value));
-                item.Property(i => i.SupplierId)
-               .HasConversion(id => id.Value, value => new Domain.Suppliers.SupplierId(value));
+                //     item.Property(i => i.SupplierId)
+                //    .HasConversion(id => id.Value, value => new Domain.Suppliers.SupplierId(value));
             });
         });
 
@@ -510,20 +515,13 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             entity.Property(x => x.Id)
             .HasConversion(id => id.Value, value => new FulfillmentRequestId(value));
 
-            entity.HasOne<Order>()
-            .WithMany()
+            entity.HasOne(x => x.Order)
+            .WithMany(x => x.FulfillmentRequests)
             .HasForeignKey(x => x.OrderId);
 
             entity.HasOne<Supplier>()
             .WithMany(x => x.FulfillmentRequests)
             .HasForeignKey(x => x.SupplierId);
-
-            entity.OwnsMany(x => x.Items, fi =>
-            {
-                fi.WithOwner();
-                fi.Property(x => x.InventoryItemId)
-                .HasConversion(id => id.Value, value => new InventoryItemId(value));
-            });
         });
 
         base.OnModelCreating(builder);

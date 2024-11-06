@@ -18,7 +18,6 @@ using Ramsha.Application.Features.Suppliers.Queries.GetCurrentSupplierProducts;
 using Ramsha.Application.Features.Suppliers.Queries.GetCurrentSupplierProductVariant;
 using Ramsha.Application.Features.Suppliers.Queries.GetCurrentSupplierProductVariantList;
 using Ramsha.Application.Features.Suppliers.Commands.UpdateSupplierVariant;
-using Ramsha.Application.Features.Suppliers.Queries.GetCurrentSupplierFulfillmentRequests;
 
 namespace Ramsha.Api.Controllers.v1;
 
@@ -92,9 +91,6 @@ public class SuppliersController : BaseApiController
 	public async Task<BaseResult> GetInventoryItems()
 	=> await Mediator.Send(new GetSupplierInventoryItemsQuery());
 
-	[HttpGet("fulfillment-requests")]
-	public async Task<BaseResult<List<FulfillmentRequestDto>>> Getfulfillments()
-	=> await Mediator.Send(new GetCurrentSupplierFulfillmentRequestsQuery());
 
 
 

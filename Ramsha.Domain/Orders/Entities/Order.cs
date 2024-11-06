@@ -2,6 +2,7 @@
 using Ramsha.Domain.Common;
 using Ramsha.Domain.Customers;
 using Ramsha.Domain.Customers.Entities;
+using Ramsha.Domain.Orders.Enums;
 using Ramsha.Domain.Orders.Events;
 
 namespace Ramsha.Domain.Orders.Entities;
@@ -15,23 +16,20 @@ public class Order : BaseEntity
     }
 
 
-    public Order(OrderId id, CustomerId customerId, List<OrderItem> items, ShippingAddress shippingAddress)
+    private Order(OrderId id, CustomerId customerId, ShippingAddress shippingAddress)
     {
         Id = id;
         CustomerId = customerId;
         OrderStatus = OrderStatus.Pending;
         OrderDate = DateTime.UtcNow;
-        OrderItems = items;
-        Subtotal = items.Sum(x => x.Price * x.Quantity);
         ShippingAddress = shippingAddress;
     }
 
-    public static Order Create(CustomerId customerId, List<OrderItem> items, ShippingAddress shippingAddress, decimal deliveryFee)
+
+    public static Order Create(CustomerId customerId, ShippingAddress shippingAddress)
     {
-        var order = new Order(new OrderId(Guid.NewGuid()), customerId, items, shippingAddress);
-        order.SetDeliveryFee(deliveryFee);
-        
-        order.RaiseDomainEvent(new NewOrderCreatedEvent(order.Id, order.ShippingAddress, order.OrderItems));
+        var order = new Order(new OrderId(Guid.NewGuid()), customerId, shippingAddress);
+        order.RaiseDomainEvent(new NewOrderCreatedEvent(order.Id, order.ShippingAddress));
         return order;
     }
 
@@ -51,10 +49,18 @@ public class Order : BaseEntity
     public decimal DeliveryFee { get; private set; }
 
     public OrderStatus OrderStatus { get; private set; }
+    public List<FulfillmentRequest> FulfillmentRequests { get; private set; } = [];
 
     public void SetDeliveryFee(decimal deliveryFee)
     {
         DeliveryFee = deliveryFee;
+    }
+
+    public void SetFulfillmentRequests(List<FulfillmentRequest> requests)
+    {
+        FulfillmentRequests.AddRange(requests);
+        Subtotal = FulfillmentRequests.Sum(x => x.Subtotal);
+        DeliveryFee = FulfillmentRequests.Sum(x => x.DeliveryFee);
     }
 
 

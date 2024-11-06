@@ -5,7 +5,6 @@ using Ramsha.Application.Contracts;
 using Ramsha.Application;
 using Ramsha.Persistence;
 using Ramsha.FileStorage;
-
 using Ramsha.Identity;
 using Ramsha.Persistence.Seeds;
 using Ramsha.Persistence.Contexts;
@@ -13,17 +12,11 @@ using Microsoft.AspNetCore.Identity;
 using Ramsha.Identity.Models;
 using Ramsha.Identity.Seeds;
 using Serilog;
-using Ramsha.Api.Infrastructure.Filters;
 using FluentValidation.AspNetCore;
 using System.Reflection;
 using Ramsha.Mail;
-using Ramsha.Application.Contracts.Persistence;
-using Ramsha.Persistence.Repositories;
 using System.Text.Json.Serialization;
-using Ramsha.Domain.Common.Events;
 using Ramsha.Domain.Settings;
-using Microsoft.AspNetCore.Authentication;
-using System.CodeDom.Compiler;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFile("appsettings.firebase.json", false, reloadOnChange: true);

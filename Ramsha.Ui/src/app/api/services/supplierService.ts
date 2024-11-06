@@ -1,9 +1,9 @@
 import { PagedParams, PaginationResponse } from "../../models/common/commonModels";
 import { SupplierInventoryItem } from "../../models/suppliers/supplierInventoryItem";
 import { SupplierProduct, SupplierVariant } from "../../models/suppliers/supplierProduct";
-import { Supply } from "../../models/suppliers/supply"
-import { SupplyRequest, SupplyRequestItem } from "../../models/suppliers/supplyRequest"
-import request from "../Request"
+import { Supply } from "../../models/suppliers/supply";
+import { SupplyRequest, SupplyRequestItem } from "../../models/suppliers/supplyRequest";
+import request from "../Request";
 
 
 const BASE_URL = 'suppliers'
@@ -111,6 +111,8 @@ const updateMyVariant = async (data: any) => {
         data
     })
 }
+
+
 
 
 export const supplierService = {

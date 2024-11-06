@@ -33,6 +33,11 @@ export const CUSTOMERS_MY_ADDRESS = "customers-my-address"
 //orders
 export const ORDERS_QUERY_KEY = "orders"
 export const MY_ORDERS_QUERY_KEY = "my-orders"
+export const ORDERS_SUPPLIER_FULFILLMENT_REQUESTS = "orders-supplierFulfillmentRequests"
+export const ORDERS_FULFILLMENT_REQUESTS = "orders-FulfillmentRequests"
+
+
+
 
 
 

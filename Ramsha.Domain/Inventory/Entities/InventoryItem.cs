@@ -108,9 +108,10 @@ public class InventoryItem : BaseEntity, IAuditable
         TotalQuantity += quantity;
     }
 
-    public void DecreaseTotalQuantity(int quantity)
+    public void DecreaseInventoryQuantity(int quantity)
     {
         TotalQuantity -= quantity;
+        AvailableQuantity -= quantity;
     }
 
 
@@ -131,7 +132,7 @@ public class InventoryItem : BaseEntity, IAuditable
             Stocks.Remove(currentStock);
         }
 
-        DecreaseTotalQuantity(quantity);
+        DecreaseInventoryQuantity(quantity);
         UpdateInventoryBasedOnSelectionStockStrategy(StockSelectionType);
         RaiseDomainEvent(new StockUpdatedEvent(ProductId, ProductVariantId));
     }

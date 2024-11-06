@@ -1,5 +1,6 @@
 ﻿using Ramsha.Domain.Common;
 using Ramsha.Domain.Orders;
+using Ramsha.Domain.Orders.Entities;
 using Ramsha.Domain.Products;
 using Ramsha.Domain.Products.Entities;
 
@@ -54,11 +55,7 @@ public class Supplier : BaseEntity, IAuditable, ISoftDeletable, IUser
 		_supplierProducts.Add(newProduct);
 	}
 
-	public void AddFulfillmentRequest(OrderId orderId, List<FulfillmentRequestItem> Items)
-	{
-		var newFulfillment = FulfillmentRequest.Create(Id, orderId, Items);
-		FulfillmentRequests.Add(newFulfillment);
-	}
+	
 
 
 

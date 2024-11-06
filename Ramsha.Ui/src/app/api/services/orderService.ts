@@ -1,3 +1,4 @@
+import { FulfillmentRequest, FulfillmentRequestDetail } from "../../models/orders/fulfillmentRequest";
 import { Order, OrderDetailType } from "../../models/orders/order";
 import request from "../Request";
 
@@ -23,9 +24,23 @@ const getMyOrders = async () => {
     })
 }
 
+const getMyFulfillmentRequests = async () =>
+    await request<FulfillmentRequest[]>({
+        url: `${BASE_URL}/supplier-fulfillment-requests`
+    })
+
+
+const getFulfillmentRequestDetail = async (id: string) => {
+    return await request<FulfillmentRequestDetail>({
+        url: `${BASE_URL}/fulfillment-requests/${id}/detail`
+    })
+}
+
 export const orderService = {
     createOrder,
     getMyOrders,
-    getOrderDetail
+    getOrderDetail,
+    getMyFulfillmentRequests,
+    getFulfillmentRequestDetail
 }
 

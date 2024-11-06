@@ -1,43 +1,44 @@
-import LoginPage from "../../features/account/login/LoginPage";
-import CatalogPage from "../../features/catalog/CatalogPage";
-import ContactPage from "../../features/contact/ContactPage";
-import PersistAuth from "../components/PersistAuth";
 import { createBrowserRouter } from "react-router-dom";
-import { PrivateRoutes } from "./PrivateRoutes";
-import AdminDashboard from "../../features/admin/AdminDashboard";
-import SupplierDashboard from "../../features/suppliers/SupplierDashboard";
-import CheckoutPage from "../../features/checkout/CheckoutPage";
+import AboutPage from "../../features/about/AboutPage";
+import LoginPage from "../../features/account/login/LoginPage";
 import RegisterPage from "../../features/account/register/RegisterPage";
-import BasketDetailPage from "../../features/basket/BasketDetailPage";
-import ProfilePage from "../../features/profile/ProfilePage";
-import SearchPage from "../../features/search/SearchPage";
-import DashboardLayout from "../layout/dashboard/DashboardLayout";
-import MainLayout from "../layout/home/MainLayout";
+import AdminDashboard from "../../features/admin/AdminDashboard";
 import InventoryPage from "../../features/admin/inventory/InventoryPage";
 import AdminProductPage from "../../features/admin/products/AdminProductPage";
-import CreateProductPage from "../../features/products/CreateProductPage";
 import ProductVariantsPage from "../../features/admin/products/ProductVariantsPage";
-import CreateVariantPage from "../../features/products/variants/CreateVariantPage";
-import EditVariantPage from "../../features/products/variants/EditVariantPage";
+import BasketDetailPage from "../../features/basket/BasketDetailPage";
+import CatalogPage from "../../features/catalog/CatalogPage";
+import CatalogProductDetailPage from "../../features/catalog/CatalogProductDetailPage";
+import CheckoutPage from "../../features/checkout/CheckoutPage";
+import ContactPage from "../../features/contact/ContactPage";
+import MyOrdersPage from "../../features/orders/MyOrdersPage";
+import OrderDetailPage from "../../features/orders/OrderDetailPage";
+import CreateProductPage from "../../features/products/CreateProductPage";
 import ProductDetailsPage from "../../features/products/ProductDetailsPage";
 import ProductEditModal from "../../features/products/ProductEditModal";
-import CatalogProductDetailPage from "../../features/catalog/CatalogProductDetailPage";
-import AboutPage from "../../features/about/AboutPage";
-import SuppliesPage from "../../features/suppliers/supplies/SuppliesPage";
-import SupplyRequestPage from "../../features/suppliers/supplies/SupplyRequestPage";
-import AddSupplyRequestItemPage from "../../features/suppliers/supplies/AddSupplyRequestItemPage";
-import EditSupplyItemPage from "../../features/suppliers/supplies/EditSupplyItemPage";
+import CreateVariantPage from "../../features/products/variants/CreateVariantPage";
+import EditVariantPage from "../../features/products/variants/EditVariantPage";
+import OrderHistory from '../../features/profile/OrderHistory';
+import ProfilePage, { SavedItems } from "../../features/profile/ProfilePage";
+import AccountSettings from "../../features/profile/settings/AccountSettings";
+import ManageAddressPage from "../../features/profile/settings/ManageAddressPage";
+import SearchPage from "../../features/search/SearchPage";
+import FulfillmentRequestDetailPage from "../../features/suppliers/FulfillmentRequests/FulfillmentRequestDetailPage";
+import MyFulfillmentRequestsPage from "../../features/suppliers/FulfillmentRequests/MyFulfillmentRequestsPage";
 import SupplierInventoryPage from "../../features/suppliers/inventory/SupplierInventoryPage";
 import SupplierProductsPage from "../../features/suppliers/Products/SupplierProductsPage";
 import AddSupplierVariantPage from "../../features/suppliers/Products/Variants/AddSupplierVariantPage";
-import SupplierProductVariantsPage from "../../features/suppliers/Products/Variants/SupplierProductVariantsPage";
 import EditSupplierVariantPage from "../../features/suppliers/Products/Variants/EditSupplierVariantPage";
-import MyOrdersPage from "../../features/orders/MyOrdersPage";
-import OrderDetailPage from "../../features/orders/OrderDetailPage";
-import { SavedItems } from '../../features/profile/ProfilePage'
-import OrderHistory from '../../features/profile/OrderHistory'
-import ManageAddressPage from "../../features/profile/settings/ManageAddressPage";
-import AccountSettings from "../../features/profile/settings/AccountSettings";
+import SupplierProductVariantsPage from "../../features/suppliers/Products/Variants/SupplierProductVariantsPage";
+import SupplierDashboard from "../../features/suppliers/SupplierDashboard";
+import AddSupplyRequestItemPage from "../../features/suppliers/supplies/AddSupplyRequestItemPage";
+import EditSupplyItemPage from "../../features/suppliers/supplies/EditSupplyItemPage";
+import SuppliesPage from "../../features/suppliers/supplies/SuppliesPage";
+import SupplyRequestPage from "../../features/suppliers/supplies/SupplyRequestPage";
+import PersistAuth from "../components/PersistAuth";
+import DashboardLayout from "../layout/dashboard/DashboardLayout";
+import MainLayout from "../layout/home/MainLayout";
+import { PrivateRoutes } from "./PrivateRoutes";
 
 
 //import AdminProductPage from "../../features/admin/products/AdminProductPage";
@@ -185,7 +186,6 @@ export const router = createBrowserRouter([
                                         path: 'edit/:productId',
                                         element: null
                                     }
-
                                 ]
                             }
                         ]
@@ -197,6 +197,16 @@ export const router = createBrowserRouter([
                             {
                                 element: <SupplierDashboard />,
                                 path: 'dashboard'
+                            },
+                            {
+                                element: <MyFulfillmentRequestsPage />,
+                                path: 'fulfillment-requests',
+                                children: [
+                                    {
+                                        element: <FulfillmentRequestDetailPage />,
+                                        path: ':fulfillmentRequestId'
+                                    }
+                                ]
                             },
                             {
                                 element: <SuppliesPage />,

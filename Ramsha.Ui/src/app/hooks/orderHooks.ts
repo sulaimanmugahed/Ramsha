@@ -1,7 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { orderService } from "../api/services/orderService"
 import { toast } from "sonner"
-import { BASKET_QUERY_KEY, MY_ORDERS_QUERY_KEY, ORDERS_QUERY_KEY } from "../constants/queriesKey"
+import { orderService } from "../api/services/orderService"
+import { BASKET_QUERY_KEY, MY_ORDERS_QUERY_KEY, ORDERS_FULFILLMENT_REQUESTS, ORDERS_QUERY_KEY, ORDERS_SUPPLIER_FULFILLMENT_REQUESTS } from "../constants/queriesKey"
+import { FulfillmentRequest, FulfillmentRequestDetail } from "../models/orders/fulfillmentRequest"
 import { Order, OrderDetailType } from "../models/orders/order"
 
 export const useCreateOrder = () => {
@@ -43,5 +44,31 @@ export const useOrderDetail = (orderId: string) => {
     return {
         order: data,
         isOrderLoading: isLoading
+    }
+}
+
+
+export const useMyFulfillmentRequests = () => {
+    const { data, isLoading } = useQuery<FulfillmentRequest[]>({
+        queryKey: [ORDERS_SUPPLIER_FULFILLMENT_REQUESTS],
+        queryFn: async () => await orderService.getMyFulfillmentRequests()
+    })
+
+    return {
+        fulfillmentRequests: data,
+        isFulfillmentRequestsLoading: isLoading
+    }
+}
+
+
+export const useMyFulfillmentRequestDetail = (id: string) => {
+    const { data, isLoading } = useQuery<FulfillmentRequestDetail>({
+        queryKey: [ORDERS_FULFILLMENT_REQUESTS, id],
+        queryFn: async () => await orderService.getFulfillmentRequestDetail(id)
+    })
+
+    return {
+        fulfillmentRequestDetail: data,
+        isLoading
     }
 }

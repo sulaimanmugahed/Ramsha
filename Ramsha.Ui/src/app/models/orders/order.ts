@@ -1,3 +1,5 @@
+import { Address } from "../account";
+
 type orderStatus =
     'Pending' |
     'PaymentReceived' |
@@ -21,7 +23,7 @@ export type OrderDetailType = {
     total: number,
     status: orderStatus,
     items: OrderItem[],
-    shippingAddress: ShippingAddress,
+    shippingAddress: Address,
     orderDate: string
 }
 

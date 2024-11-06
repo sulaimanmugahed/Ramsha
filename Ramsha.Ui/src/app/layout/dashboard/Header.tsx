@@ -1,30 +1,30 @@
 
-import * as React from 'react';
-import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
-import MuiDrawer from '@mui/material/Drawer';
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
+import { Add } from '@mui/icons-material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import MenuIcon from '@mui/icons-material/Menu';
+import { Box } from '@mui/material';
+import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
+import Divider from '@mui/material/Divider';
+import MuiDrawer from '@mui/material/Drawer';
+import IconButton from '@mui/material/IconButton';
+import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { Box, Avatar } from '@mui/material';
-import { AppDashboardIcon } from '../../components/icons/AppDashboardIcon';
-import { NavLink } from 'react-router-dom';
-import AppGridIcon from '../../components/icons/AppGridIcon';
-import { useAccount } from '../../hooks/accountHooks';
+import { CSSObject, styled, Theme, useTheme } from '@mui/material/styles';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import * as React from 'react';
 import { User } from 'react-flaticons';
-import { AppOrderIcon } from '../../components/icons/AppOrderIcon';
-import { AppDollarIcon } from '../../components/icons/AppDollarIcon';
+import { NavLink } from 'react-router-dom';
 import AppBagIcon from '../../components/icons/AppBagIcon';
-import { Add } from '@mui/icons-material';
+import { AppDashboardIcon } from '../../components/icons/AppDashboardIcon';
+import { AppDollarIcon } from '../../components/icons/AppDollarIcon';
+import AppGridIcon from '../../components/icons/AppGridIcon';
+import { AppOrderIcon } from '../../components/icons/AppOrderIcon';
+import { useAccount } from '../../hooks/accountHooks';
 
 const drawerWidth = 240;
 
@@ -133,6 +133,11 @@ export default function Header() {
             label: 'Dashboard',
             value: 'supplier/dashboard',
             icon: <AppDashboardIcon />,
+        },
+        {
+            label: 'Fulfillment Requests',
+            value: 'supplier/fulfillment-requests',
+            icon: <AppOrderIcon />,
         },
         {
             label: 'Supply Products',
