@@ -63,6 +63,43 @@ public class Order : BaseEntity
         DeliveryFee = FulfillmentRequests.Sum(x => x.DeliveryFee);
     }
 
+    public void DeliverFulfillmentRequest(FulfillmentRequestId fulfillmentRequestId)
+    {
+        var existFulfillment = FulfillmentRequests.FirstOrDefault(x => x.Id == fulfillmentRequestId);
+        if (existFulfillment is null)
+            return;
+
+        if (FulfillmentRequests.Count(x => x.Status == FulfillmentRequestStatus.Delivered) >= FulfillmentRequests.Count - 1)
+        {
+            OrderStatus = OrderStatus.FullyShipped;
+        }
+        else
+        {
+            OrderStatus = OrderStatus != OrderStatus.FullyShipped ? OrderStatus.Processing : OrderStatus.FullyShipped;
+        }
+        existFulfillment.SetStatus(FulfillmentRequestStatus.Delivered);
+    }
+
+    public void ShipFulfillmentRequest(FulfillmentRequestId fulfillmentRequestId)
+    {
+        var existFulfillment = FulfillmentRequests.FirstOrDefault(x => x.Id == fulfillmentRequestId);
+        if (existFulfillment is null)
+            return;
+
+        if (FulfillmentRequests.Count(
+                  x => x.Status == FulfillmentRequestStatus.Shipped ||
+                  x.Status == FulfillmentRequestStatus.Delivered) >= FulfillmentRequests.Count - 1)
+        {
+            OrderStatus = OrderStatus.FullyShipped;
+        }
+        else
+        {
+            OrderStatus = OrderStatus.Processing;
+        }
+        existFulfillment.SetStatus(FulfillmentRequestStatus.Shipped);
+    }
+
+
 
     public decimal GetTotal()
     {

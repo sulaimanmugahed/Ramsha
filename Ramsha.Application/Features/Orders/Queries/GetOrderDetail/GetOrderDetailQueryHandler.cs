@@ -13,8 +13,9 @@ public class GetOrderDetailQueryHandler(
 {
     public async Task<BaseResult<OrderDetailDto?>> Handle(GetOrderDetailQuery request, CancellationToken cancellationToken)
     {
-        var order = await orderRepository.FindOrderWithDetails(
-            x => x.Id == new Domain.Orders.OrderId(request.OrderId));
+        var order = await orderRepository.GetAsync(
+            x => x.Id == new Domain.Orders.OrderId(request.OrderId),
+            x => x.ShippingAddress, X => X.FulfillmentRequests);
 
         return order?.AsDetailDto();
     }

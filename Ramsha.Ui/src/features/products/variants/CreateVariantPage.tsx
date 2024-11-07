@@ -1,11 +1,10 @@
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, IconButton, Box } from '@mui/material';
 import { Close } from '@mui/icons-material';
-import VariantCommand from './VariantCommand';
+import { Box, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
-import { VariantScheme } from '../productFormValidations';
-import { UploadResponse } from '../../../app/models/common/commonModels';
-import { useUploadFile } from '../../../app/hooks/storageHooks';
 import { useAddVariant, useProductOptions } from '../../../app/hooks/productHooks';
+import { useUploadFile } from '../../../app/hooks/storageHooks';
+import { VariantScheme } from '../productFormValidations';
+import VariantCommand from './VariantCommand';
 
 
 const CreateVariantPage = () => {
@@ -18,6 +17,7 @@ const CreateVariantPage = () => {
 
     const { upload } = useUploadFile()
 
+
     const navigate = useNavigate()
 
     const handleClose = () => {
@@ -26,7 +26,7 @@ const CreateVariantPage = () => {
 
     const onSubmit = async (variant: VariantScheme) => {
 
-        const { file, ...others } = variant
+        const { file, variantValues: formVariantValues, ...others } = variant
         let imageUrl = file?.preview
         const newFile = file?.file
         if (newFile) {
@@ -34,7 +34,15 @@ const CreateVariantPage = () => {
             imageUrl = uploadResponse.url
         }
 
-        await addVariant({ data: { ...others, imageUrl }, productId })
+        const variantValues = Object.keys(formVariantValues).map((option) => {
+            const value = formVariantValues[option].value;
+            return {
+                option,
+                value,
+            };
+        });
+
+        await addVariant({ data: { ...others, imageUrl, variantValues }, productId })
         handleClose()
     }
 

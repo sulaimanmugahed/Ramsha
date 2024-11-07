@@ -13,13 +13,16 @@ public record OrderDto(
     DateTime OrderDate
 );
 
+
+
+
 public record OrderDetailDto(
     Guid Id,
     decimal Subtotal,
     decimal DeliveryFee,
     decimal Total,
     string Status,
-    List<OrderItemDto> Items,
+    List<FulfillmentRequestDto> FulfillmentRequests,
     ShippingAddress ShippingAddress,
     DateTime OrderDate
 );

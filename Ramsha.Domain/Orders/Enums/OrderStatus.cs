@@ -8,6 +8,10 @@ public enum OrderStatus
     PaymentReceived,
     Processing,
     FullyFulfilled,
+    PartialShipped,
+    PartialDelivered,
+    FullyShipped,
+    FullyDelivered,
     PaymentFailed,
     Cancelled,
     Completed

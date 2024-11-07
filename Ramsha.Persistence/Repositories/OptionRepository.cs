@@ -12,5 +12,10 @@ public class OptionRepository(ApplicationDbContext context)
 IOptionRepository
 {
     private readonly DbSet<Option> _option = context.Set<Option>();
+    private readonly DbSet<OptionValue> _values = context.Set<OptionValue>();
 
+    public async Task<OptionValue?> GetValue(OptionValueId optionValueId)
+    {
+        return await _values.FirstOrDefaultAsync(x=> x.Id == optionValueId);
+    }
 }

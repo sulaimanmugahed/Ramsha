@@ -451,15 +451,21 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         builder.Entity<OrderItem>(builder =>
         {
             builder.HasOne<Order>()
-            .WithMany(x=> x.OrderItems)
-            .HasForeignKey(x=> x.OrderId);
+            .WithMany(x => x.OrderItems)
+            .HasForeignKey(x => x.OrderId)
+           .OnDelete(DeleteBehavior.Restrict);
+
+
+            builder.HasOne<FulfillmentRequest>()
+          .WithMany(x => x.Items)
+          .HasForeignKey(x => x.FulfillmentRequestId)
+           .OnDelete(DeleteBehavior.Restrict);
+
 
             builder.OwnsOne(x => x.ItemOrdered, item =>
             {
                 item.Property(i => i.InventoryItemId)
                 .HasConversion(id => id.Value, value => new Domain.Inventory.InventoryItemId(value));
-                //     item.Property(i => i.SupplierId)
-                //    .HasConversion(id => id.Value, value => new Domain.Suppliers.SupplierId(value));
             });
         });
 
@@ -519,7 +525,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .WithMany(x => x.FulfillmentRequests)
             .HasForeignKey(x => x.OrderId);
 
-            entity.HasOne<Supplier>()
+            entity.HasOne(x => x.Supplier)
             .WithMany(x => x.FulfillmentRequests)
             .HasForeignKey(x => x.SupplierId);
         });

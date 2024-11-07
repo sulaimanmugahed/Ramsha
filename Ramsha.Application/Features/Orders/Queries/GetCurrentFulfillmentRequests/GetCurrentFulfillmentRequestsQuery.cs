@@ -4,7 +4,7 @@ using Ramsha.Application.Wrappers;
 
 namespace Ramsha.Application.Features.Orders.Queries.GetCurrentSupplierFulfillmentRequests;
 
-public class GetCurrentSupplierFulfillmentRequestsQuery : IRequest<BaseResult<List<FulfillmentRequestDto>>>
+public class GetCurrentSupplierFulfillmentRequestsQuery : PagedParams, IRequest<BaseResult<List<FulfillmentRequestDto>>>
 {
 
 }

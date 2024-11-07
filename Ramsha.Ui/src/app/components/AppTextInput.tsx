@@ -1,8 +1,6 @@
-import { TextFieldProps, TextField, FilledInputProps, OutlinedInputProps, InputProps } from "@mui/material";
-import { useController, UseControllerProps } from "react-hook-form"
+import { FilledInputProps, InputProps, OutlinedInputProps, SxProps, TextField, TextFieldProps, Theme } from "@mui/material";
+import { useController, UseControllerProps } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { SxProps, Theme } from '@mui/material'
-import { useCustomStylesStore } from "../store/customStylesStore";
 
 
 type Props = UseControllerProps & TextFieldProps & {
@@ -14,7 +12,6 @@ type Props = UseControllerProps & TextFieldProps & {
 const AppTextInput = ({ inputStyle, InputProps, ...props }: Props) => {
     const { fieldState, field } = useController({ ...props, defaultValue: '' })
     const { i18n, t } = useTranslation()
-    const { inputBorderRadius } = useCustomStylesStore()
     return (
         <TextField
             {...props}
@@ -22,7 +19,7 @@ const AppTextInput = ({ inputStyle, InputProps, ...props }: Props) => {
             error={!!fieldState.error}
             helperText={t(fieldState.error?.message!)}
             InputProps={{
-                sx: { borderRadius: inputBorderRadius, ...inputStyle }, ...InputProps
+                sx: { ...inputStyle }, ...InputProps
             }}
             FormHelperTextProps={
                 {

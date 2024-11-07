@@ -1,10 +1,12 @@
 import { Address } from "../account"
 import { OrderItem } from "./order"
 
+export type FulfillmentRequestStatus ='Pending' | 'Approved' | 'Shipped' | 'Delivered' | 'Cancelled' | 'Failed' | 'Completed'
+
 export type FulfillmentRequest = {
     id: string,
     orderId: string,
-    status: string,
+    status:FulfillmentRequestStatus
     subtotal: number,
     deliveryFee: number
     received: string

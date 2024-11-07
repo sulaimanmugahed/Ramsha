@@ -19,7 +19,8 @@ public static class OrdersExtensions
     request.Status.ToString(),
     request.Created,
     request.Order.ShippingAddress,
-    request.Items.Select(x => x.AsDto()).ToList());
+    request.Items.Select(x => x.AsDto()).ToList())
+    ;
 
     public static FulfillmentRequestDto AsFulfillmentRequestDto(this FulfillmentRequest request)
     => new FulfillmentRequestDto(
@@ -55,12 +56,12 @@ public static class OrdersExtensions
     public static OrderDetailDto AsDetailDto(this Order order)
     {
         return new OrderDetailDto(
-            order.Id.Value,
+         order.Id.Value,
          order.Subtotal,
          order.DeliveryFee,
          order.GetTotal(),
          order.OrderStatus.ToString(),
-         order.OrderItems.Select(x => x.AsDto()).ToList(),
+         order.FulfillmentRequests.Select(x => x.AsFulfillmentRequestDto()).ToList(),
          order.ShippingAddress,
          order.OrderDate
         );

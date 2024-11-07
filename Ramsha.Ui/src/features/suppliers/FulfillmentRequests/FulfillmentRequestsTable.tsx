@@ -7,10 +7,11 @@ import { displayDateTime } from "../../../app/utils/dateTimeUtils"
 
 type Props = {
   fulfillmentRequests: FulfillmentRequest[]
-  onRowView: (request: FulfillmentRequest) => void
+  onRowView: (request: FulfillmentRequest) => void,
+  onShip: (request: FulfillmentRequest) => void
 }
 
-const FulfillmentRequestsTable = ({ onRowView, fulfillmentRequests }: Props) => {
+const FulfillmentRequestsTable = ({ onShip, onRowView, fulfillmentRequests }: Props) => {
 
 
   const columnHelper = createColumnHelper<FulfillmentRequest>()
@@ -23,11 +24,7 @@ const FulfillmentRequestsTable = ({ onRowView, fulfillmentRequests }: Props) => 
         hidable: false
       },
     }),
-    columnHelper.accessor('status', {
-      id: 'status',
-      header: 'Status',
-      cell: info => info.getValue()
-    }),
+
     columnHelper.accessor('subtotal', {
       id: 'subtotal',
       header: 'Subtotal',
@@ -37,6 +34,11 @@ const FulfillmentRequestsTable = ({ onRowView, fulfillmentRequests }: Props) => 
       id: 'deliveryFee',
       header: 'Delivery Fee',
       cell: info => info.getValue()
+    }),
+    columnHelper.display({
+      id: 'total',
+      header: 'Total Amount',
+      cell: info => info.row.original.subtotal + info.row.original.deliveryFee
     }),
     columnHelper.accessor('received', {
       id: 'received',
@@ -51,6 +53,11 @@ const FulfillmentRequestsTable = ({ onRowView, fulfillmentRequests }: Props) => 
           {
             label: 'Detail',
             action: onRowView
+          },
+          {
+            label: 'Ship',
+            disable: props.row.original.status !== 'Approved',
+            action: onShip
           }
         ]} />,
       enableSorting: false,

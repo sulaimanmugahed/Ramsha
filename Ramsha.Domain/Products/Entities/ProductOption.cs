@@ -14,6 +14,7 @@ public class ProductOption : BaseEntity
     {
         Product = product;
         Option = option;
+        OptionId = option.Id;
         Priority = priority;
     }
 

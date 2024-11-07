@@ -12,8 +12,8 @@ using Ramsha.Persistence.Contexts;
 namespace Ramsha.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241101231009_Initial1")]
-    partial class Initial1
+    [Migration("20241107045146_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -106,19 +106,19 @@ namespace Ramsha.Persistence.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Address1")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Address2")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("City")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Display")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -239,6 +239,38 @@ namespace Ramsha.Persistence.Migrations
                     b.ToTable("Stocks", "Core");
                 });
 
+            modelBuilder.Entity("Ramsha.Domain.Orders.Entities.FulfillmentRequest", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("DeliveryFee")
+                        .HasColumnType("decimal(18,6)");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Subtotal")
+                        .HasColumnType("decimal(18,6)");
+
+                    b.Property<Guid>("SupplierId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("SupplierId");
+
+                    b.ToTable("FulfillmentRequest", "Core");
+                });
+
             modelBuilder.Entity("Ramsha.Domain.Orders.Entities.Order", b =>
                 {
                     b.Property<Guid>("Id")
@@ -278,7 +310,10 @@ namespace Ramsha.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<Guid?>("OrderId")
+                    b.Property<Guid>("FulfillmentRequestId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("OrderId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Price")
@@ -288,6 +323,8 @@ namespace Ramsha.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FulfillmentRequestId");
 
                     b.HasIndex("OrderId");
 
@@ -560,18 +597,14 @@ namespace Ramsha.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<decimal>("FinalPrice")
                         .HasColumnType("decimal(18,6)");
 
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("bit");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,6)");
@@ -678,32 +711,6 @@ namespace Ramsha.Persistence.Migrations
                     b.ToTable("VariantValue", "Core");
                 });
 
-            modelBuilder.Entity("Ramsha.Domain.Suppliers.Entities.FulfillmentRequest", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("OrderId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("SupplierId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
-
-                    b.HasIndex("SupplierId");
-
-                    b.ToTable("FulfillmentRequest", "Core");
-                });
-
             modelBuilder.Entity("Ramsha.Domain.Suppliers.Entities.Supplier", b =>
                 {
                     b.Property<Guid>("Id")
@@ -752,19 +759,19 @@ namespace Ramsha.Persistence.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Address1")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Address2")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("City")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Display")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -1117,6 +1124,25 @@ namespace Ramsha.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Ramsha.Domain.Orders.Entities.FulfillmentRequest", b =>
+                {
+                    b.HasOne("Ramsha.Domain.Orders.Entities.Order", "Order")
+                        .WithMany("FulfillmentRequests")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Ramsha.Domain.Suppliers.Entities.Supplier", "Supplier")
+                        .WithMany("FulfillmentRequests")
+                        .HasForeignKey("SupplierId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Supplier");
+                });
+
             modelBuilder.Entity("Ramsha.Domain.Orders.Entities.Order", b =>
                 {
                     b.HasOne("Ramsha.Domain.Customers.Entities.Customer", "Customer")
@@ -1130,14 +1156,6 @@ namespace Ramsha.Persistence.Migrations
                             b1.Property<Guid>("OrderId")
                                 .HasColumnType("uniqueidentifier");
 
-                            b1.Property<string>("Address1")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<string>("Address2")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
-
                             b1.Property<string>("City")
                                 .IsRequired()
                                 .HasColumnType("nvarchar(max)");
@@ -1146,9 +1164,23 @@ namespace Ramsha.Persistence.Migrations
                                 .IsRequired()
                                 .HasColumnType("nvarchar(max)");
 
+                            b1.Property<string>("Description")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("Display")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
                             b1.Property<string>("FullName")
                                 .IsRequired()
                                 .HasColumnType("nvarchar(max)");
+
+                            b1.Property<double>("Latitude")
+                                .HasColumnType("float");
+
+                            b1.Property<double>("Longitude")
+                                .HasColumnType("float");
 
                             b1.Property<string>("State")
                                 .IsRequired()
@@ -1174,9 +1206,17 @@ namespace Ramsha.Persistence.Migrations
 
             modelBuilder.Entity("Ramsha.Domain.Orders.Entities.OrderItem", b =>
                 {
+                    b.HasOne("Ramsha.Domain.Orders.Entities.FulfillmentRequest", null)
+                        .WithMany("Items")
+                        .HasForeignKey("FulfillmentRequestId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Ramsha.Domain.Orders.Entities.Order", null)
                         .WithMany("OrderItems")
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.OwnsOne("Ramsha.Domain.Orders.Entities.ProductItemOrdered", "ItemOrdered", b1 =>
                         {
@@ -1197,9 +1237,6 @@ namespace Ramsha.Persistence.Migrations
                             b1.Property<string>("PictureUrl")
                                 .IsRequired()
                                 .HasColumnType("nvarchar(max)");
-
-                            b1.Property<Guid>("SupplierId")
-                                .HasColumnType("uniqueidentifier");
 
                             b1.HasKey("OrderItemId");
 
@@ -1362,6 +1399,22 @@ namespace Ramsha.Persistence.Migrations
                             b1.Property<Guid>("ProductVariantId")
                                 .HasColumnType("uniqueidentifier");
 
+                            b1.Property<decimal>("DimensionalFactor")
+                                .HasColumnType("decimal(18,2)")
+                                .HasColumnName("DimensionalFactor");
+
+                            b1.Property<decimal>("Height")
+                                .HasColumnType("decimal(18,2)")
+                                .HasColumnName("HeightDimension");
+
+                            b1.Property<decimal>("Length")
+                                .HasColumnType("decimal(18,2)")
+                                .HasColumnName("LengthDimension");
+
+                            b1.Property<decimal>("Width")
+                                .HasColumnType("decimal(18,2)")
+                                .HasColumnName("WidthDimension");
+
                             b1.HasKey("ProductVariantProductId", "ProductVariantId");
 
                             b1.ToTable("ProductVariant", "Core");
@@ -1445,48 +1498,6 @@ namespace Ramsha.Persistence.Migrations
                     b.Navigation("OptionValue");
 
                     b.Navigation("ProductVariant");
-                });
-
-            modelBuilder.Entity("Ramsha.Domain.Suppliers.Entities.FulfillmentRequest", b =>
-                {
-                    b.HasOne("Ramsha.Domain.Orders.Entities.Order", null)
-                        .WithMany()
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Ramsha.Domain.Suppliers.Entities.Supplier", null)
-                        .WithMany("FulfillmentRequests")
-                        .HasForeignKey("SupplierId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.OwnsMany("Ramsha.Domain.Suppliers.Entities.FulfillmentRequestItem", "Items", b1 =>
-                        {
-                            b1.Property<Guid>("FulfillmentRequestId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("int");
-
-                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
-
-                            b1.Property<Guid>("InventoryItemId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<int>("Quantity")
-                                .HasColumnType("int");
-
-                            b1.HasKey("FulfillmentRequestId", "Id");
-
-                            b1.ToTable("FulfillmentRequestItem", "Core");
-
-                            b1.WithOwner()
-                                .HasForeignKey("FulfillmentRequestId");
-                        });
-
-                    b.Navigation("Items");
                 });
 
             modelBuilder.Entity("Ramsha.Domain.Suppliers.Entities.SupplierAddress", b =>
@@ -1624,8 +1635,15 @@ namespace Ramsha.Persistence.Migrations
                     b.Navigation("Stocks");
                 });
 
+            modelBuilder.Entity("Ramsha.Domain.Orders.Entities.FulfillmentRequest", b =>
+                {
+                    b.Navigation("Items");
+                });
+
             modelBuilder.Entity("Ramsha.Domain.Orders.Entities.Order", b =>
                 {
+                    b.Navigation("FulfillmentRequests");
+
                     b.Navigation("OrderItems");
                 });
 

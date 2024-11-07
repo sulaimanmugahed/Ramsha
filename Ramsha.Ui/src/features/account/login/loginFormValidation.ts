@@ -7,6 +7,6 @@ export const loginFormValidation = z.object({
 
     username: z
         .string()
-        .min(3, 'username_should_more_4')
+        .min(1, 'username_should_more_4')
 
 })

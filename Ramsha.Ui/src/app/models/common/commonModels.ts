@@ -1,4 +1,3 @@
-// types/api.ts
 
 export enum ErrorCode {
     ModelStateNotValid = 0,
@@ -39,7 +38,7 @@ export interface BaseError {
 
 export interface BaseResult<TData = any> {
     success: boolean;
-    errors: BaseError[] | null; // Allow errors to be null
+    errors: BaseError[] | null;
     data?: TData;
 }
 

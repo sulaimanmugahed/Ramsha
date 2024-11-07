@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { orderService } from "../api/services/orderService"
 import { BASKET_QUERY_KEY, MY_ORDERS_QUERY_KEY, ORDERS_FULFILLMENT_REQUESTS, ORDERS_QUERY_KEY, ORDERS_SUPPLIER_FULFILLMENT_REQUESTS } from "../constants/queriesKey"
+import { PagedParams, PaginationResponse } from "../models/common/commonModels"
 import { FulfillmentRequest, FulfillmentRequestDetail } from "../models/orders/fulfillmentRequest"
 import { Order, OrderDetailType } from "../models/orders/order"
 
@@ -48,14 +49,14 @@ export const useOrderDetail = (orderId: string) => {
 }
 
 
-export const useMyFulfillmentRequests = () => {
-    const { data, isLoading } = useQuery<FulfillmentRequest[]>({
-        queryKey: [ORDERS_SUPPLIER_FULFILLMENT_REQUESTS],
-        queryFn: async () => await orderService.getMyFulfillmentRequests()
+export const useMyFulfillmentRequests = (params: PagedParams) => {
+    const { data, isLoading } = useQuery<PaginationResponse<FulfillmentRequest[]>>({
+        queryKey: [ORDERS_SUPPLIER_FULFILLMENT_REQUESTS, params],
+        queryFn: async () => await orderService.getMyFulfillmentRequests(params)
     })
 
     return {
-        fulfillmentRequests: data,
+        fulfillmentRequests: data?.items,
         isFulfillmentRequestsLoading: isLoading
     }
 }
@@ -72,3 +73,17 @@ export const useMyFulfillmentRequestDetail = (id: string) => {
         isLoading
     }
 }
+
+
+export const useMarkFulfillmentRequest = () => {
+    const { mutateAsync, isPending } = useMutation({
+        mutationFn: async (data: { markAs: "ship" | "deliver", id: string, orderId: string }) => await orderService.markFulfillmentRequest(data.markAs, data.id, data.orderId),
+    })
+
+    return {
+        markAs: mutateAsync,
+        isMarkAsPending: isPending
+    }
+}
+
+

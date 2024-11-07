@@ -1,3 +1,4 @@
+import { PaginationResponse ,PagedParams} from "../../models/common/commonModels";
 import { FulfillmentRequest, FulfillmentRequestDetail } from "../../models/orders/fulfillmentRequest";
 import { Order, OrderDetailType } from "../../models/orders/order";
 import request from "../Request";
@@ -24,9 +25,11 @@ const getMyOrders = async () => {
     })
 }
 
-const getMyFulfillmentRequests = async () =>
-    await request<FulfillmentRequest[]>({
-        url: `${BASE_URL}/supplier-fulfillment-requests`
+const getMyFulfillmentRequests = async (params: PagedParams) =>
+    await request<PaginationResponse<FulfillmentRequest[]>>({
+        url: `${BASE_URL}/supplier-fulfillment-requests/paged`,
+        method: 'POST',
+        data: params
     })
 
 
@@ -36,11 +39,21 @@ const getFulfillmentRequestDetail = async (id: string) => {
     })
 }
 
+
+const markFulfillmentRequest = async (markAs: 'ship' | 'deliver', id: string, orderId: string) => {
+    return await request({
+        url: `${BASE_URL}/${orderId}/fulfillment-requests/${id}/${markAs}`,
+        method: 'POST'
+    })
+}
+
+
 export const orderService = {
     createOrder,
     getMyOrders,
     getOrderDetail,
     getMyFulfillmentRequests,
-    getFulfillmentRequestDetail
+    getFulfillmentRequestDetail,
+    markFulfillmentRequest
 }
 

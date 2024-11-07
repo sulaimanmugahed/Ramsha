@@ -1,11 +1,10 @@
-import { useNavigate, useParams } from "react-router-dom"
-import { ProductVariantDto } from "../../../app/models/products/product"
-import VariantCommand from "./VariantCommand"
-import { VariantScheme } from "../productFormValidations"
 import { Close } from "@mui/icons-material"
-import { Box, Dialog, DialogTitle, IconButton, DialogContent } from "@mui/material"
+import { Box, Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material"
+import { useNavigate, useParams } from "react-router-dom"
 import { useProductOptions, useProductVariant, useUpdateVariant } from "../../../app/hooks/productHooks"
 import { useUploadFile } from "../../../app/hooks/storageHooks"
+import { VariantScheme } from "../productFormValidations"
+import VariantCommand from "./VariantCommand"
 
 
 const EditVariantPage = () => {
@@ -26,11 +25,22 @@ const EditVariantPage = () => {
         const existVariantValues = variant?.variantValues
 
         const variantValuesToRemove = existVariantValues
-            ?.filter(vv => !updatedVariantValues?.some(uvv => uvv.option === vv.optionId && uvv.value === vv.optionValueId))
-            ?.map(vv => ({ option: vv.optionId, value: vv.optionValueId }))
+            ?.filter(vv =>
+                !updatedVariantValues.hasOwnProperty(vv.optionId) || updatedVariantValues[vv.optionId].value !== vv.optionValueId
+            )
+            .map(vv => ({
+                option: vv.optionId,
+                value: vv.optionValueId
+            }));
 
-        const variantValuesToAdd = updatedVariantValues.filter(uvv => !existVariantValues
-            ?.some(vv => vv.optionId === uvv.option && vv.optionValueId === uvv.value))
+        const variantValuesToAdd = Object.keys(updatedVariantValues)
+            .filter(optionKey =>
+                !existVariantValues?.some(vv => vv.optionId === optionKey && vv.optionValueId === updatedVariantValues[optionKey].value)
+            )
+            .map(optionKey => ({
+                option: optionKey,
+                value: updatedVariantValues[optionKey]
+            }));
 
         let imageUrl;
         const newFile = file?.file;

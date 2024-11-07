@@ -1,5 +1,3 @@
-
-
 using Ramsha.Domain.Common;
 using Ramsha.Domain.Inventory.Entities;
 using Ramsha.Domain.Products.Enums;
@@ -53,7 +51,6 @@ public class ProductVariant : BaseEntity
         return Images.FirstOrDefault(x => x.Url == url);
     }
 
-
     public ProductVariantId Id { get; set; }
     public ProductId ProductId { get; set; }
     public Product Product { get; set; }
@@ -65,11 +62,10 @@ public class ProductVariant : BaseEntity
     public int TotalQuantity { get; private set; }
     public int AvailableQuantity { get; private set; }
     public decimal Weight { get; private set; }
+    public bool IsDefault { get; private set; }
     public DimensionalWeight Dimensions { get; private set; }
-
     public List<VariantValue> VariantValues { get; set; } = [];
     public List<InventoryItem> InventoryItems { get; set; } = [];
-
     public List<ProductImage> Images { get; set; } = [];
 
     public void SetDimensional(DimensionalWeight dimensionalWeight)
@@ -132,6 +128,11 @@ public class ProductVariant : BaseEntity
     public void SetCode(string code)
     {
         Code = code;
+    }
+
+    public void SetDefault(bool isDefault)
+    {
+        IsDefault = isDefault;
     }
 
     public void UpdatePriceBasedOnStrategy(ProductPricingStrategy productPricingStrategy, List<InventoryItem> inventories)

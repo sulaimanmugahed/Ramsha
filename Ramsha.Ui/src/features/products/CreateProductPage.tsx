@@ -1,24 +1,24 @@
-import { useCreateProduct } from '../../app/hooks/productHooks'
-import { FormProvider, useForm } from 'react-hook-form'
-import { Box, Button, Dialog, DialogContent, DialogTitle, Fade, Grid, IconButton, LinearProgress, Step, StepIcon, StepLabel, Stepper, Typography, useTheme } from '@mui/material'
-import { useTranslation } from 'react-i18next'
-import { useState } from 'react'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { ProductFormScheme, ProductFormValidations, VariantScheme } from './productFormValidations'
-import ProductBasicForm from './ProductBasicForm'
-import { AppStepper } from '../../app/components/AppStepper'
-import { Close, KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material'
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import { useUploadFile, useUploadFiles } from '../../app/hooks/storageHooks'
-import ProductVariantListForm from './variants/ProductVariantListForm'
-import useFormPersist from 'react-hook-form-persist'
-import ProductAdditionalForm from './ProductAdditionalForm'
-import AppLoadingWaves from '../../app/components/AppLoadingWaves'
-import { UploadResponse } from '../../app/models/common/commonModels'
-import { useNavigate } from 'react-router-dom'
-import ProductOptionsForm from './ProductOptionsForm'
 import { DevTool } from '@hookform/devtools'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Close, KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material'
+import { Box, Button, Dialog, DialogContent, DialogTitle, Grid, IconButton, Step, StepLabel, Stepper, Typography, useTheme } from '@mui/material'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { useState } from 'react'
+import { FormProvider, useForm } from 'react-hook-form'
+import useFormPersist from 'react-hook-form-persist'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
+import AppLoadingWaves from '../../app/components/AppLoadingWaves'
+import { AppStepper } from '../../app/components/AppStepper'
+import { useOptions } from '../../app/hooks/optionHooks'
+import { useCreateProduct } from '../../app/hooks/productHooks'
+import { useUploadFile, useUploadFiles } from '../../app/hooks/storageHooks'
+import ProductAdditionalForm from './ProductAdditionalForm'
+import ProductBasicForm from './ProductBasicForm'
+import { ProductFormScheme, ProductFormValidations, VariantScheme } from './productFormValidations'
+import ProductOptionsForm from './ProductOptionsForm'
+import ProductVariantForm from './variants/ProductVariantFormField'
 
 
 type Props = {
@@ -53,10 +53,10 @@ const CreateProductPage = ({ }: Props) => {
             description: '',
             category: '',
             productImage: null,
-            variants: [],
             options: [{ id: '', priority: 1 }],
             seoSettings: null,
-            tags: []
+            tags: [],
+            defaultVariant: {}
         },
         resolver: activeStep !== ProductFormValidations.length ? zodResolver(ProductFormValidations[activeStep]) : undefined,
         mode: 'all'
@@ -72,13 +72,17 @@ const CreateProductPage = ({ }: Props) => {
     ];
 
 
-
     useFormPersist("product", {
         watch,
         setValue,
         storage: window.localStorage
         // exclude: ['variantImages']
     });
+
+    const productOptions = watch('options')
+
+    const { options } = useOptions()
+
 
     const commandSteps = [
 
@@ -105,10 +109,10 @@ const CreateProductPage = ({ }: Props) => {
             )
         },
         {
-            id: 'variants',
-            label: 'Variants',
+            id: 'variant',
+            label: 'Default variant',
             content: (
-                <ProductVariantListForm />
+                <ProductVariantForm name='defaultVariant' availableOptions={options.filter(o => productOptions.some(x => x.id === o.id))} />
             )
         },
         {
@@ -153,35 +157,32 @@ const CreateProductPage = ({ }: Props) => {
             || (activeStep === commandSteps.length - 1 && !isSubmitSuccessful)
     }
 
-    const handleVariantSubmission = async (variants: VariantScheme[]) => {
-        const uploadedVariants = await Promise.all(
-            variants.map(async (variant) => {
-                let imageUrl = variant.file?.preview
-                const newFile = variant.file?.file
-                if (newFile) {
-                    const uploadResponse = await uploadProductImage({ path: 'products', file: newFile })
-                    imageUrl = uploadResponse.url
-                }
+    const handleVariantSubmission = async (variant: VariantScheme) => {
 
-                return { ...variant, imageUrl };
-            })
-        );
+        const { file, variantValues: formVariantValues, ...others } = variant
 
-        return uploadedVariants;
+        const variantValues = Object.keys(formVariantValues).map((option) => {
+            const value = formVariantValues[option].value;
+            return {
+                option,
+                value,
+            };
+        });
 
-        // if (selectedProduct)
-        //     // Submit variants with the productId to the API
-        //     await addProductVariants({ data: { variants: uploadedVariants }, productId: selectedProduct });
-    };
+        let imageUrl = file?.preview
+        const newFile = file?.file
+        if (newFile) {
+            const uploadResponse = await uploadProductImage({ path: 'variants', file: newFile })
+            imageUrl = uploadResponse.url
+        }
 
+        return { ...others, imageUrl, variantValues }
+    }
 
     const handleProductSubmission = async (data: ProductFormScheme) => {
-        const { productImage, variants, options, ...productData } = data
+        const { productImage, defaultVariant, options, ...productData } = data
 
-        let variantsToAdd: any[] = []
-        if (variants.length > 0) {
-            variantsToAdd = await handleVariantSubmission(variants);
-        }
+        const variant = await handleVariantSubmission(defaultVariant)
 
         let imageUrl = productImage?.preview
         const newFile = productImage?.file
@@ -190,10 +191,9 @@ const CreateProductPage = ({ }: Props) => {
             imageUrl = uploadResponse.url
         }
 
-        const productId = await submitProductBasic({ ...productData, variants: variantsToAdd, options: options.map(o => ({ priority: o.priority, id: o.id })), imageUrl })
+        const productId = await submitProductBasic({ ...productData, defaultVariant: variant, options: options.map(o => ({ priority: o.priority, id: o.id })), imageUrl })
         return productId
     }
-
 
 
     const onSubmit = async (data: ProductFormScheme) => {
@@ -216,14 +216,8 @@ const CreateProductPage = ({ }: Props) => {
     }
 
 
-    const variants = watch("variants")
-
     const getNextButtonName = () => {
         switch (commandSteps[activeStep].id) {
-            case 'variants':
-                if (!(variants && variants.length > 0))
-                    return 'Skip';
-                return 'Next';
             case 'submit':
                 return 'Done'
             default: return 'Next';

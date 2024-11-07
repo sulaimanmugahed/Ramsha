@@ -2,6 +2,7 @@
 using Ramsha.Domain.Common;
 using Ramsha.Domain.Orders.Enums;
 using Ramsha.Domain.Suppliers;
+using Ramsha.Domain.Suppliers.Entities;
 
 namespace Ramsha.Domain.Orders.Entities;
 
@@ -25,6 +26,7 @@ public class FulfillmentRequest : BaseEntity
 
     public FulfillmentRequestId Id { get; set; }
     public SupplierId SupplierId { get; set; }
+    public Supplier Supplier { get; set; }
     public OrderId OrderId { get; set; }
     public Order Order { get; set; }
     public decimal DeliveryFee { get; set; }
@@ -33,7 +35,6 @@ public class FulfillmentRequest : BaseEntity
     public FulfillmentRequestStatus Status { get; set; }
     public List<OrderItem> Items { get; set; } = [];
     public DateTime Created { get; private set; }
-
 
     public void SetStatus(FulfillmentRequestStatus status)
     {

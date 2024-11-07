@@ -32,9 +32,9 @@ public class OrdersController : BaseApiController
 
 
     [Authorize(Roles = Roles.Supplier)]
-    [HttpGet("supplier-fulfillment-requests")]
-    public async Task<BaseResult<List<FulfillmentRequestDto>>> Getfulfillments()
-    => await Mediator.Send(new GetCurrentSupplierFulfillmentRequestsQuery());
+    [HttpPost("supplier-fulfillment-requests/paged")]
+    public async Task<BaseResult<List<FulfillmentRequestDto>>> Getfulfillments(GetCurrentSupplierFulfillmentRequestsQuery query)
+    => await Mediator.Send(query);
 
 
     [HttpGet("fulfillment-requests/{id}/detail")]
@@ -42,12 +42,12 @@ public class OrdersController : BaseApiController
     => await Mediator.Send(new GetFulfillmentRequestDetailQuery { Id = id });
 
     [Authorize(Roles = Roles.Supplier)]
-    [HttpPost("fulfillment-requests/{id}/ship")]
-    public async Task<BaseResult> ShipRequest(Guid id)
-   => await Mediator.Send(new ShipFulfillmentRequestCommand { FulfillmentRequestId = id });
+    [HttpPost("{orderId}/fulfillment-requests/{fulfillmentId}/ship")]
+    public async Task<BaseResult> ShipRequest(Guid orderId, Guid fulfillmentId)
+   => await Mediator.Send(new ShipFulfillmentRequestCommand { OrderId = orderId, FulfillmentRequestId = fulfillmentId });
 
-    [HttpPost("fulfillment-requests/{id}/deliver")]
-    public async Task<BaseResult> DeliverRequest(Guid id)
-    => await Mediator.Send(new DeliverFulfillmentRequestCommand { FulfillmentRequestId = id });
+    [HttpPost("{orderId}/fulfillment-requests/{fulfillmentId}/deliver")]
+    public async Task<BaseResult> DeliverRequest(Guid orderId, Guid fulfillmentId)
+    => await Mediator.Send(new DeliverFulfillmentRequestCommand { OrderId = orderId, FulfillmentRequestId = fulfillmentId });
 
 }

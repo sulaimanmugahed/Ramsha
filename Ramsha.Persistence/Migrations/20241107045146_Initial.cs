@@ -222,15 +222,15 @@ namespace Ramsha.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Latitude = table.Column<double>(type: "float", nullable: false),
-                    Longitude = table.Column<double>(type: "float", nullable: false),
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address1 = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address2 = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Display = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     City = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     State = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Zip = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Zip = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Latitude = table.Column<double>(type: "float", nullable: false),
+                    Longitude = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -253,12 +253,14 @@ namespace Ramsha.Persistence.Migrations
                     CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PaymentIntentId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ShippingAddress_FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ShippingAddress_Address1 = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ShippingAddress_Address2 = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ShippingAddress_Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ShippingAddress_Display = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ShippingAddress_City = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ShippingAddress_Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ShippingAddress_State = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ShippingAddress_Zip = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ShippingAddress_Latitude = table.Column<double>(type: "float", nullable: false),
+                    ShippingAddress_Longitude = table.Column<double>(type: "float", nullable: false),
                     OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Subtotal = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
                     DeliveryFee = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
@@ -303,15 +305,15 @@ namespace Ramsha.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Latitude = table.Column<double>(type: "float", nullable: false),
-                    Longitude = table.Column<double>(type: "float", nullable: false),
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address1 = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address2 = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Display = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     City = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     State = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Zip = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Zip = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Latitude = table.Column<double>(type: "float", nullable: false),
+                    Longitude = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -414,15 +416,18 @@ namespace Ramsha.Persistence.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Price = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
                     FinalPrice = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
                     TotalQuantity = table.Column<int>(type: "int", nullable: false),
                     AvailableQuantity = table.Column<int>(type: "int", nullable: false),
-                    Weight = table.Column<decimal>(type: "decimal(18,6)", nullable: false)
+                    Weight = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
+                    IsDefault = table.Column<bool>(type: "bit", nullable: false),
+                    LengthDimension = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    WidthDimension = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    HeightDimension = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    DimensionalFactor = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -472,6 +477,8 @@ namespace Ramsha.Persistence.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     SupplierId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     OrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DeliveryFee = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
+                    Subtotal = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -492,33 +499,6 @@ namespace Ramsha.Persistence.Migrations
                         principalTable: "Suppliers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "OrderItem",
-                schema: "Core",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ItemOrdered_InventoryItemId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ItemOrdered_SupplierId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ItemOrdered_Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ItemOrdered_InventorySKU = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ItemOrdered_PictureUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
-                    Quantity = table.Column<int>(type: "int", nullable: false),
-                    OrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_OrderItem", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_OrderItem_Orders_OrderId",
-                        column: x => x.OrderId,
-                        principalSchema: "Core",
-                        principalTable: "Orders",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -630,26 +610,38 @@ namespace Ramsha.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "FulfillmentRequestItem",
+                name: "OrderItem",
                 schema: "Core",
                 columns: table => new
                 {
-                    FulfillmentRequestId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    InventoryItemId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ItemOrdered_InventoryItemId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ItemOrdered_Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ItemOrdered_InventorySKU = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ItemOrdered_PictureUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FulfillmentRequestId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FulfillmentRequestItem", x => new { x.FulfillmentRequestId, x.Id });
+                    table.PrimaryKey("PK_OrderItem", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_FulfillmentRequestItem_FulfillmentRequest_FulfillmentRequestId",
+                        name: "FK_OrderItem_FulfillmentRequest_FulfillmentRequestId",
                         column: x => x.FulfillmentRequestId,
                         principalSchema: "Core",
                         principalTable: "FulfillmentRequest",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_OrderItem_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalSchema: "Core",
+                        principalTable: "Orders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -981,6 +973,12 @@ namespace Ramsha.Persistence.Migrations
                 filter: "[ProductVariantId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_OrderItem_FulfillmentRequestId",
+                schema: "Core",
+                table: "OrderItem",
+                column: "FulfillmentRequestId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OrderItem_OrderId",
                 schema: "Core",
                 table: "OrderItem",
@@ -1112,10 +1110,6 @@ namespace Ramsha.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "Discount",
-                schema: "Core");
-
-            migrationBuilder.DropTable(
-                name: "FulfillmentRequestItem",
                 schema: "Core");
 
             migrationBuilder.DropTable(

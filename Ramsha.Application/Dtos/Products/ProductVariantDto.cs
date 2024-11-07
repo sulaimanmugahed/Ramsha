@@ -33,10 +33,9 @@ decimal DiscountedPrice,
 List<VariantValuesDto> Values,
 List<ProductImageDto> VariantImages);
 
-
 public record VariantValuesCommand(Guid Option, Guid Value);
 
-public record VariantCommand(List<VariantValuesCommand> VariantValues, string? ImageUrl);
+public record VariantCommand(List<VariantValuesCommand> VariantValues,decimal Length,decimal Width,decimal Height, decimal Weight, string? ImageUrl);
 
 public class NewVariantDto
 {

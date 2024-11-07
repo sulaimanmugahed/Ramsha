@@ -15,7 +15,8 @@ namespace Ramsha.Application.Features.Orders.Queries.GetCurrentSupplierFulfillme
 public class GetCurrentSupplierFulfillmentRequestsQueryHandler(
     IFulfillmentRequestRepository fulfillmentRequestRepository,
     ISupplierRepository supplierRepository,
-    IAuthenticatedUserService authenticatedUserService
+    IAuthenticatedUserService authenticatedUserService,
+    IHttpService httpService
 ) : IRequestHandler<GetCurrentSupplierFulfillmentRequestsQuery, BaseResult<List<FulfillmentRequestDto>>>
 {
     public async Task<BaseResult<List<FulfillmentRequestDto>>> Handle(GetCurrentSupplierFulfillmentRequestsQuery request, CancellationToken cancellationToken)
@@ -24,7 +25,14 @@ public class GetCurrentSupplierFulfillmentRequestsQueryHandler(
         if (supplier is null)
             return new Error(ErrorCode.ErrorInIdentity);
 
-        var requests = await fulfillmentRequestRepository.GetAllAsync(x => x.SupplierId == supplier.Id);
-        return requests.Select(x => x.AsFulfillmentRequestDto()).ToList();
+        var responseDto = await fulfillmentRequestRepository.GetPaged(request.PaginationParams, request.FilterParams, request.SortingParams,x=> x.SupplierId == supplier.Id);
+
+        responseDto.AddFilterMetaData(request.FilterParams);
+        responseDto.AddSortingMetaData(request.SortingParams);
+
+        httpService.AddPagedHeader(responseDto.MetaData);
+
+        return responseDto.Data;
+
     }
 }

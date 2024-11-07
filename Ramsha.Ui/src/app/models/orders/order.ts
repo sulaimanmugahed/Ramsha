@@ -1,4 +1,5 @@
 import { Address } from "../account";
+import { FulfillmentRequest } from "./fulfillmentRequest";
 
 type orderStatus =
     'Pending' |
@@ -22,10 +23,11 @@ export type OrderDetailType = {
     deliveryFee: number,
     total: number,
     status: orderStatus,
-    items: OrderItem[],
+    fulfillmentRequests: FulfillmentRequest[],
     shippingAddress: Address,
     orderDate: string
 }
+
 
 export type OrderItem = {
     inventoryItemId: string,

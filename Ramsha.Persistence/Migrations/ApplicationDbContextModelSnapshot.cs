@@ -307,10 +307,10 @@ namespace Ramsha.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<Guid?>("FulfillmentRequestId")
+                    b.Property<Guid>("FulfillmentRequestId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("OrderId")
+                    b.Property<Guid>("OrderId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Price")
@@ -599,6 +599,9 @@ namespace Ramsha.Persistence.Migrations
 
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("bit");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,6)");
@@ -1120,17 +1123,21 @@ namespace Ramsha.Persistence.Migrations
 
             modelBuilder.Entity("Ramsha.Domain.Orders.Entities.FulfillmentRequest", b =>
                 {
-                    b.HasOne("Ramsha.Domain.Orders.Entities.Order", null)
+                    b.HasOne("Ramsha.Domain.Orders.Entities.Order", "Order")
                         .WithMany("FulfillmentRequests")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Ramsha.Domain.Suppliers.Entities.Supplier", null)
+                    b.HasOne("Ramsha.Domain.Suppliers.Entities.Supplier", "Supplier")
                         .WithMany("FulfillmentRequests")
                         .HasForeignKey("SupplierId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Supplier");
                 });
 
             modelBuilder.Entity("Ramsha.Domain.Orders.Entities.Order", b =>
@@ -1198,11 +1205,15 @@ namespace Ramsha.Persistence.Migrations
                 {
                     b.HasOne("Ramsha.Domain.Orders.Entities.FulfillmentRequest", null)
                         .WithMany("Items")
-                        .HasForeignKey("FulfillmentRequestId");
+                        .HasForeignKey("FulfillmentRequestId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Ramsha.Domain.Orders.Entities.Order", null)
                         .WithMany("OrderItems")
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.OwnsOne("Ramsha.Domain.Orders.Entities.ProductItemOrdered", "ItemOrdered", b1 =>
                         {

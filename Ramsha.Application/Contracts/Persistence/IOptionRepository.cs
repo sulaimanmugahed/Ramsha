@@ -6,5 +6,5 @@ namespace Ramsha.Application.Contracts.Persistence;
 
 public interface IOptionRepository : IGenericRepository<Option, OptionId>
 {
-
+    Task<OptionValue?> GetValue(OptionValueId optionValueId);
 }

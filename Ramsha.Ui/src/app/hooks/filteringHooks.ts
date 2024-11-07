@@ -1,13 +1,21 @@
 import { CategoryFilter, ColumnFilter, FilterParams } from '../models/common/commonModels';
 import { usePagedParams } from './routeHooks';
 
-export const useFiltering = () => {
-    const [params, setParams] = usePagedParams();
-    const filterParams = params.filterParams || { columnsFilter: [], categories: [], globalFilterValue: null };
+type FilteringHookOptions = {
+    defaultFilterParams?: FilterParams;
+};
 
-    // Function to update the column filters
+export const useFiltering = (options: FilteringHookOptions = {}) => {
+    const [params, setParams] = usePagedParams();
     
-    // Common function to update filterParams
+      const defaultFilterParams: FilterParams = options.defaultFilterParams || {
+        columnsFilter: [],
+        categories: [],
+        globalFilterValue: null,
+    };
+
+    const filterParams = params.filterParams || defaultFilterParams;
+
     const updateFilterParams = (newFilters: Partial<FilterParams>) => {
         setParams({
             filterParams: {

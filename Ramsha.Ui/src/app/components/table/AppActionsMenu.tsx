@@ -1,11 +1,12 @@
-import React, { useState, MouseEvent } from 'react';
-import { IconButton, Menu, MenuItem, ListItemIcon } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { IconButton, ListItemIcon, Menu, MenuItem } from '@mui/material';
+import React, { MouseEvent, useState } from 'react';
 
 interface MenuItemProps<T> {
   label: string;
   icon?: React.ReactNode;
   action?: (row: T) => void;
+  disable?: boolean
 }
 
 interface ActionsMenuProps<T> {
@@ -43,6 +44,7 @@ const AppActionsMenu = <T extends any>({ row, icon, menuItems }: ActionsMenuProp
         {menuItems.map((item, index) => (
           <MenuItem
             key={index}
+            disabled={item.disable}
             onClick={() => {
               item.action && item.action(row);
               handleMenuClose();

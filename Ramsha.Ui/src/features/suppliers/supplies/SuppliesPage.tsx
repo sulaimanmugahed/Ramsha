@@ -107,11 +107,6 @@ const SuppliesPage = () => {
                     </Grid>
                 </Grid>
             </Grid>
-
-
-
-
-
             <Grid item xs={12}>
                 <AppTable
                     headerGroups={getHeaderGroups()}
@@ -152,7 +147,6 @@ const SuppliesPage = () => {
                             </Grid>
                         </Grid>
                     </Grid>
-
                 )
             }
         </Grid>

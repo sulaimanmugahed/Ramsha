@@ -34,6 +34,7 @@ builder.Services.AddControllers().AddJsonOptions(o =>
     options.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 });
 
+
 builder.Services.AddAuthorization();
 
 

@@ -1,7 +1,4 @@
 import { z } from "zod";
-import ProductList from "../catalog/ProductList";
-import { ProductStatus } from "../../app/models/products/product";
-import { checkDuplicateVariants } from "../../app/utils/util";
 
 const schemaMultiImage = z.object({
     fileUpload: z.array(z.object({
@@ -22,17 +19,11 @@ export const variantSchema = z.object({
         file: z.any(),
         preview: z.string().url({ message: "Invalid file format." }).nullable(),
     }).nullable(),
-    variantValues: z.array(z.object({
-        option: z.string().min(1, "Option name is required"),
-        value: z.string().min(1, "Option value is required"),
-    })).min(1, "one at least").refine((data) => {
-        const options = data.map(v => v.option);
-        const uniqueValues = new Set(options);
-        return uniqueValues.size === options.length;
-    }, {
-        message: "Duplicate option values are not allowed",
-        path: [],
-    })
+    variantValues: z.record(
+        z.object({
+            value: z.string().min(1, "Option value is required")
+        })
+    )
 });
 
 
@@ -71,12 +62,7 @@ export const basicInfoSchema = z.object({
 
 
 const variantsSchema = z.object({
-    variants: z.array(variantSchema)
-        .max(5)
-        .refine((variants) => !checkDuplicateVariants(variants),
-            {
-                message: 'Duplicate Variants are not allowed',
-            })
+    defaultVariant: variantSchema
 });
 
 export const optionSchema = z.object({
