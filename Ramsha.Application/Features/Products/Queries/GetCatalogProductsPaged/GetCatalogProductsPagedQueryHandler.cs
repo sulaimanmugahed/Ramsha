@@ -17,7 +17,7 @@ public class GetCatalogProductsPagedQueryHandler(
 {
     public async Task<BaseResult<List<CatalogProductDto>>> Handle(GetCatalogProductsPagedQuery request, CancellationToken cancellationToken)
     {
-        var result = await productRepository.GetCatalogProductsPaged(request.PaginationParams);
+        var result = await productRepository.GetCatalogProductsPaged(request.PaginationParams, request.FilterParams, request.SortingParams);
         httpService.AddPagedHeader(result.MetaData);
         return result.Data;
     }

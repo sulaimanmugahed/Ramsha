@@ -13,7 +13,7 @@ public class ErrorHandlerMiddleware(RequestDelegate next)
     {
         try
         {
-            await next(context);
+        await next(context);
         }
         catch (Exception exception)
         {

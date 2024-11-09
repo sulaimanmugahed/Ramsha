@@ -9,6 +9,5 @@ public enum InventoryStatus
 {
     InStock,
     OutOfStock,
-    Reserved,
     PendingRestock
 }

@@ -1,7 +1,6 @@
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useCallback } from 'react';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import {
-
     PagedParams,
 } from '../models/common/commonModels';
 import { deserializeParams, serializeParams } from '../utils/util';
@@ -41,6 +40,9 @@ export function usePagedParams(): [PagedParams, (partialParams: Partial<PagedPar
                 categories: [
                     ...(partialParams.filterParams?.categories || []),
                 ],
+                brands: [
+                    ...(partialParams.filterParams?.brands || []),
+                ],
                 globalFilterValue: partialParams.filterParams.globalFilterValue || null
             }
             : currentParams.filterParams;
@@ -50,7 +52,7 @@ export function usePagedParams(): [PagedParams, (partialParams: Partial<PagedPar
             ...(partialParams.variantParams || {}),
         };
 
-       
+
         const updatedVariantId = partialParams.variantId || currentParams.variantId || undefined;
         const updatedProductId = partialParams.productId || currentParams.productId || undefined;
 

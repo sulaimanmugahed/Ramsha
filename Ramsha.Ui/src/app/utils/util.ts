@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { PagedParams, PaginationParams, CategoryFilter, FilterParams, SortingParams, ColumnSort, ColumnFilter, BaseError } from "../models/common/commonModels";
+import { BaseError, CategoryFilter, ColumnFilter, ColumnSort, FilterOperator, FilterParams, PagedParams, PaginationParams, SortingParams } from "../models/common/commonModels";
 
 
 export const extractErrorMessages = (errors: BaseError[]): string => {
@@ -27,9 +27,8 @@ export function serializeParams(params: PagedParams): string {
         paginationParams?.pageNumber ? `pageNumber=${paginationParams.pageNumber}` : '',
         paginationParams?.pageSize ? `pageSize=${paginationParams.pageSize}` : ''
     ]
-        .filter(Boolean)
+        .filter(Boolean) // Exclude empty values
         .join('&');
-
 
     const serializedSorting = sortingParams
         ? sortingParams.columnsSort
@@ -45,12 +44,15 @@ export function serializeParams(params: PagedParams): string {
             filterParams.columnsFilter?.map((filter) => {
                 const base = `filterColumn=${encodeURIComponent(filter.filterColumn)}&value=${encodeURIComponent(filter.value)}`;
                 const operator = filter.operation ? `&operation=${encodeURIComponent(filter.operation)}` : '';
-                const valueTo = filter.valueTo ? `&valueTo=${encodeURIComponent(filter.valueTo)}` : '';
+                const valueTo = filter.operation === 'Between' && filter.valueTo ? `&valueTo=${encodeURIComponent(filter.valueTo)}` : '';
                 return base + operator + valueTo;
             }).join('&'),
-            filterParams.categories?.map(category => `categories=${encodeURIComponent(category.value)}`).join('&'),
+            filterParams.categories?.map(category => `cat=${encodeURIComponent(category.value)}`).join('&'),
+            filterParams.brands?.map(brand => `brand=${encodeURIComponent(brand.value)}`).join('&'),
             filterParams.globalFilterValue ? `globalFilterValue=${encodeURIComponent(filterParams.globalFilterValue)}` : ''
-        ].filter(Boolean).join('&')
+        ]
+            .filter(Boolean) // Exclude empty values
+            .join('&')
         : '';
 
     const serializedVariants = variantParams
@@ -62,13 +64,21 @@ export function serializeParams(params: PagedParams): string {
     const serializedVariantId = variantId ? `variantId=${encodeURIComponent(variantId)}` : '';
     const serializedProductId = productId ? `productId=${encodeURIComponent(productId)}` : '';
 
-
     const serializedSku = sku ? `sku=${encodeURIComponent(sku)}` : '';
 
-    return `${serializedPagination}&${serializedSorting}&${serializedFilters}&${serializedVariants}&${serializedVariantId}&${serializedSku}&${serializedProductId}`.replace(/^&/, '');
+    // Combine all parts, making sure not to add empty values
+    return [
+        serializedPagination,
+        serializedSorting,
+        serializedFilters,
+        serializedVariants,
+        serializedVariantId,
+        serializedSku,
+        serializedProductId
+    ]
+        .filter(Boolean) // Exclude any empty values
+        .join('&');
 }
-
-
 
 
 export function deserializeParams(searchParams: URLSearchParams): PagedParams {
@@ -82,21 +92,35 @@ export function deserializeParams(searchParams: URLSearchParams): PagedParams {
         descending: searchParams.getAll('descending')[index] === 'true',
     }));
 
-    const columnsFilter: ColumnFilter[] = searchParams.getAll('filterColumn').map((column, index) => ({
-        filterColumn: decodeURIComponent(column),
-        value: decodeURIComponent(searchParams.getAll('value')[index]),
-        operation: decodeURIComponent(searchParams.getAll('operation')[index]),
-        valueTo: decodeURIComponent(searchParams.getAll('valueTo')[index]),
-    }));
+    const columnsFilter: ColumnFilter[] = searchParams.getAll('filterColumn').map((column, index) => {
+        const filterColumn = decodeURIComponent(column);
+        const value = decodeURIComponent(searchParams.getAll('value')[index]);
+        const operation = decodeURIComponent(searchParams.getAll('operation')[index]) as FilterOperator;
+        const valueTo = decodeURIComponent(searchParams.getAll('valueTo')[index]);
 
-    const categories: CategoryFilter[] = searchParams.getAll('categories').map(cat => ({
+        // Only include valueTo for "Between" filters
+        return {
+            filterColumn,
+            value,
+            operation,
+            valueTo: operation === 'Between' ? valueTo : '',
+        };
+    });
+
+    // Filter out empty values in columnsFilter
+    const validColumnsFilter = columnsFilter.filter(filter => filter.value !== undefined && filter.value !== null);
+
+    const categories: CategoryFilter[] = searchParams.getAll('cat').map(cat => ({
         value: decodeURIComponent(cat)
+    }));
+    const brands: CategoryFilter[] = searchParams.getAll('brand').map(brand => ({
+        value: decodeURIComponent(brand)
     }));
 
     const globalFilterValue: string | null = searchParams.get('globalFilterValue') || null;
 
-    const filterParams: FilterParams | undefined = columnsFilter.length || categories.length || globalFilterValue
-        ? { columnsFilter, categories, globalFilterValue }
+    const filterParams: FilterParams | undefined = validColumnsFilter.length || categories.length || brands.length || globalFilterValue
+        ? { columnsFilter: validColumnsFilter, categories, brands, globalFilterValue }
         : undefined;
 
     const sortingParams: SortingParams | undefined = columnsSort.length
@@ -113,10 +137,7 @@ export function deserializeParams(searchParams: URLSearchParams): PagedParams {
 
     const variantId: string | null = searchParams.get('variantId') || null;
     const productId: string | undefined = searchParams.get('productId') || undefined;
-
-
     const sku: string | null = searchParams.get('sku') || null;
-
 
     return {
         paginationParams,
@@ -128,7 +149,6 @@ export function deserializeParams(searchParams: URLSearchParams): PagedParams {
         sku
     };
 }
-
 
 
 
@@ -179,7 +199,7 @@ function deserializeParamsShort(searchParams: URLSearchParams): PagedParams {
     const columnsFilter: ColumnFilter[] = searchParams.getAll('fc').map((column, index) => ({
         filterColumn: decodeURIComponent(column),
         value: decodeURIComponent(searchParams.getAll('value')[index]),
-        operation: decodeURIComponent(searchParams.getAll('op')[index]),
+        operation: decodeURIComponent(searchParams.getAll('op')[index]) as FilterOperator,
         valueTo: decodeURIComponent(searchParams.getAll('valueTo')[index]),
     }));
 

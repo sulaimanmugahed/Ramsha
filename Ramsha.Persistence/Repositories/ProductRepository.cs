@@ -200,13 +200,48 @@ public class ProductRepository(ApplicationDbContext context)
       return await _variantValues.AnyAsync(x => x.OptionId == optionId);
    }
 
-   public async Task<PaginationResponseDto<CatalogProductDto>> GetCatalogProductsPaged(PaginationParams paginationParams)
+   public async Task<PaginationResponseDto<CatalogProductDto>> GetCatalogProductsPaged(PaginationParams paginationParams, FilterParams filterParams, SortingParams sortingParams)
    {
       var productsQuery = _product
+      .Include(p => p.Tags)
+      .ThenInclude(x => x.Tag)
      .Include(p => p.Category)
      .Include(p => p.Brand)
-     .OrderBy(x => x.Created)
+     .Include(x => x.Inventories)
      .AsQueryable();
+
+
+      productsQuery = sortingParams is not null && sortingParams.ColumnsSort.Count > 0
+       ? productsQuery.OrderByColumnName(sortingParams.ColumnsSort)
+       : productsQuery.OrderBy(x => x.Created);
+
+      if (filterParams is not null)
+      {
+         var globalFilter = filterParams.GlobalFilterValue;
+
+         if (!string.IsNullOrEmpty(globalFilter))
+         {
+            globalFilter = globalFilter.ToLower();
+            productsQuery = productsQuery.Where(
+              x => x.Tags.Any(x => x.Tag.Name.ToLower() == globalFilter) ||
+              x.Name.ToLower().Contains(globalFilter)
+              );
+         }
+
+         if (filterParams.ColumnsFilter is not null && filterParams.ColumnsFilter.Count != 0)
+            productsQuery = productsQuery.FilterByColumn(filterParams.ColumnsFilter);
+
+         if (filterParams?.Categories != null && filterParams.Categories.Count != 0)
+         {
+            var allCategoryIds = await GetChildCategoryIds(filterParams.Categories);
+            productsQuery = productsQuery.Where(p => allCategoryIds.Contains(p.CategoryId));
+         }
+
+         if (filterParams?.Brands != null && filterParams.Brands.Count != 0)
+         {
+            productsQuery = productsQuery.Where(p => filterParams.Brands.Contains(p.BrandId));
+         }
+      }
 
       return await Paged(
        productsQuery.Select(p => p.AsProductCatalogDto()),

@@ -1,5 +1,5 @@
-import { IconButton, InputBase, Paper, SxProps, Theme } from "@mui/material"
 import SearchIcon from '@mui/icons-material/Search';
+import { IconButton, InputBase, Paper, SxProps, Theme } from "@mui/material";
 import { useForm } from "react-hook-form";
 
 
@@ -11,20 +11,20 @@ type AppSearchProps = {
     placeholder?: string
     styles?: SxProps<Theme>
     inputStyle?: SxProps<Theme>
+    defaultValue?: string | null
 }
 
 const AppSearch = ({
     onSubmit,
     placeholder,
     styles,
-    inputStyle
-
-
+    inputStyle,
+    defaultValue
 }: AppSearchProps) => {
 
     const { register, handleSubmit } = useForm<AppSearchFormValues>({
         defaultValues: {
-            searchValue: ''
+            searchValue: defaultValue || ''
         }
     })
 

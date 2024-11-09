@@ -67,7 +67,6 @@ export const useProductBrands = () => {
     const { data, isLoading, isError } = useQuery<BrandDto[]>({
         queryKey: [BRANDS_QUERY_KEY],
         queryFn: async () => await productService.getBrands(),
-        initialData: initialBrands,
 
     })
 

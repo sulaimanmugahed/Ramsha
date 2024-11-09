@@ -28,6 +28,7 @@ public record ColumnFilter(
 public record FilterParams(
 List<ColumnFilter>? ColumnsFilter,
 List<CategoryId>? Categories,
+List<BrandId>? Brands,
 string? GlobalFilterValue
 );
 

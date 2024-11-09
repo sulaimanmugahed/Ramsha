@@ -19,6 +19,12 @@ public class ProductConfigurations : IEntityTypeConfiguration<Product>
             .Property(p => p.Id)
             .HasConversion(id => id.Value, value => new ProductId(value));
 
+        builder.Property(p => p.BrandId)
+            .HasConversion(
+                v => v.Value,
+                v => new BrandId(v)
+            );
+
 
         builder
         .HasOne(p => p.Category)

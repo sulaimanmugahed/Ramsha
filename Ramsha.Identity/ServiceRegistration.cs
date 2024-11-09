@@ -51,15 +51,15 @@ public static class ServiceRegistration
 
 
         services.AddTransient<IUpdateUserServices, UpdateUserServices>();
-		services.AddTransient<ITokenService, TokenService>();
-		services.AddTransient<IAccountServices, AccountServices>();
+        services.AddTransient<ITokenService, TokenService>();
+        services.AddTransient<IAccountServices, AccountServices>();
 
-		services.AddTransient<IUserService, UserService>();
+        services.AddTransient<IUserService, UserService>();
 
         return services;
 
-	}
-	public static void AddJwt(this IServiceCollection services, IConfiguration configuration)
+    }
+    public static void AddJwt(this IServiceCollection services, IConfiguration configuration)
     {
         var serializerSettings = new JsonSerializerSettings()
         {

@@ -108,10 +108,12 @@ public class InventoryItem : BaseEntity, IAuditable
         TotalQuantity += quantity;
     }
 
-    public void DecreaseInventoryQuantity(int quantity)
+    private void DecreaseInventoryQuantity(int quantity)
     {
         TotalQuantity -= quantity;
         AvailableQuantity -= quantity;
+
+
     }
 
 
@@ -130,6 +132,7 @@ public class InventoryItem : BaseEntity, IAuditable
         if (currentStock.Quantity == 0)
         {
             Stocks.Remove(currentStock);
+            Status = Stocks.Count > 1 ? InventoryStatus.PendingRestock : InventoryStatus.OutOfStock;
         }
 
         DecreaseInventoryQuantity(quantity);

@@ -7,10 +7,11 @@ type FilteringHookOptions = {
 
 export const useFiltering = (options: FilteringHookOptions = {}) => {
     const [params, setParams] = usePagedParams();
-    
-      const defaultFilterParams: FilterParams = options.defaultFilterParams || {
+
+    const defaultFilterParams: FilterParams = options.defaultFilterParams || {
         columnsFilter: [],
         categories: [],
+        brands: [],
         globalFilterValue: null,
     };
 
@@ -21,6 +22,7 @@ export const useFiltering = (options: FilteringHookOptions = {}) => {
             filterParams: {
                 columnsFilter: newFilters.columnsFilter ?? filterParams.columnsFilter,
                 categories: newFilters.categories ?? filterParams.categories,
+                brands: newFilters.brands ?? filterParams.brands,
                 globalFilterValue: newFilters.globalFilterValue ?? filterParams.globalFilterValue,
             },
         });
@@ -31,6 +33,7 @@ export const useFiltering = (options: FilteringHookOptions = {}) => {
             filterParams: {
                 columnsFilter: [],
                 categories: [],
+                brands: [],
                 globalFilterValue: null,
             },
         });

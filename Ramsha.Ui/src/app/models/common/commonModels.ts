@@ -105,43 +105,47 @@ export type ColumnFilter = {
     filterColumn: string;
     value: string;
     valueTo?: string;
-    operation: string;
+    operation: FilterOperator;
 }
 
-export type ComparisonOperator = {
-    value: 'Equal' | 'LessThan' | 'GreaterThan' | 'Between' | 'Contains'
-}
+export type FilterOperator = 'Equals' | 'LessThan' | 'GreaterThan' | 'Between' | 'Contains'
 
 
-export interface PaginationParams {
+
+export type PaginationParams ={
     pageNumber?: number;
     pageSize?: number;
 }
 
 
 
-export interface SortingParams {
+export type SortingParams = {
     columnsSort: ColumnSort[];
 }
 
-export interface ColumnSort {
+export type ColumnSort =  {
     sortColumn: string;
     descending: boolean;
 }
 
-export interface CategoryFilter {
+export type CategoryFilter = {
     value: string;
 }
 
-export interface FilterParams {
+export type BrandFilter = {
+
+} & CategoryFilter
+
+export type FilterParams  = {
     columnsFilter?: ColumnFilter[];
     categories?: CategoryFilter[];
+    brands?: BrandFilter[];
     globalFilterValue?: string | null;
 }
 
 
 
-export interface PagedParams {
+export type PagedParams  = {
     paginationParams: PaginationParams;
     sortingParams?: SortingParams;
     filterParams?: FilterParams;

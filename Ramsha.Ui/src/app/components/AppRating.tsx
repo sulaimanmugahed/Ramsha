@@ -7,7 +7,7 @@ type Props = RatingProps & {
 }
 const AppRating = (props: Props) => {
     return (
-        <Rating {...props} size='small' precision={0.5} icon={<Favorite fontSize='inherit' color='primary' />} emptyIcon={<FavoriteBorder fontSize='inherit' />} />
+        <Rating {...props} precision={0.5} icon={<Favorite fontSize='inherit' color='primary' />} emptyIcon={<FavoriteBorder fontSize='inherit' />} />
     )
 }
 

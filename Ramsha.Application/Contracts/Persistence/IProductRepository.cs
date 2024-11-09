@@ -28,7 +28,7 @@ public interface IProductRepository : IGenericRepository<Product, ProductId>
 
     Task RemoveVariant(ProductVariant variant);
     Task<List<ProductOption>> GetProductOptions(ProductId productId);
-    Task<PaginationResponseDto<CatalogProductDto>> GetCatalogProductsPaged(PaginationParams paginationParams);
+    Task<PaginationResponseDto<CatalogProductDto>> GetCatalogProductsPaged(PaginationParams paginationParams,FilterParams filterParams,SortingParams sortingParams);
     Task<ProductVariant?> GetVariant(ProductId productId, ProductVariantId productVariantId);
 
     Task<Product?> GetProductCatalogDetail(ProductId productId);

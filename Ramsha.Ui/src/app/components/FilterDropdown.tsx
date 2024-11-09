@@ -1,31 +1,31 @@
-import React, { useState, useEffect, useRef } from 'react';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 import {
+  Box,
+  Button,
   Dialog,
   DialogActions,
   DialogContent,
-  Select,
-  MenuItem,
-  TextField,
   FormControl,
-  InputLabel,
-  Button,
-  SelectChangeEvent,
-  IconButton,
   Grid,
-  Box,
+  IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  TextField,
   Typography
 } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
-import { useFiltering } from '../hooks/filteringHooks';
-import { FilterOperator, FilterVariant } from '../types/tanstack-table';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import dayjs, { Dayjs } from 'dayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import dayjs, { Dayjs } from 'dayjs';
+import React, { useEffect, useRef, useState } from 'react';
 import CategorySelector from '../../features/categories/AppMultiCategorySelector';
+import { useFiltering } from '../hooks/filteringHooks';
+import { CategoryFilter, FilterOperator } from '../models/common/commonModels';
 import { CategoryDto } from '../models/products/product';
-import { CategoryFilter } from '../models/common/commonModels';
+import { FilterVariant } from '../types/tanstack-table';
 
 interface Filter {
   column: string;
@@ -119,18 +119,18 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({ columns, open, onClose,
     setSelectedCategories([]);
   };
 
-  const getSelectedColumn = (id:string)=>columns.find(col => col.id === id);
+  const getSelectedColumn = (id: string) => columns.find(col => col.id === id);
 
   const hasOptions = (columnId: string) => {
     const column = getSelectedColumn(columnId);
     return column?.variant === 'Select' && column?.options && column?.options.length > 0;
-};
+  };
 
 
-const getAllowedOperators = (columnId: string): FilterOperator[] => {
+  const getAllowedOperators = (columnId: string): FilterOperator[] => {
     const column = getSelectedColumn(columnId);
     return column?.allowedOperators || ['Equals'];
-};
+  };
 
   const renderDatePicker = (label: string, onChange: (newValue: Dayjs | null) => void, value?: string) => (
     <DatePicker
@@ -141,26 +141,26 @@ const getAllowedOperators = (columnId: string): FilterOperator[] => {
     />
   );
 
-      const renderOperators =  (filter:Filter,index:number)=> {
-        const columnOperators = getAllowedOperators(filter.column);
-        return (
-            <FormControl fullWidth>
-            <InputLabel size='small'>Operator</InputLabel>
-            <Select
-                value={filter.operation}
-                onChange={(e) => handleOperatorChange(index, e)}
-                label="Operator"
-                size="small"
-            >
-                {
-                   columnOperators?.map(opr=>(
-                        <MenuItem value={opr}>{opr}</MenuItem>
-                    ))
-                }
-            </Select>
-        </FormControl>
-        )
-    }
+  const renderOperators = (filter: Filter, index: number) => {
+    const columnOperators = getAllowedOperators(filter.column);
+    return (
+      <FormControl fullWidth>
+        <InputLabel size='small'>Operator</InputLabel>
+        <Select
+          value={filter.operation}
+          onChange={(e) => handleOperatorChange(index, e)}
+          label="Operator"
+          size="small"
+        >
+          {
+            columnOperators?.map(opr => (
+              <MenuItem value={opr}>{opr}</MenuItem>
+            ))
+          }
+        </Select>
+      </FormControl>
+    )
+  }
 
   const renderFilterInput = (filter: Filter, index: number) => {
     const column = columns.find(col => col.id === filter.column);
@@ -199,51 +199,51 @@ const getAllowedOperators = (columnId: string): FilterOperator[] => {
         );
       default:
         if (hasOptions(filter.column)) {
-           return (
-                 <FormControl fullWidth>
-                                  <InputLabel size='small'>Select Value</InputLabel>
-                                        <Select
-                                            value={filter.value}
-                                            onChange={(e) => handleValueChange(index, e.target.value)}
-                                            label="Select Value"
-                                            size="small"
-                                        >
-                                            {column?.options?.map(option => (
-                                                <MenuItem key={option} value={option}>
-                                                    {option}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                );
-                                }
-            
-                 if(column?.variant === 'DatePicker'){
-                         return (
-                                    renderDatePicker("From date",(newValue)=> handleValueChange(index, newValue ? newValue.toISOString() : ''),filter.value)
-                                    )
-                                }
-            
-                return (
-                                    <TextField
-                                        label="Filter Value"
-                                        variant="outlined"
-                                        fullWidth
-                                        type={column?.variant === 'NumberInput' ? 'number':'text'}
-                                        size="small"
-                                        value={filter.value}
-                                        onChange={(e) => handleValueChange(index, e.target.value)}
-                                    />
-                );
-                                
-                } 
-                };
+          return (
+            <FormControl fullWidth>
+              <InputLabel size='small'>Select Value</InputLabel>
+              <Select
+                value={filter.value}
+                onChange={(e) => handleValueChange(index, e.target.value)}
+                label="Select Value"
+                size="small"
+              >
+                {column?.options?.map(option => (
+                  <MenuItem key={option} value={option}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          );
+        }
+
+        if (column?.variant === 'DatePicker') {
+          return (
+            renderDatePicker("From date", (newValue) => handleValueChange(index, newValue ? newValue.toISOString() : ''), filter.value)
+          )
+        }
+
+        return (
+          <TextField
+            label="Filter Value"
+            variant="outlined"
+            fullWidth
+            type={column?.variant === 'NumberInput' ? 'number' : 'text'}
+            size="small"
+            value={filter.value}
+            onChange={(e) => handleValueChange(index, e.target.value)}
+          />
+        );
+
+    }
+  };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
         <Grid container sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
-          <Typography variant="h6" sx={{ fontWeight: 'bold',mb:2 }}>Products Filter</Typography>
+          <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>Products Filter</Typography>
           {categories && (
             <CategorySelector
               selectedCategories={selectedCategories}
@@ -277,7 +277,7 @@ const getAllowedOperators = (columnId: string): FilterOperator[] => {
               </Grid>
               <Grid item xs={3}>
                 {
-                    renderOperators(filter,index)
+                  renderOperators(filter, index)
                 }
               </Grid>
               <Grid item xs={4}>
@@ -300,7 +300,7 @@ const getAllowedOperators = (columnId: string): FilterOperator[] => {
             Add Filter
           </Button>
         </DialogContent>
-        
+
         <DialogActions sx={{ p: 2, justifyContent: 'space-between' }}>
           <Button onClick={handleClearFilter} color="error" sx={{ borderRadius: 2 }}>Clear</Button>
           <Box>

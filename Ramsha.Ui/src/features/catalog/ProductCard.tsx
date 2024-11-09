@@ -1,10 +1,9 @@
-import React, { useState } from "react";
-import { Card, CardContent, CardMedia, Typography, Box, Chip, IconButton } from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import AppRating from "../../app/components/AppRating";
-import { Link } from 'react-router-dom';
+import { Box, Card, CardContent, CardMedia, Chip, IconButton, Typography } from "@mui/material";
 import { alpha } from '@mui/material/styles';
-
+import React, { useState } from "react";
+import { Link } from 'react-router-dom';
+import AppRating from "../../app/components/AppRating";
 
 type ProductCardProps = {
     product: {
@@ -23,21 +22,20 @@ type ProductCardProps = {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     const discountPercentage = Math.round(((product.basePrice - product.finalPrice) / product.basePrice) * 100);
-
-    const [hovered, setHovered] = useState(false); // Track hover state
+    const [hovered, setHovered] = useState(false);
 
     return (
         <Card
             sx={{
-                width: { xs: '100%', sm: 300, md: 320 },
+                width: { xs: '90%', sm: 250, md: 280 },
                 border: "1px solid",
                 borderColor: (theme) => alpha(theme.palette.primary.main, 0.5),
-                borderRadius: "1.5rem",
+                borderRadius: "1rem",
                 transition: "all 0.3s ease",
                 p: 0,
-                boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+                boxShadow: "0px 3px 10px rgba(0, 0, 0, 0.1)",
                 "&:hover": {
-                    transform: "translateY(-5px)",
+                    transform: "translateY(-4px)",
                 },
                 position: "relative",
             }}
@@ -48,11 +46,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 onMouseLeave={() => setHovered(false)}
             >
                 {product.imageUrl && (
-                <Link to={`/catalog/${product.id}`} style={{ textDecoration: 'none' }}>
+                    <Link to={`/catalog/${product.id}`} style={{ textDecoration: 'none' }}>
                         <Box
                             sx={{
-                                height: "280px",
-                                padding: '10px',
+                                height: { xs: "200px", sm: "240px" },
+                                padding: '8px',
                                 boxSizing: 'border-box',
                                 position: 'relative',
                             }}
@@ -64,10 +62,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                                 alt={product.name}
                                 sx={{
                                     objectFit: "cover",
-                                    borderRadius: '1rem',
+                                    borderRadius: '0.8rem',
                                 }}
                             />
-                            {hovered && ( // Display details on hover
+                            {hovered && (
                                 <Box
                                     sx={{
                                         position: 'absolute',
@@ -80,17 +78,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                                         flexDirection: 'column',
                                         justifyContent: 'center',
                                         alignItems: 'center',
-                                        borderRadius: '1rem',
+                                        borderRadius: '0.8rem',
                                         color: 'white',
-                                        padding: '10px',
+                                        padding: '8px',
                                         opacity: 0.9,
                                         transition: 'all 0.3s ease',
                                     }}
                                 >
-                                    <Typography variant="h6" fontWeight="bold" color="inherit">
+                                    <Typography variant="subtitle2" fontWeight="bold" color="inherit">
                                         {product.name}
                                     </Typography>
-                                    <Typography variant="body2" color="inherit" sx={{ mt: 1 }}>
+                                    <Typography variant="body2" color="inherit" sx={{ mt: 0.5 }}>
                                         Brand: {product.brand}
                                     </Typography>
                                     <Typography variant="body2" color="inherit">
@@ -109,12 +107,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                         size="small"
                         sx={{
                             position: "absolute",
-                            top: 12,
-                            right: 12,
+                            top: 10,
+                            right: 10,
                             fontWeight: 500,
-                            fontSize: "0.7rem",
-                            borderRadius: 20,
-                            height: 20,
+                            fontSize: "0.6rem",
+                            borderRadius: 16,
+                            height: 18,
                             backgroundColor: "red",
                             color: "white",
                         }}
@@ -122,18 +120,18 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 )}
             </Box>
 
-            <CardContent sx={{ px: { xs: 2, sm: 2 } }}>
+            <CardContent sx={{ px: { xs: 1.5, sm: 2 } }}>
                 <Box display="flex" alignItems="center" justifyContent="space-between">
                     <Typography
                         variant="body2"
                         color="text.secondary"
-                        sx={{ fontSize: { xs: "0.7rem", sm: "0.8rem" }, mb: 0.5 }}
+                        sx={{ fontSize: { xs: "0.6rem", sm: "0.75rem" }, mb: 0.5 }}
                         noWrap
                     >
                         {product.category} / {product.brand}
                     </Typography>
 
-                    <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: "0.75rem", sm: "0.8rem" } }}>
+                    <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: "0.65rem", sm: "0.75rem" } }}>
                         Qty {product.totalQuantity}
                     </Typography>
                 </Box>
@@ -142,7 +140,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                     variant="subtitle2"
                     fontWeight="bold"
                     noWrap
-                    sx={{ fontSize: { xs: "0.9rem", sm: "1rem" } }}
+                    sx={{ fontSize: { xs: "0.8rem", sm: "0.9rem" } }}
                 >
                     {product.name}
                 </Typography>
@@ -152,7 +150,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                         <Typography
                             variant="subtitle2"
                             color="primary"
-                            sx={{ fontSize: { xs: "0.85rem", sm: "0.9rem" }, fontWeight: 600 }}
+                            sx={{ fontSize: { xs: "0.75rem", sm: "0.85rem" }, fontWeight: 600 }}
                         >
                             ${product?.finalPrice}
                         </Typography>
@@ -163,7 +161,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                                 sx={{
                                     textDecoration: "line-through",
                                     marginLeft: 1,
-                                    fontSize: { xs: "0.7rem", sm: "0.8rem" },
+                                    fontSize: { xs: "0.6rem", sm: "0.7rem" },
                                 }}
                             >
                                 ${product?.basePrice}
@@ -175,11 +173,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                         sx={{
                             padding: 0,
                             borderRadius: '50%',
-                            width: '50px',
-                            height: '50px',
+                            width: { xs: '40px', sm: '45px' },
+                            height: { xs: '40px', sm: '45px' },
                         }}
                     >
-                        <FavoriteIcon sx={{ color: 'error.main', fontSize: '1.8rem' }} />
+                        <FavoriteIcon sx={{ color: 'error.main', fontSize: { xs: '1.5rem', sm: '1.8rem' } }} />
                     </IconButton>
                 </Box>
 
@@ -189,12 +187,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                             name="product-rating"
                             value={product.averageRating}
                             readOnly
-                            sx={{ fontSize: { xs: "1rem", sm: "1.2rem" } }}
+                            sx={{ fontSize: { xs: "0.9rem", sm: "1rem" } }}
                         />
                         <Typography
                             variant="body2"
                             color="text.secondary"
-                            sx={{ fontSize: { xs: "0.65rem", sm: "0.7rem" }, marginLeft: 1 }}
+                            sx={{ fontSize: { xs: "0.6rem", sm: "0.65rem" }, marginLeft: 1 }}
                         >
                             {product.numberOfRatings === 0
                                 ? "No reviews yet"
@@ -208,7 +206,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 };
 
 export default ProductCard;
-
 
 
 
