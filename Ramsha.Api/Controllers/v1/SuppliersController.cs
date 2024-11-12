@@ -18,6 +18,7 @@ using Ramsha.Application.Features.Suppliers.Queries.GetCurrentSupplierProducts;
 using Ramsha.Application.Features.Suppliers.Queries.GetCurrentSupplierProductVariant;
 using Ramsha.Application.Features.Suppliers.Queries.GetCurrentSupplierProductVariantList;
 using Ramsha.Application.Features.Suppliers.Commands.UpdateSupplierVariant;
+using Ramsha.Application.Dtos.Supplies;
 
 namespace Ramsha.Api.Controllers.v1;
 

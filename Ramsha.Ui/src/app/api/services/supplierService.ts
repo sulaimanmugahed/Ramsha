@@ -1,8 +1,8 @@
 import { PagedParams, PaginationResponse } from "../../models/common/commonModels";
 import { SupplierInventoryItem } from "../../models/suppliers/supplierInventoryItem";
 import { SupplierProduct, SupplierVariant } from "../../models/suppliers/supplierProduct";
-import { Supply } from "../../models/suppliers/supply";
 import { SupplyRequest, SupplyRequestItem } from "../../models/suppliers/supplyRequest";
+import { Supply } from "../../models/supplies/supply";
 import request from "../Request";
 
 

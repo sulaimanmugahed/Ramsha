@@ -1,17 +1,18 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
-import { PagedParams, PaginationResponse } from "../models/common/commonModels"
 import { CatalogCategory } from "../models/catalog/catalogCategory"
+import { PagedParams, PaginationResponse } from "../models/common/commonModels"
 
 import { catalogService } from "../api/services/catalogService"
-import { CatalogProductDetailType, CatalogVariant } from "../models/catalog/catalogProduct"
 import { INVENTORY_ITEMS_QUERY_KEY } from "../constants/queriesKey"
+import { CatalogProduct, CatalogProductDetailType, CatalogVariant } from "../models/catalog/catalogProduct"
+import { CurrencyCode } from "../models/common/currency"
 
 
 
-export const useCatalogProducts = (params: PagedParams) => {
-    const { data, isLoading, isError } = useQuery<PaginationResponse<any[]>>({
+export const useCatalogProducts = (params: PagedParams, preferredCurrency: CurrencyCode = 'SAR') => {
+    const { data, isLoading, isError } = useQuery<PaginationResponse<CatalogProduct[]>>({
         queryKey: ["catalogProducts", params],
-        queryFn: async () => await catalogService.getProducts(params),
+        queryFn: async () => await catalogService.getProducts(params, preferredCurrency),
     })
 
     return {

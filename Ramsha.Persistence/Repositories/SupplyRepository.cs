@@ -10,6 +10,7 @@ using Ramsha.Application.Dtos.Suppliers;
 using Ramsha.Application.Wrappers;
 using Ramsha.Application.Extensions;
 using Ramsha.Persistence.Helpers;
+using Ramsha.Application.Dtos.Supplies;
 
 namespace Ramsha.Persistence.Repositories;
 
@@ -32,7 +33,7 @@ public class SupplyRepository(ApplicationDbContext context) : GenericRepository<
 
     public async Task<PaginationResponseDto<SupplyDto>> GetSuppliesPaged(PagedParams pagedParams, Expression<Func<Supply, bool>>? criteria = null)
     {
-        var suppliesQuery = _supplies.OrderBy(x => x.Total).AsQueryable();
+        var suppliesQuery = _supplies.OrderBy(x => x.Status).AsQueryable();
 
         if (criteria is not null)
             suppliesQuery = suppliesQuery.Where(criteria);

@@ -1,7 +1,7 @@
 import { Checkbox } from "@mui/material";
-import { Supply } from "../../../app/models/suppliers/supply";
 import { createColumnHelper } from "@tanstack/react-table";
 import dayjs from "dayjs";
+import { Supply } from "../../../app/models/supplies/supply";
 
 const columnHelper = createColumnHelper<Supply>();
 

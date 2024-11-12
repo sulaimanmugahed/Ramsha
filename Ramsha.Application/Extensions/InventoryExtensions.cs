@@ -10,8 +10,8 @@ public static class InventoryExtensions
     => new InventoryItemDto(
         item.Id.Value,
         item.ProductName,
-        item.WholesalePrice,
-        item.RetailPrice,
+        item.WholesalePrice.Amount,
+        item.RetailPrice.Amount,
         item.InventorySKU,
         item.AvailableQuantity,
         item.Status.ToString(),
@@ -22,8 +22,8 @@ public static class InventoryExtensions
   => new InventoryItemDetailDto(
       item.Id.Value,
       item.ProductName,
-      item.WholesalePrice,
-      item.RetailPrice,
+      item.WholesalePrice.Amount,
+      item.RetailPrice.Amount,
       item.InventorySKU,
       item.AvailableQuantity,
       item.Status.ToString(),

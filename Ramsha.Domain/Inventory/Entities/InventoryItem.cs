@@ -48,10 +48,9 @@ public class InventoryItem : BaseEntity, IAuditable
     public int TotalQuantity { get; set; }
     public string InventorySKU { get; private set; }
     public string? ImageUrl { get; private set; }
-    public decimal WholesalePrice { get; private set; }
-    public decimal RetailPrice { get; private set; }
-    public decimal FinalPrice { get; private set; }
-    public string Currency { get; private set; }
+    public Price WholesalePrice { get; private set; }
+    public Price RetailPrice { get; private set; }
+    public Price FinalPrice { get; private set; }
     public string ProductName { get; private set; }
     public InventoryStatus Status { get; set; }
     public ProductId ProductId { get; set; }
@@ -96,10 +95,9 @@ public class InventoryItem : BaseEntity, IAuditable
         if (stock is not null)
         {
             AvailableQuantity = stock.Quantity;
-            WholesalePrice = stock.WholesalePrice.Amount;
-            RetailPrice = stock.RetailPrice.Amount;
-            FinalPrice = stock.FinalPrice.Amount;
-            Currency = stock.FinalPrice.Currency.ToString();
+            WholesalePrice = stock.WholesalePrice;
+            RetailPrice = stock.RetailPrice;
+            FinalPrice = stock.FinalPrice;
         }
     }
 
@@ -112,8 +110,6 @@ public class InventoryItem : BaseEntity, IAuditable
     {
         TotalQuantity -= quantity;
         AvailableQuantity -= quantity;
-
-
     }
 
 

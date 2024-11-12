@@ -94,6 +94,7 @@ const CatalogPage = () => {
                                 display: 'flex',
                                 flexWrap: 'nowrap',
                                 overflowX: 'auto',
+                                
                                 gap: 1,
                                 width: 250,
                                 padding: '8px 0',

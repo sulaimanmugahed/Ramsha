@@ -46,7 +46,8 @@ public class UserService(UserManager<Account> userManager) : IUserService
 		var account = new Account
 		{
 			Email = request.Email,
-			UserName = request.Username
+			UserName = request.Username,
+			PreferredCurrency = request.PreferredCurrency
 		};
 
 		var result = await userManager.CreateAsync(account, request.Password);

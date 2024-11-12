@@ -1,12 +1,14 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Box, Button, Chip, Grid } from '@mui/material'
-import { FieldValues, useForm } from 'react-hook-form'
-import { registerFormValidation } from './registerFormValidation'
-import { useRegister } from '../../../app/hooks/accountHooks'
-import AppTextInput from '../../../app/components/AppTextInput'
-import { useTranslation } from 'react-i18next'
 import LoadingButton from '@mui/lab/LoadingButton'
+import { Box, Button, Grid } from '@mui/material'
 import { useState } from 'react'
+import { FieldValues, useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import AppSelector from '../../../app/components/AppSelector'
+import AppTextInput from '../../../app/components/AppTextInput'
+import { useRegister } from '../../../app/hooks/accountHooks'
+import { useCurrencies } from '../../../app/hooks/currencyHooks'
+import { registerFormValidation } from './registerFormValidation'
 
 
 const registrationRoles = [
@@ -39,7 +41,8 @@ const RegisterForm = () => {
             username: '',
             email: '',
             password: '',
-            confirmPassword: ''
+            confirmPassword: '',
+            preferredCurrency: 'SAR'
         },
         resolver: zodResolver(registerFormValidation)
     })
@@ -47,6 +50,8 @@ const RegisterForm = () => {
     const onSubmit = async (userData: FieldValues) => {
         await registerUser({ ...userData, who })
     }
+
+    const { currencies } = useCurrencies()
 
     return (
         <Box
@@ -129,6 +134,7 @@ const RegisterForm = () => {
                         label={t('confirmPassword')}
                         fullWidth
                     />
+                    <AppSelector options={currencies?.map(x => ({ id: x.code, name: x.code }))} control={control} name='preferredCurrency' />
                 </Grid>
             </Grid>
             <LoadingButton loading={isSubmitting} type='submit' size='large' variant='contained' sx={{ borderRadius: '30px', width: '180px', color: 'text.primary', alignSelf: 'start', mb: 2 }}>{t('register')}</LoadingButton>

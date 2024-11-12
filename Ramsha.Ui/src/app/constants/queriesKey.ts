@@ -22,12 +22,16 @@ export const ACCOUNT_QUERY_KEY = 'account'
 
 //suppliers
 
-export const SUPPLIES_QUERY_KEY = 'supplies'
+export const SUPPLIER_SUPPLIES_QUERY_KEY = 'supplies'
 export const SUPPLIERS_MY_PRODUCTS_QUERY_KEY = 'suppliers-my-products'
 export const SUPPLIERS_MY_VARIANTS_QUERY_KEY = 'suppliers-my-variants'
 export const SUPPLY_REQUEST_QUERY_KEY = 'supplyRequest'
 export const SUPPLIERS_INVENTORY_ITEMS_QUERY_KEY = 'suppliersInventoryItems'
 export const CUSTOMERS_MY_ADDRESS = "customers-my-address"
+
+//supplies
+export const SUPPLIES_QUERY_KEY = 'supplies'
+
 
 
 //orders
@@ -35,6 +39,11 @@ export const ORDERS_QUERY_KEY = "orders"
 export const MY_ORDERS_QUERY_KEY = "my-orders"
 export const ORDERS_SUPPLIER_FULFILLMENT_REQUESTS = "orders-supplierFulfillmentRequests"
 export const ORDERS_FULFILLMENT_REQUESTS = "orders-FulfillmentRequests"
+
+
+
+//currency
+export const CURRENCIES_QUERY_KEY = "currencies"
 
 
 

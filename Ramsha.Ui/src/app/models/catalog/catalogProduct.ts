@@ -1,3 +1,18 @@
+export type CatalogProduct = {
+    id: string;
+    name: string;
+    category: string;
+    imageUrl: string;
+    totalQuantity: number;
+    minPrice: number;
+    maxPrice: number;
+    brand: string;
+    averageRating: number;
+    numberOfRatings: number;
+}
+
+
+
 export interface CatalogInventoryItem {
     id: string;
     availableQuantity: number;

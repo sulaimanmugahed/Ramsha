@@ -22,7 +22,9 @@ public static class CustomerExtensions
 			Role = authenticationResult.Role,
 			RefreshTokenExpiration = authenticationResult.RefreshTokenExpiration,
 			Basket = basket?.ToDto(),
-			Address = authenticationResult.Address
+			Address = authenticationResult.Address,
+			PreferredCurrency = authenticationResult.PreferredCurrency
+
 		};
 
 	}

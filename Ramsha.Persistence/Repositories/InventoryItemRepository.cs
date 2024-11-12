@@ -77,8 +77,8 @@ IInventoryItemRepository
         {
             query = settings.Value.ProductPricingStrategy switch
             {
-                ProductPricingStrategy.MaxPrice => query.OrderByDescending(x => x.FinalPrice),
-                _ => query.OrderBy(x => x.FinalPrice),
+                ProductPricingStrategy.MaxPrice => query.OrderByDescending(x => x.FinalPrice.Amount),
+                _ => query.OrderBy(x => x.FinalPrice.Amount),
             };
         }
 

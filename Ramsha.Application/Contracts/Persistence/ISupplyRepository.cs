@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Ramsha.Application.Dtos.Suppliers;
+using Ramsha.Application.Dtos.Supplies;
 using Ramsha.Application.DTOs.Common;
 using Ramsha.Application.Wrappers;
 using Ramsha.Domain.Suppliers;

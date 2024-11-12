@@ -11,6 +11,8 @@ using Ramsha.Application.Extensions;
 using Ramsha.Persistence.Helpers;
 using Ramsha.Application.Dtos.Catalog;
 using Ramsha.Application.Dtos.Common;
+using Ramsha.Domain.Products.Enums;
+using Ramsha.Domain.Common;
 
 
 

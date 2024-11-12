@@ -126,6 +126,11 @@ export default function Header() {
             value: '/admin/products',
             icon: <AppGridIcon />,
         },
+        {
+            label: 'Supplies',
+            value: '/admin/supplies',
+            icon: <AppOrderIcon />,
+        },
     ];
 
     const supplierNav = [

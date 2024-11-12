@@ -135,13 +135,13 @@ public class ProductVariant : BaseEntity
         IsDefault = isDefault;
     }
 
-    public void UpdatePriceBasedOnStrategy(ProductPricingStrategy productPricingStrategy, List<InventoryItem> inventories)
-    {
-        var strategy = ProductPricingStrategyFactory.Create(productPricingStrategy);
-        (decimal basePrice, decimal finalPrice) = strategy.CalculatePrice(inventories) ?? (0, 0);
-        Price = basePrice;
-        FinalPrice = finalPrice;
-    }
+    // public void UpdatePriceBasedOnStrategy(ProductPricingStrategy productPricingStrategy, List<InventoryItem> inventories)
+    // {
+    //     var strategy = ProductPricingStrategyFactory.Create(productPricingStrategy);
+    //     (decimal basePrice, decimal finalPrice) = strategy.CalculatePrice(inventories) ?? (0, 0);
+    //     Price = basePrice;
+    //     FinalPrice = finalPrice;
+    // }
 
     public void UpdatePrice(decimal price, decimal finalPrice)
     {

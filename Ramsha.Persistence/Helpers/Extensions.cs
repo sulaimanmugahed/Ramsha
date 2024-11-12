@@ -2,6 +2,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Linq.Dynamic.Core;
 using Ramsha.Application.Wrappers;
+using Ramsha.Domain.Common;
 
 namespace Ramsha.Persistence.Helpers
 {
@@ -83,6 +84,7 @@ namespace Ramsha.Persistence.Helpers
 
             var lambda = Expression.Lambda<Func<T, bool>>(predicate, parameter);
             return query.Where(lambda);
+            
         }
 
         private static Expression CreateFilterExpression<T>(Expression parameter, ColumnFilter column)
@@ -99,13 +101,18 @@ namespace Ramsha.Persistence.Helpers
                 if (property == null)
                     throw new ArgumentException($"Property '{propertyName}' not found on type '{currentType.Name}'.");
 
+                // if (IsValueObjectType(property.PropertyType))
+                // {
+                //     continue;
+                // }
+
                 if (typeof(System.Collections.IEnumerable).IsAssignableFrom(property.PropertyType) && property.PropertyType.IsGenericType && property.PropertyType != typeof(string))
                 {
                     var elementType = property.PropertyType.GetGenericArguments()[0];
                     var itemParameter = Expression.Parameter(elementType, "item");
 
                     var innerPropertyExpression = GetNestedPropertyExpression(itemParameter, propertyNames.Skip(i + 1).ToArray());
-                    // var convertedFilterValue = ConvertFilterValue(innerPropertyExpression.Type, column.Value);
+
                     var comparison = BuildComparison(innerPropertyExpression, column);
 
                     var anyMethod = typeof(Enumerable).GetMethods()
@@ -267,6 +274,11 @@ namespace Ramsha.Persistence.Helpers
         {
             return new[] { typeof(int), typeof(decimal), typeof(double), typeof(float), typeof(long), typeof(short), typeof(byte) }.Contains(type) ||
                    Nullable.GetUnderlyingType(type) is { } underlyingType && IsNumericType(underlyingType);
+        }
+
+        private static bool IsValueObjectType(Type type)
+        {
+            return typeof(ValueObject).IsAssignableFrom(type);
         }
     }
 }

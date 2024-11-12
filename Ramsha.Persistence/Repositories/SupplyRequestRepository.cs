@@ -23,6 +23,8 @@ ISupplyRequestRepository
         return await _requests
         .Include(r => r.Items)
         .ThenInclude(r => r.SupplierVariant)
+         .Include(r => r.Items)
+        .ThenInclude(r => r.Product)
         .SingleOrDefaultAsync(criteria);
     }
 }

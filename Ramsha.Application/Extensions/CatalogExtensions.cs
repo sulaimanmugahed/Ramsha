@@ -1,7 +1,9 @@
 
 using Ramsha.Application.Dtos.Catalog;
+using Ramsha.Domain.Common;
 using Ramsha.Domain.Inventory.Entities;
 using Ramsha.Domain.Products.Entities;
+using Ramsha.Domain.Products.Enums;
 
 namespace Ramsha.Application.Extensions;
 
@@ -23,6 +25,8 @@ public static class CatalogExtensions
     public static CatalogProductDto AsProductCatalogDto(this Product product)
     {
         var basePrice = product.Price ?? 0;
+        var minPrice = product.Inventories.MinBy(x => x.FinalPrice.Amount)?.FinalPrice.Amount ?? 0;
+        var maxPrice = product.Inventories.MaxBy(x => x.FinalPrice.Amount)?.FinalPrice.Amount ?? 0;
 
         return new CatalogProductDto(
            product.Id.Value,
@@ -30,6 +34,8 @@ public static class CatalogExtensions
            product.Category.Name,
            product.Brand?.Name,
            product.ImageUrl,
+           minPrice,
+           maxPrice,
            basePrice,
            product.FinalPrice ?? basePrice,
            product.TotalQuantity,
@@ -44,8 +50,8 @@ public static class CatalogExtensions
             item.Id.Value,
             item.AvailableQuantity,
             item.InventorySKU,
-            item.RetailPrice,
-            item.FinalPrice,
+            item.RetailPrice.Amount,
+            item.FinalPrice.Amount,
             Enumerable.Range(1, 10).Select(x => $"https://picsum.photos/200?random={x}")
             .Select(x => new Dtos.Products.ProductImageDto(x, false)).ToList()
         );

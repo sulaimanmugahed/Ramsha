@@ -16,5 +16,6 @@ namespace Ramsha.Application.DTOs.Account.Responses
 		public string AccessToken { get; set; }
 		public DateTime RefreshTokenExpiration { get; set; }
 		public Address? Address { get; set; }
+		public string PreferredCurrency  { get; set; }
 	}
 }

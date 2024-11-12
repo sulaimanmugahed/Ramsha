@@ -8,25 +8,11 @@
 
 // namespace Ramsha.Application.Services;
 
-// public class PriceService(
-//  IDiscountRepository discountRepository,
-//  IProductPriceRepository productPriceRepository)
-//  : IPriceService
+// public class PriceService: IPriceService
 // {
-
-
-
-
 //     public async Task<decimal> CalculateFinalPrice(ProductId productId, SupplierId supplierId, decimal purchaseAmount, string couponCode)
 //     {
-//         var productPrice = await productPriceRepository.GetProductPriceAsync(productId, supplierId);
-//         decimal price = productPrice!.Value;
 
-//         var discount = await GetAppliedDiscount(productId, supplierId, couponCode);
-//         if (discount is null || discount.MinimumPurchaseAmount > purchaseAmount)
-//             return price;
-
-//         return ApplyDiscount(price, discount.Value, discount.Type);
 //     }
 
 
@@ -35,12 +21,6 @@
 
 //     private decimal ApplyDiscount(decimal price, decimal discountValue, DiscountType discountType)
 //     {
-//         return discountType switch
-//         {
-//             DiscountType.Percentage => price - (price * discountValue / 100),
-//             DiscountType.FixedAmount => price - discountValue,
-//             _ => price
-//         };
 
 //     }
 

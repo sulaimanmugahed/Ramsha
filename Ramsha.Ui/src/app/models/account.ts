@@ -1,4 +1,5 @@
 import { AddressInfo } from "../components/maps/mapUtils";
+import { CurrencyCode } from "./common/currency";
 
 
 
@@ -10,6 +11,7 @@ export type Account = {
     accessToken: string;
     refreshTokenExpiration: Date;
     address: Address | null
+    preferredCurrency: CurrencyCode
 }
 
 export type loginRequest = {

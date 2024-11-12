@@ -90,6 +90,7 @@ const CatalogFilter: React.FC<FilterComponentProps> = ({ type, expanded, setExpa
   };
 
   return (
+    
     <Box
       sx={{
         p: 2,

@@ -48,6 +48,9 @@ builder.Services
 .AddEmialServices(appConfiguration);
 
 builder.Services.Configure<DeliveryFeeSettings>(appConfiguration.GetSection(nameof(DeliveryFeeSettings)));
+builder.Services.Configure<CurrencySettings>(appConfiguration.GetSection(nameof(CurrencySettings)));
+
+
 
 
 builder.Services.AddScoped<IAuthenticatedUserService, AuthenticatedUserService>();

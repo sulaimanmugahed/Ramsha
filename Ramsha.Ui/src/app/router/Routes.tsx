@@ -6,6 +6,7 @@ import AdminDashboard from "../../features/admin/AdminDashboard";
 import InventoryPage from "../../features/admin/inventory/InventoryPage";
 import AdminProductPage from "../../features/admin/products/AdminProductPage";
 import ProductVariantsPage from "../../features/admin/products/ProductVariantsPage";
+import AdminSuppliesPage from "../../features/admin/suppplies/AdminSuppliesPage";
 import BasketDetailPage from "../../features/basket/BasketDetailPage";
 import CatalogPage from "../../features/catalog/CatalogPage";
 import CatalogProductDetailPage from "../../features/catalog/CatalogProductDetailPage";
@@ -35,6 +36,7 @@ import AddSupplyRequestItemPage from "../../features/suppliers/supplies/AddSuppl
 import EditSupplyItemPage from "../../features/suppliers/supplies/EditSupplyItemPage";
 import SuppliesPage from "../../features/suppliers/supplies/SuppliesPage";
 import SupplyRequestPage from "../../features/suppliers/supplies/SupplyRequestPage";
+import SupplyDetailsPage from "../../features/supplies/SupplyDetailsPage";
 import PersistAuth from "../components/PersistAuth";
 import DashboardLayout from "../layout/dashboard/DashboardLayout";
 import MainLayout from "../layout/home/MainLayout";
@@ -138,12 +140,22 @@ export const router = createBrowserRouter([
                 element: <DashboardLayout />,
                 children: [
                     {
-                        // element: <PrivateRoutes allowedRoles={['SuperAdmin', 'Admin']} />,
+                        element: <PrivateRoutes allowedRoles={['SuperAdmin', 'Admin']} />,
                         path: '/admin',
                         children: [
                             {
                                 element: <AdminDashboard />,
                                 path: 'dashboard'
+                            },
+                            {
+                                element: <AdminSuppliesPage />,
+                                path: 'supplies',
+                                children: [
+                                    {
+                                        path: ':supplyId',
+                                        element: <SupplyDetailsPage />
+                                    }
+                                ]
                             },
                             {
                                 element: <InventoryPage />,

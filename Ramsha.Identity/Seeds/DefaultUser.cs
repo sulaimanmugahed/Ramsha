@@ -11,7 +11,7 @@ public static class DefaultUser
     {
         var defaultUser = new Account
         {
-            UserName = "SuperAdmin",
+            UserName = "sa",
             Email = "SuperAdmin@SuperAdmin.com",
             PhoneNumber = "+967773050577",
             EmailConfirmed = true,
@@ -22,7 +22,7 @@ public static class DefaultUser
             var user = await userManager.FindByEmailAsync(defaultUser.Email);
             if (user == null)
             {
-                await userManager.CreateAsync(defaultUser, "Sulaiman@12345");
+                await userManager.CreateAsync(defaultUser, "Test@12345");
                 await userManager.AddToRoleAsync(defaultUser, "SuperAdmin");
             }
 

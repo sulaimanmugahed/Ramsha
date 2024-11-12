@@ -59,9 +59,9 @@ DeliveryFeeService deliveryFeeService)
                     supplierItem.InventoryItem.ProductName,
                     supplierItem.InventoryItem.InventorySKU,
                     supplierItem.InventoryItem.ImageUrl,
-                    supplierItem.InventoryItem.RetailPrice,
-                    supplierItem.InventoryItem.FinalPrice,
-                    supplierItem.InventoryItem.FinalPrice * supplierItem.Quantity + deliveryFee,
+                    supplierItem.InventoryItem.RetailPrice.Amount,
+                    supplierItem.InventoryItem.FinalPrice.Amount,
+                    supplierItem.InventoryItem.FinalPrice.Amount * supplierItem.Quantity + deliveryFee,
                     supplierItem.Quantity,
                     deliveryFee
                 );

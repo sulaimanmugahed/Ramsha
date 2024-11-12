@@ -72,7 +72,7 @@ public class CreateOrderCommandHandler(
                     inventoryItem.ImageUrl
                 );
 
-                var orderItem = new OrderItem(order.Id,itemOrdered, inventoryItem.FinalPrice, supplierItem.Quantity);
+                var orderItem = new OrderItem(order.Id, itemOrdered, inventoryItem.FinalPrice.Amount, supplierItem.Quantity);
                 orderItems.Add(orderItem);
                 inventoryItem.DecreaseQuantity(supplierItem.Quantity);
 
@@ -86,7 +86,7 @@ public class CreateOrderCommandHandler(
         }
 
         order.SetFulfillmentRequests(fulfillmentRequests);
-        
+
         await orderRepository.AddAsync(order);
         basketRepository.Delete(basket);
         await unitOfWork.SaveChangesAsync();

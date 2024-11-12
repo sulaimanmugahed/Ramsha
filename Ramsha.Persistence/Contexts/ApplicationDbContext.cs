@@ -35,7 +35,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Stock> Stocks { get; set; }
     public DbSet<SupplierProduct> SupplierProducts { get; set; }
     public DbSet<SupplierVariant> SupplierVariants { get; set; }
-
+    public DbSet<CurrencyRate> CurrencyRates { get; set; }
 
 
 
@@ -205,7 +205,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         .WithMany()
         .HasForeignKey(x => x.SupplierId);
 
-            builder.HasOne<Product>()
+            builder.HasOne(x => x.Product)
           .WithMany()
           .HasForeignKey(x => x.ProductId);
 
@@ -314,6 +314,25 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
            .HasForeignKey(ii => new { ii.ProductId, ii.ProductVariantId })
            .OnDelete(DeleteBehavior.Restrict);
 
+
+            builder.ComplexProperty(x => x.WholesalePrice, price =>
+               {
+                   price.Property(x => x.Amount).HasColumnName("ItemWholesalePriceAmount").HasColumnType("decimal(18,6)");
+                   price.Property(x => x.Currency).HasColumnName("ItemWholesalePriceCurrency");
+               });
+
+            builder.ComplexProperty(p => p.RetailPrice, price =>
+      {
+          price.Property(x => x.Amount).HasColumnName("ItemRetailPriceAmount").HasColumnType("decimal(18,6)");
+          price.Property(x => x.Currency).HasColumnName("ItemRetailPriceCurrency");
+      });
+
+            builder.ComplexProperty(p => p.FinalPrice, price =>
+            {
+                price.Property(x => x.Amount).HasColumnName("ItemFinalPriceAmount").HasColumnType("decimal(18,6)");
+                price.Property(x => x.Currency).HasColumnName("ItemPriceCurrency");
+            });
+
         });
 
         builder.Entity<SupplierProduct>(entity =>
@@ -380,17 +399,16 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
           .HasConversion(id => id.Value, value => new StockId(value));
 
 
-            entity.OwnsOne(x => x.WholesalePrice, price =>
+            entity.ComplexProperty(x => x.WholesalePrice, price =>
                 {
-                    price.WithOwner();
+
                     price.Property(x => x.Amount).HasColumnName("StockWholesalePriceAmount").HasColumnType("decimal(18,6)");
                     price.Property(x => x.Currency).HasColumnName("StockWholesalePriceCurrency");
                 });
 
-            entity.OwnsOne(p => p.RetailPrice, price =>
+            entity.ComplexProperty(p => p.RetailPrice, price =>
       {
-          price.WithOwner();
-
+        
           price.Property(x => x.Amount).HasColumnName("StockRetailPriceAmount").HasColumnType("decimal(18,6)");
           price.Property(x => x.Currency).HasColumnName("StockRetailPriceCurrency");
       });

@@ -10,7 +10,6 @@ using MediatR;
 namespace Ramsha.Application.Features.Customers.Commands.Create;
 internal class CreateCustomerCommandHandler(
 	IUserService userService,
-	IGeocodingService geocodingService,
 	ICustomerRepository customerRepository,
 	IUnitOfWork unitOfWork)
 	: IRequestHandler<CreateCustomerCommand, BaseResult<string>>
@@ -21,7 +20,9 @@ internal class CreateCustomerCommandHandler(
 		{
 			Email = request.Email,
 			Password = request.Password,
-			Username = request.Username
+			Username = request.Username,
+			PreferredCurrency = request.PreferredCurrency
+
 		}, Roles.Customer);
 
 		if (!registerResult.Success)

@@ -1,28 +1,27 @@
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { Box, Card, CardContent, CardMedia, Chip, IconButton, Typography } from "@mui/material";
+import { Box, Card, CardContent, CardMedia, IconButton, Typography } from "@mui/material";
 import { alpha } from '@mui/material/styles';
 import React, { useState } from "react";
 import { Link } from 'react-router-dom';
 import AppRating from "../../app/components/AppRating";
+import { useAccount } from '../../app/hooks/accountHooks';
+import { useCurrency } from '../../app/hooks/currencyHooks';
+import { CatalogProduct } from '../../app/models/catalog/catalogProduct';
+import { formatCurrency } from '../../app/utils/formatUtils';
 
 type ProductCardProps = {
-    product: {
-        id: string;
-        name: string;
-        category: string;
-        imageUrl: string;
-        totalQuantity: number;
-        basePrice: number;
-        finalPrice: number;
-        brand: string;
-        averageRating: number;
-        numberOfRatings: number;
-    };
+    product: CatalogProduct
 };
 
-const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-    const discountPercentage = Math.round(((product.basePrice - product.finalPrice) / product.basePrice) * 100);
+const ProductCard: React.FC<ProductCardProps> = ({ product: { averageRating, brand, category, id, imageUrl, maxPrice, minPrice, name, numberOfRatings, totalQuantity } }) => {
+    //const discountPercentage = Math.round(((product.basePrice - product.finalPrice) / product.basePrice) * 100);
     const [hovered, setHovered] = useState(false);
+    const { account } = useAccount()
+    const { currency } = useCurrency(account?.preferredCurrency || 'USD')
+
+    const formattedMinPrice = currency && formatCurrency(currency?.rate * minPrice, currency?.code)
+    const formattedMaxPrice = currency && formatCurrency(currency?.rate * maxPrice, currency?.code)
+
 
     return (
         <Card
@@ -45,8 +44,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 onMouseEnter={() => setHovered(true)}
                 onMouseLeave={() => setHovered(false)}
             >
-                {product.imageUrl && (
-                    <Link to={`/catalog/${product.id}`} style={{ textDecoration: 'none' }}>
+                {imageUrl && (
+                    <Link to={`/catalog/${id}`} style={{ textDecoration: 'none' }}>
                         <Box
                             sx={{
                                 height: { xs: "200px", sm: "240px" },
@@ -58,8 +57,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                             <CardMedia
                                 component="img"
                                 height="100%"
-                                image={product.imageUrl}
-                                alt={product.name}
+                                image={imageUrl}
+                                alt={name}
                                 sx={{
                                     objectFit: "cover",
                                     borderRadius: '0.8rem',
@@ -86,13 +85,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                                     }}
                                 >
                                     <Typography variant="subtitle2" fontWeight="bold" color="inherit">
-                                        {product.name}
+                                        {name}
                                     </Typography>
                                     <Typography variant="body2" color="inherit" sx={{ mt: 0.5 }}>
-                                        Brand: {product.brand}
+                                        Brand: {brand}
                                     </Typography>
                                     <Typography variant="body2" color="inherit">
-                                        Category: {product.category}
+                                        Category: {category}
                                     </Typography>
                                 </Box>
                             )}
@@ -100,7 +99,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                     </Link>
                 )}
 
-                {product.finalPrice < product.basePrice && (
+                {/* {product.finalPrice < product.basePrice && (
                     <Chip
                         label={`- ${discountPercentage}% `}
                         color="error"
@@ -117,7 +116,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                             color: "white",
                         }}
                     />
-                )}
+                )} */}
             </Box>
 
             <CardContent sx={{ px: { xs: 1.5, sm: 2 } }}>
@@ -128,11 +127,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                         sx={{ fontSize: { xs: "0.6rem", sm: "0.75rem" }, mb: 0.5 }}
                         noWrap
                     >
-                        {product.category} / {product.brand}
+                        {category} / {brand}
                     </Typography>
 
                     <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: "0.65rem", sm: "0.75rem" } }}>
-                        Qty {product.totalQuantity}
+                        Qty {totalQuantity}
                     </Typography>
                 </Box>
 
@@ -142,7 +141,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                     noWrap
                     sx={{ fontSize: { xs: "0.8rem", sm: "0.9rem" } }}
                 >
-                    {product.name}
+                    {name}
                 </Typography>
 
                 <Box display="flex" alignItems="center" justifyContent="space-between" mb={0.5}>
@@ -152,9 +151,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                             color="primary"
                             sx={{ fontSize: { xs: "0.75rem", sm: "0.85rem" }, fontWeight: 600 }}
                         >
-                            ${product?.finalPrice}
+                            {currency && (
+                                formattedMinPrice === formattedMaxPrice ?
+                                    formattedMinPrice :
+                                    `${formattedMinPrice} - ${formattedMaxPrice}`
+                            )}
                         </Typography>
-                        {product?.finalPrice < product?.basePrice && (
+                        {/* {product?.finalPrice < product?.basePrice && (
                             <Typography
                                 variant="body2"
                                 color="text.secondary"
@@ -166,7 +169,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                             >
                                 ${product?.basePrice}
                             </Typography>
-                        )}
+                        )} */}
                     </Box>
                     <IconButton
                         aria-label="add to favorites"
@@ -185,7 +188,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                     <Box display="flex" alignItems="center">
                         <AppRating
                             name="product-rating"
-                            value={product.averageRating}
+                            value={averageRating}
                             readOnly
                             sx={{ fontSize: { xs: "0.9rem", sm: "1rem" } }}
                         />
@@ -194,9 +197,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                             color="text.secondary"
                             sx={{ fontSize: { xs: "0.6rem", sm: "0.65rem" }, marginLeft: 1 }}
                         >
-                            {product.numberOfRatings === 0
+                            {numberOfRatings === 0
                                 ? "No reviews yet"
-                                : `${product.numberOfRatings} ${product.numberOfRatings === 1 ? "Review" : "Reviews"} `}
+                                : `${numberOfRatings} ${numberOfRatings === 1 ? "Review" : "Reviews"} `}
                         </Typography>
                     </Box>
                 </Box>

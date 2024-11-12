@@ -42,6 +42,7 @@ public class SupplyRequestItem
     public SupplyRequestId SupplyRequestId { get; set; }
     public SupplyRequest SupplyRequest { get; set; }
     public ProductId ProductId { get; private set; }
+    public Product Product { get; private set; }
     public SupplierId SupplierId { get; private set; }
     public ProductVariantId ProductVariantId { get; private set; }
     public SupplierVariant SupplierVariant { get; private set; }

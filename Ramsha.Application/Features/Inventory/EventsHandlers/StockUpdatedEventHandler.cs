@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.Extensions.Options;
 using Ramsha.Application.Contracts;
 using Ramsha.Application.Contracts.Persistence;
+using Ramsha.Domain.Common;
 using Ramsha.Domain.Inventory.Events;
 using Ramsha.Domain.Products.Services;
 using Ramsha.Domain.Settings;
@@ -33,21 +34,21 @@ public class StockAddedEventHandler(
                 return;
 
             var variantInventories = inventories
-            
+
             .Where(x => x.ProductVariantId == variant.Id)
             .ToList();
 
-            (decimal variantBasePrice, decimal variantFinalPrice) = strategy.CalculatePrice([.. variantInventories]) ?? (0, 0);
+            (Price variantBasePrice, Price variantFinalPrice) = strategy.CalculatePrice([.. variantInventories]) ?? (new(0),new(0));
 
             variant.UpdateQuantity(variantInventories
             .Sum(x => x.AvailableQuantity),
              variantInventories.Sum(x => x.AvailableQuantity));
-            variant.UpdatePrice(variantBasePrice, variantFinalPrice);
+            variant.UpdatePrice(variantBasePrice.Amount, variantFinalPrice.Amount);
         }
 
-        (decimal basePrice, decimal finalPrice) = strategy.CalculatePrice([.. inventories]) ?? (0, 0);
+        (Price basePrice, Price finalPrice) = strategy.CalculatePrice([.. inventories]) ?? (new(0),new(0));
 
-        product.UpdatePrice(basePrice, finalPrice);
+        product.UpdatePrice(basePrice.Amount, finalPrice.Amount);
         product.UpdateQuantity(inventories
               .Sum(x => x.AvailableQuantity),
                inventories.Sum(x => x.TotalQuantity));

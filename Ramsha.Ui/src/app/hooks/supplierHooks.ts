@@ -2,17 +2,17 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { supplierService } from "../api/services/supplierService"
 import {
+    SUPPLIER_SUPPLIES_QUERY_KEY,
     SUPPLIERS_INVENTORY_ITEMS_QUERY_KEY,
     SUPPLIERS_MY_PRODUCTS_QUERY_KEY,
     SUPPLIERS_MY_VARIANTS_QUERY_KEY,
-    SUPPLIES_QUERY_KEY,
     SUPPLY_REQUEST_QUERY_KEY
 } from "../constants/queriesKey"
 import { PagedParams, PaginationParams, PaginationResponse } from "../models/common/commonModels"
 import { SupplierInventoryItem } from "../models/suppliers/supplierInventoryItem"
 import { SupplierProduct, SupplierVariant } from "../models/suppliers/supplierProduct"
-import { Supply } from "../models/suppliers/supply"
 import { SupplyRequest, SupplyRequestItem } from "../models/suppliers/supplyRequest"
+import { Supply } from "../models/supplies/supply"
 
 
 
@@ -20,7 +20,7 @@ export const useSupplies = (params: PagedParams) => {
 
 
     const { data, isError, isLoading } = useQuery<PaginationResponse<Supply[]>>({
-        queryKey: [SUPPLIES_QUERY_KEY],
+        queryKey: [SUPPLIER_SUPPLIES_QUERY_KEY],
         queryFn: async () => await supplierService.getSupplies(params)
     })
 

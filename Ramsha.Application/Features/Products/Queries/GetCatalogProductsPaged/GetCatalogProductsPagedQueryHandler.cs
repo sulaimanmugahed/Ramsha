@@ -7,12 +7,14 @@ using Ramsha.Application.Contracts;
 using Ramsha.Application.Contracts.Persistence;
 using Ramsha.Application.Dtos.Catalog;
 using Ramsha.Application.Wrappers;
+using Ramsha.Domain.Common;
 
 namespace Ramsha.Application.Features.Products.Queries.GetCatalogProductsPaged;
 
 public class GetCatalogProductsPagedQueryHandler(
     IProductRepository productRepository,
-    IHttpService httpService
+    IHttpService httpService,
+    ICurrencyRateRepository currencyRateRepository
 ) : IRequestHandler<GetCatalogProductsPagedQuery, BaseResult<List<CatalogProductDto>>>
 {
     public async Task<BaseResult<List<CatalogProductDto>>> Handle(GetCatalogProductsPagedQuery request, CancellationToken cancellationToken)

@@ -100,7 +100,9 @@ IOptionsSnapshot<JWTSettings> jwtSettings) : IAccountServices
             AccountId = user.Id,
             Role = rolesList.FirstOrDefault(),
             IsVerified = user.EmailConfirmed,
-            Address = user.Address
+            Address = user.Address,
+            PreferredCurrency = user.PreferredCurrency.ToString()
+
         };
     }
 
@@ -148,7 +150,8 @@ IOptionsSnapshot<JWTSettings> jwtSettings) : IAccountServices
             Username = user.UserName,
             Role = rolesList.FirstOrDefault(),
             IsVerified = user.EmailConfirmed,
-            Address = user.Address
+            Address = user.Address,
+            PreferredCurrency = user.PreferredCurrency.ToString()
         };
 
         if (user.RefreshTokens.Any(t => t.IsActive))

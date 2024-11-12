@@ -7,6 +7,8 @@ using Ramsha.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ramsha.Application.Contracts;
+using Ramsha.Domain.Products.Enums;
+using Ramsha.Domain.Common;
 
 namespace Ramsha.Persistence.Seeds;
 
@@ -14,7 +16,24 @@ public class DefaultData
 {
     public static async Task SeedAsync(ApplicationDbContext context, ILogger<DefaultData> logger, ICodeGenerator codeGenerator)
     {
-        context.Database.EnsureCreated();
+        await context.Database.EnsureCreatedAsync();
+
+        if (!context.CurrencyRates.Any())
+        {
+            var currencies = Enum.GetValues(typeof(Currency))
+            .Cast<Currency>()
+            .Select(x => x)
+            .ToArray();
+
+            foreach (var currency in currencies)
+            {
+                var currencyRateToAdd = CurrencyRate.Create(currency, 1);
+                await context.CurrencyRates.AddAsync(currencyRateToAdd);
+            }
+            logger.LogInformation("seeding currencies Completed");
+
+        }
+
 
         if (!context.Brand.Any())
         {

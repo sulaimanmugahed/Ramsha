@@ -12,8 +12,8 @@ public static class BasketExtensions
 				basketItem.InventoryItemId.Value,
 				basketItem.Quantity,
 				basketItem.InventoryItem.ProductName,
-				basketItem.InventoryItem.RetailPrice,
-				basketItem.InventoryItem.FinalPrice,
+				basketItem.InventoryItem.RetailPrice.Amount,
+				basketItem.InventoryItem.FinalPrice.Amount,
 				basketItem.InventoryItem.InventorySKU,
 				$"https://picsum.photos/200?random={basketItem.InventoryItemId}"
 				);

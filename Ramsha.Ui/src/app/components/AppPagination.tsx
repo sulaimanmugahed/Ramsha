@@ -25,7 +25,6 @@ const AppPagination = ({
     const handlePageChange = (page: number) => {
         setInPageNumber(page)
         onPageChange(page);
-
     }
 
     return (

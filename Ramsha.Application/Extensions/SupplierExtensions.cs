@@ -37,10 +37,10 @@ public static class SupplierExtensions
 			inventoryItem.AvailableQuantity,
 			inventoryItem.TotalQuantity,
 			new StockPriceDto(
-				inventoryItem.WholesalePrice,
-				inventoryItem.RetailPrice,
-				inventoryItem.FinalPrice,
-				inventoryItem.Currency
+				inventoryItem.WholesalePrice.Amount,
+				inventoryItem.RetailPrice.Amount,
+				inventoryItem.FinalPrice.Amount,
+				inventoryItem.FinalPrice.Currency.ToString()
 			),
 			$"https://picsum.photos/200?random={inventoryItem.Id.Value}"
 
@@ -75,15 +75,7 @@ public static class SupplierExtensions
 		};
 	}
 
-	public static SupplyDto AsSupplyDto(this Supply supply)
-	=> new SupplyDto(
-		supply.Id.Value,
-		supply.Total,
-		supply.Status.ToString(),
-		supply.Currency.ToString(),
-		supply.TotalQuantity,
-		supply.Sent,
-		supply.ApprovedAt);
+
 
 
 	public static SupplyRequestItemDto AsRequestItemDto(this SupplyRequestItem x)

@@ -2,14 +2,14 @@
 using Ramsha.Domain.Products.Enums;
 
 namespace Ramsha.Domain.Common;
-public class Price : IEquatable<Price>
+public class Price : ValueObject
 {
     public decimal Amount { get; }
     public Currency Currency { get; }
 
-    private Price() { }
+    protected Price() { }
 
-    public Price(decimal amount, Currency currency)
+    public Price(decimal amount, Currency currency = Currency.USD)
     {
         if (amount < 0)
             throw new ArgumentException("Amount cannot be negative.", nameof(amount));
@@ -28,24 +28,15 @@ public class Price : IEquatable<Price>
         return new Price(convertedAmount, targetCurrency);
     }
 
-    public override bool Equals(object? obj)
-    {
-        return Equals(obj as Price);
-    }
-
-    public bool Equals(Price? other)
-    {
-        if (other == null) return false;
-        return Amount == other.Amount && Currency == other.Currency;
-    }
-
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(Amount, Currency);
-    }
 
     public override string ToString()
     {
         return $"{Amount} {Currency}";
+    }
+
+    protected override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return Amount;
+        yield return Currency;
     }
 }

@@ -4,6 +4,7 @@ using Ramsha.Application.Dtos.Suppliers;
 using Ramsha.Application.Extensions;
 using Ramsha.Application.Wrappers;
 using MediatR;
+using Ramsha.Application.Dtos.Supplies;
 
 namespace Ramsha.Application.Features.Inventory.Queries.GetSupplyRequestList;
 
