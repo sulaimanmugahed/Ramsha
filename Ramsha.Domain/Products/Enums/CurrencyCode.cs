@@ -1,10 +1,10 @@
 namespace Ramsha.Domain.Products.Enums;
 
-public enum Currency
+public enum CurrencyCode
 {
     USD,
     SAR,
-    YER_OLD,
-    YER_NEW,
+    EGP,
+    YER,
     EUR
 }

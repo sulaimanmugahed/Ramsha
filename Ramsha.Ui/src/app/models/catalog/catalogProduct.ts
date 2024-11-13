@@ -15,15 +15,13 @@ export type CatalogProduct = {
 
 export interface CatalogInventoryItem {
     id: string;
+    supplierId: string;
+    variantId: string;
     availableQuantity: number;
+    totalQuantity: number;
     sku: string;
     basePrice: number;
     finalPrice: number;
-    images: { url: string; isHome: boolean; }[]
-    supplierDetail: {
-        firstName: string;
-        lastName: string
-    }
 }
 
 export interface CatalogVariantValue {
@@ -42,11 +40,16 @@ export interface CatalogVariant {
 export interface CatalogProductDetailType {
     id: string;
     name: string;
+    minPrice: number;
+    maxPrice: number;
     description: string;
     category: string;
     brand: string;
     imageUrl: string;
     totalQuantity: number;
+    availableQuantity: number;
     averageRating: number;
     numberOfRatings: number;
+    totalVariants: number,
+    totalSuppliers: number
 }

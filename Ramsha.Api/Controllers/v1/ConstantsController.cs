@@ -12,8 +12,8 @@ public class ConstantsController : BaseApiController
 {
     [HttpGet]
     public string[] GetCurrencies()
-     => Enum.GetValues(typeof(Currency))
-     .Cast<Currency>()
+     => Enum.GetValues(typeof(CurrencyCode))
+     .Cast<CurrencyCode>()
      .Select(x => x.ToString())
      .ToArray();
 }

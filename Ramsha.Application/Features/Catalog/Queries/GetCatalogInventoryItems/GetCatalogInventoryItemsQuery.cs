@@ -11,6 +11,6 @@ namespace Ramsha.Application.Features.Catalog.Queries.GetCatalogInventoryItems;
 public class GetCatalogInventoryItemsQuery : PagedParams, IRequest<BaseResult<List<CatalogInventoryItemDetailDto>>>
 {
     public Guid ProductId { get; set; }
-    public Guid ProductVariantId { get; set; }
+    public Guid? ProductVariantId { get; set; }
 
 }

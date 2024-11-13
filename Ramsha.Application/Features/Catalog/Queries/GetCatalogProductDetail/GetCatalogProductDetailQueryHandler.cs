@@ -17,6 +17,6 @@ public class GetCatalogProductDetailQueryHandler(
         if (product is null)
             return new Error(ErrorCode.RequestedDataNotExist);
 
-        return product.AsCatalogProductDetailDto();
+        return product;
     }
 }

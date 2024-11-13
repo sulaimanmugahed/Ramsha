@@ -36,8 +36,7 @@ public class UserService(UserManager<Account> userManager) : IUserService
 		return new AccountDto
 		{
 			Username = username,
-			Email = account.Email,
-
+			Email = account.Email
 		};
 	}
 

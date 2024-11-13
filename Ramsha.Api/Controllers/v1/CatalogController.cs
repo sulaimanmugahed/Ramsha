@@ -34,8 +34,10 @@ public class CatalogController : BaseApiController
     public async Task<BaseResult<List<CatalogCategoryDto>>> GetCatalogCategories()
     => await Mediator.Send(new GetCatalogCategoriesQuery());
 
-    [HttpPost("{productId}/{productVariantId}/inventoryItems")]
-    public async Task<BaseResult<List<CatalogInventoryItemDetailDto>>> GetInventoryItems(Guid productId, Guid productVariantId, [FromBody] GetCatalogInventoryItemsQuery query)
+
+
+    [HttpPost("{productId}/inventoryItems/{productVariantId?}")]
+    public async Task<BaseResult<List<CatalogInventoryItemDetailDto>>> GetInventoryItems(Guid productId, [FromBody] GetCatalogInventoryItemsQuery query, Guid? productVariantId = null)
     {
         query.ProductId = productId;
         query.ProductVariantId = productVariantId;

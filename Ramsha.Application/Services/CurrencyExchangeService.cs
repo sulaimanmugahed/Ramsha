@@ -9,12 +9,12 @@ namespace Ramsha.Application.Services;
 public class CurrencyExchangeService(ICurrencyRateRepository currencyRateRepository, IOptionsSnapshot<CurrencySettings> settings)
 {
 
-    public async Task<decimal> ConvertFrom(decimal amount, Currency fromCurrency)
+    public async Task<decimal> ConvertFrom(decimal amount, CurrencyCode fromCurrency)
     {
         if (amount <= 0)
             throw new ArgumentException("Amount must be greater than zero.", nameof(amount));
 
-        var fromRate = await currencyRateRepository.GetAsync(x => x.Currency == fromCurrency);
+        var fromRate = await currencyRateRepository.GetAsync(x => x.CurrencyCode == fromCurrency);
         if (fromRate is null)
             throw new Exception($"{fromCurrency} not found");
 
@@ -24,16 +24,16 @@ public class CurrencyExchangeService(ICurrencyRateRepository currencyRateReposit
     }
 
 
-    public async Task<decimal> Exchange(decimal amount, Currency fromCurrency, Currency toCurrency)
+    public async Task<decimal> Exchange(decimal amount, CurrencyCode fromCurrency, CurrencyCode toCurrency)
     {
         if (amount <= 0)
             throw new ArgumentException("Amount must be greater than zero.", nameof(amount));
 
-        var fromRate = await currencyRateRepository.GetAsync(x => x.Currency == fromCurrency);
+        var fromRate = await currencyRateRepository.GetAsync(x => x.CurrencyCode == fromCurrency);
         if (fromRate is null)
             throw new Exception($"{fromCurrency} not found");
 
-        var toRate = await currencyRateRepository.GetAsync(x => x.Currency == toCurrency);
+        var toRate = await currencyRateRepository.GetAsync(x => x.CurrencyCode == toCurrency);
         if (toRate is null)
             throw new Exception($"{toRate} not found");
 

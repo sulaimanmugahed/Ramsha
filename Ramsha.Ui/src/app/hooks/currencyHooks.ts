@@ -23,6 +23,8 @@ export const useCurrency = (code: CurrencyCode) => {
         staleTime: 1000 * 60 * 60 * 12
     })
 
+    
+
     return {
         currency: data,
         isLoading

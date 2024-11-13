@@ -63,13 +63,17 @@ IInventoryItemRepository
         .ToListAsync();
     }
 
-    public async Task<PaginationResponseDto<CatalogInventoryItemDetailDto>> GetCatalogItemsPagedListAsync(ProductId productId, ProductVariantId productVariantId, PaginationParams paginationParams, SortingParams? sortingParams = null, FilterParams? filterParams = null)
+    public async Task<PaginationResponseDto<CatalogInventoryItemDetailDto>> GetCatalogItemsPagedListAsync(ProductId productId, PaginationParams paginationParams, SortingParams? sortingParams = null, FilterParams? filterParams = null, ProductVariantId? productVariantId = null)
     {
         var query = _items
-        .Where(x => x.ProductId == productId && x.ProductVariantId == productVariantId)
+        .Where(x => x.ProductId == productId)
         .AsQueryable();
+
+        if (productVariantId is not null)
+        {
+            query = query.Where(x => x.ProductVariantId == productVariantId);
+        }
         if (sortingParams is not null)
-        
         {
             query = query.OrderByColumnName(sortingParams.ColumnsSort);
         }

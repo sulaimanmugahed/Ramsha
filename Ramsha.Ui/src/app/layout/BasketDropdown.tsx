@@ -1,10 +1,11 @@
-import { IconButton, Menu, Fade, Badge, Grid, MenuList, Typography, Box, styled, Button, CircularProgress } from '@mui/material';
+import { Badge, Box, Button, CircularProgress, Fade, Grid, IconButton, Menu, MenuList, styled, Typography } from '@mui/material';
 import React, { useMemo } from 'react';
-import { BasketDropdownItem } from './BasketDropdownItem';
+import { useNavigate } from 'react-router-dom';
 import AppDivider from '../components/AppDivider';
 import AppBagIcon from '../components/icons/AppBagIcon';
+import { useAccount } from '../hooks/accountHooks';
 import { useBasket } from '../hooks/basketHooks';
-import { useNavigate } from 'react-router-dom';
+import { BasketDropdownItem } from './BasketDropdownItem';
 
 const StyledMenu = styled(Menu)(({ theme }) => ({
     '& .MuiPaper-root': {
@@ -18,6 +19,8 @@ const BasketDropdown = () => {
     const open = Boolean(anchorEl);
     const navigate = useNavigate()
 
+    const { account } = useAccount()
+
     const { basket, isBasketLoading, isBasketError } = useBasket();
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -27,6 +30,8 @@ const BasketDropdown = () => {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    const hasAddress = () => !!account?.address
 
 
 
@@ -92,17 +97,17 @@ const BasketDropdown = () => {
                                 </Typography>
                             </Box>
                             <Typography variant='body2' color='text.secondary'>
-                                Shipping and taxes calculated at checkout.
+                                {hasAddress() ? 'Shipping calculated ether in checkout. or in Details' : 'You cant see Shipping cost or checkout before you add your address.'}
                             </Typography>
 
                             <Grid container spacing={2} mt={2}>
                                 <Grid item xs={6}>
-                                    <Button size='large' onClick={() => { navigate('/basket/detail'); handleClose(); }} fullWidth sx={{ borderRadius: 20 }} variant='outlined'>
+                                    <Button disabled={!hasAddress()} size='large' onClick={() => { navigate('/basket/detail'); handleClose(); }} fullWidth sx={{ borderRadius: 20 }} variant='outlined'>
                                         Basket Detail
                                     </Button>
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <Button size='large' onClick={() => { navigate('/checkout'); handleClose(); }} fullWidth sx={{ borderRadius: 20 }} variant='contained'>
+                                    <Button disabled={!hasAddress()} size='large' onClick={() => { navigate('/checkout'); handleClose(); }} fullWidth sx={{ borderRadius: 20 }} variant='contained'>
                                         Checkout
                                     </Button>
                                 </Grid>

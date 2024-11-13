@@ -18,17 +18,17 @@ public class DefaultData
     {
         await context.Database.EnsureCreatedAsync();
 
-        if (!context.CurrencyRates.Any())
+        if (!context.Currencies.Any())
         {
-            var currencies = Enum.GetValues(typeof(Currency))
-            .Cast<Currency>()
+            var currencies = Enum.GetValues(typeof(CurrencyCode))
+            .Cast<CurrencyCode>()
             .Select(x => x)
             .ToArray();
 
             foreach (var currency in currencies)
             {
-                var currencyRateToAdd = CurrencyRate.Create(currency, 1);
-                await context.CurrencyRates.AddAsync(currencyRateToAdd);
+                var currencyRateToAdd = Currency.Create(currency, 1);
+                await context.Currencies.AddAsync(currencyRateToAdd);
             }
             logger.LogInformation("seeding currencies Completed");
 

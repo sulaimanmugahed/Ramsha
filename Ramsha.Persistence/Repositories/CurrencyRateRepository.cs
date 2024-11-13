@@ -8,7 +8,7 @@ using Ramsha.Persistence.Contexts;
 
 namespace Ramsha.Persistence.Repositories;
 
-public class CurrencyRateRepository(ApplicationDbContext context) : GenericRepository<CurrencyRate, int>(context), ICurrencyRateRepository
+public class CurrencyRateRepository(ApplicationDbContext context) : GenericRepository<Currency, int>(context), ICurrencyRateRepository
 {
 
 }

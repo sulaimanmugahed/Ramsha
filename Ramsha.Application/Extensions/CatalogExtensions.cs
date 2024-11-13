@@ -44,16 +44,20 @@ public static class CatalogExtensions
         );
     }
 
+    //   Enumerable.Range(1, 10).Select(x => $"https://picsum.photos/200?random={x}")
+    //         .Select(x => new Dtos.Products.ProductImageDto(x, false)).ToList()
+
     public static CatalogInventoryItemDetailDto AsCatalogInventoryItemDetailDto(this InventoryItem item)
     {
         return new CatalogInventoryItemDetailDto(
             item.Id.Value,
+            item.SupplierId.Value,
+            item.ProductVariantId.Value,
             item.AvailableQuantity,
+            item.TotalQuantity,
             item.InventorySKU,
             item.RetailPrice.Amount,
-            item.FinalPrice.Amount,
-            Enumerable.Range(1, 10).Select(x => $"https://picsum.photos/200?random={x}")
-            .Select(x => new Dtos.Products.ProductImageDto(x, false)).ToList()
+            item.FinalPrice.Amount
         );
     }
 
@@ -77,17 +81,28 @@ public static class CatalogExtensions
     public static CatalogProductDetailDto AsCatalogProductDetailDto(this Product product)
     {
         var basePrice = product.Price ?? 0;
+        var TotalVariants = product.Inventories.DistinctBy(x => x.ProductVariantId).Count();
+        var TotalSuppliers = product.Inventories.DistinctBy(x => x.SupplierId).Count();
+        var minPrice = product.Inventories.MinBy(x => x.FinalPrice.Amount)?.FinalPrice.Amount ?? 0;
+        var maxPrice = product.Inventories.MaxBy(x => x.FinalPrice.Amount)?.FinalPrice.Amount ?? 0;
+        var availableQuantity = product.Inventories.Sum(x => x.AvailableQuantity);
+        var totalQuantity = product.Inventories.Sum(x => x.TotalQuantity);
 
         return new CatalogProductDetailDto(
            product.Id.Value,
            product.Name,
+           minPrice,
+           maxPrice,
            product.Description,
            product.Category.Name,
            product.Brand?.Name,
            product.ImageUrl,
-           product.TotalQuantity,
+           totalQuantity,
+           availableQuantity,
            product.AverageRating,
-           product.NumberOfRatings
+           product.NumberOfRatings,
+           TotalVariants,
+           TotalSuppliers
         );
     }
 }

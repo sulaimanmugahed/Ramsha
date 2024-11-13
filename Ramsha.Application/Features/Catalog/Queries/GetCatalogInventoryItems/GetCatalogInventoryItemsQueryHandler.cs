@@ -16,10 +16,11 @@ public class GetCatalogInventoryItemsQueryHandler(
     {
         var responseDto = await inventoryItemRepository.GetCatalogItemsPagedListAsync(
             new Domain.Products.ProductId(request.ProductId),
-            new Domain.Products.ProductVariantId(request.ProductVariantId),
             request.PaginationParams,
             request.SortingParams,
-            request.FilterParams);
+            request.FilterParams,
+            request.ProductVariantId.HasValue ? new Domain.Products.ProductVariantId(request.ProductVariantId.Value) : null
+            );
 
         responseDto.AddFilterMetaData(request.FilterParams);
         responseDto.AddSortingMetaData(request.SortingParams);

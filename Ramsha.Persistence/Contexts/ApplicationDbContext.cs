@@ -35,7 +35,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Stock> Stocks { get; set; }
     public DbSet<SupplierProduct> SupplierProducts { get; set; }
     public DbSet<SupplierVariant> SupplierVariants { get; set; }
-    public DbSet<CurrencyRate> CurrencyRates { get; set; }
+    public DbSet<Currency> Currencies { get; set; }
 
 
 

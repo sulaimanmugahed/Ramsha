@@ -49,13 +49,15 @@ public class ProductRepository(ApplicationDbContext context)
 
 
 
-   public async Task<Product?> GetProductCatalogDetail(ProductId productId)
+   public async Task<CatalogProductDetailDto?> GetProductCatalogDetail(ProductId productId)
    {
       return await _product
-     .AsSplitQuery()
      .Include(p => p.Brand)
      .Include(p => p.Category)
-  .SingleOrDefaultAsync(x => x.Id == productId);
+     .Include(p => p.Inventories)
+     .Where(x => x.Id == productId)
+     .Select(p => p.AsCatalogProductDetailDto())
+     .SingleOrDefaultAsync();
    }
 
    public async Task<CatalogVariantDto?> GetCatalogProductVariant(ProductId productId, ProductVariantId? productVariantId = null)

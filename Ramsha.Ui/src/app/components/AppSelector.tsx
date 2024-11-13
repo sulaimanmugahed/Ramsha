@@ -2,7 +2,7 @@ import { Autocomplete, Chip, TextField } from '@mui/material';
 import React, { useCallback } from 'react';
 import { Control, Controller, FieldValues } from 'react-hook-form';
 
-type Option = {
+export type Option = {
     id: string;
     name: string;
 };

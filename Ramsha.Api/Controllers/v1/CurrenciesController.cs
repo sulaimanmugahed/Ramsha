@@ -17,23 +17,23 @@ public class CurrenciesController(ICurrencyRateRepository currencyRateRepository
     public async Task<BaseResult<List<CurrencyDto>>> GetAll()
     {
         var data = await currencyRateRepository.GetAllAsync();
-        return data.Select(x => new CurrencyDto(x.Currency.ToString(), x.ExchangeRate)).ToList();
+        return data.Select(x => new CurrencyDto(x.CurrencyCode.ToString(), x.ExchangeRate)).ToList();
     }
 
     [HttpGet("{currencyCode}")]
-    public async Task<BaseResult<CurrencyDto>> Get(Currency currencyCode)
+    public async Task<BaseResult<CurrencyDto>> Get(CurrencyCode currencyCode)
     {
-        var currency = await currencyRateRepository.GetAsync(x => x.Currency == currencyCode);
+        var currency = await currencyRateRepository.GetAsync(x => x.CurrencyCode == currencyCode);
         if (currency is null)
             return new Error(ErrorCode.RequestedDataNotExist, "no currency found");
-        return new CurrencyDto(currency.Currency.ToString(), currency.ExchangeRate);
+        return new CurrencyDto(currency.CurrencyCode.ToString(), currency.ExchangeRate);
     }
 
     [HttpPut("{currencyCode}")]
     
-    public async Task<BaseResult> UpdateCurrencyRate(Currency currencyCode, decimal rate)
+    public async Task<BaseResult> UpdateCurrencyRate(CurrencyCode currencyCode, decimal rate)
     {
-        var currencyToUpdate = await currencyRateRepository.GetAsync(x => x.Currency == currencyCode);
+        var currencyToUpdate = await currencyRateRepository.GetAsync(x => x.CurrencyCode == currencyCode);
         if (currencyToUpdate is null)
             return new Error(ErrorCode.RequestedDataNotExist, "no currency found");
 

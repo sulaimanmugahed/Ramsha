@@ -6,7 +6,7 @@ using Ramsha.Domain.Common;
 
 namespace Ramsha.Application.Contracts.Persistence;
 
-public interface ICurrencyRateRepository : IGenericRepository<CurrencyRate, int>
+public interface ICurrencyRateRepository : IGenericRepository<Currency, int>
 {
 
 }

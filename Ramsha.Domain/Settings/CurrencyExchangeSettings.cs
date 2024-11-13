@@ -5,5 +5,5 @@ namespace Ramsha.Domain.Settings;
 
 public class CurrencySettings
 {
-    public Currency BaseCurrency { get; set; }
+    public CurrencyCode BaseCurrency { get; set; }
 }

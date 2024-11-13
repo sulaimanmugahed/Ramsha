@@ -9,7 +9,7 @@ import ProductVariantsPage from "../../features/admin/products/ProductVariantsPa
 import AdminSuppliesPage from "../../features/admin/suppplies/AdminSuppliesPage";
 import BasketDetailPage from "../../features/basket/BasketDetailPage";
 import CatalogPage from "../../features/catalog/CatalogPage";
-import CatalogProductDetailPage from "../../features/catalog/CatalogProductDetailPage";
+import CatalogProductDetailsModal from "../../features/catalog/CatalogProductDetailsModal";
 import CheckoutPage from "../../features/checkout/CheckoutPage";
 import ContactPage from "../../features/contact/ContactPage";
 import MyOrdersPage from "../../features/orders/MyOrdersPage";
@@ -121,7 +121,7 @@ export const router = createBrowserRouter([
                         path: 'catalog',
                         children: [
                             {
-                                element: <CatalogProductDetailPage />,
+                                element: <CatalogProductDetailsModal />,
                                 path: ':productId'
                             }
                         ]

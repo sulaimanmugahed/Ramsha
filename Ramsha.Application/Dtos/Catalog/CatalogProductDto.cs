@@ -25,13 +25,18 @@ int NumberOfRatings
 public record CatalogProductDetailDto(
 Guid Id,
 string Name,
+decimal MinPrice,
+decimal MaxPrice,
 string Description,
 string Category,
 string Brand,
 string? ImageUrl,
 int TotalQuantity,
+int AvailableQuantity,
 decimal AverageRating,
-int NumberOfRatings
+int NumberOfRatings,
+int TotalVariants,
+int TotalSuppliers
 );
 
 
@@ -53,11 +58,14 @@ string ValueName
 
 public record CatalogInventoryItemDetailDto(
 Guid Id,
+Guid SupplierId,
+Guid VariantId,
  int AvailableQuantity,
+ int TotalQuantity,
  string Sku,
  decimal BasePrice,
- decimal FinalPrice,
-List<ProductImageDto> Images
+ decimal FinalPrice
+
 
 );
 public record CatalogSupplierDetailDto(

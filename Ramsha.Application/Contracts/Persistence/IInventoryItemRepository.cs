@@ -24,6 +24,6 @@ public interface IInventoryItemRepository : IGenericRepository<InventoryItem, In
 
     Task<PaginationResponseDto<InventoryItemDto>> GetItemsPagedListAsync(PaginationParams paginationParams, SortingParams? sortingParams = null, FilterParams? filterParams = null);
 
-    Task<PaginationResponseDto<CatalogInventoryItemDetailDto>> GetCatalogItemsPagedListAsync(ProductId productId, ProductVariantId productVariantId, PaginationParams paginationParams, SortingParams? sortingParams = null, FilterParams? filterParams = null);
+    Task<PaginationResponseDto<CatalogInventoryItemDetailDto>> GetCatalogItemsPagedListAsync(ProductId productId, PaginationParams paginationParams, SortingParams? sortingParams = null, FilterParams? filterParams = null, ProductVariantId? productVariantId = null);
 
 }

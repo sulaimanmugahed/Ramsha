@@ -1,14 +1,17 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Box, Button, Checkbox, FormControl, FormControlLabel, FormLabel, IconButton, FormControlLabel as MuiFormControlLabel, Radio, RadioGroup, Slider, Typography } from '@mui/material';
 import React, { useState } from 'react';
+import AppDivider from '../../app/components/AppDivider';
 import AppRating from '../../app/components/AppRating';
-import AppSelector from '../../app/components/AppSelector';
+import AppSelector, { Option } from '../../app/components/AppSelector';
 import { CATALOG_FILTER_COLUMNS } from '../../app/constants/filterColumnNames';
 import { useCategories } from '../../app/hooks/categoryHooks';
+import { useCurrencies } from '../../app/hooks/currencyHooks';
 import { useFiltering } from '../../app/hooks/filteringHooks';
 import { useProductBrands } from '../../app/hooks/productHooks';
 import { useSorting } from '../../app/hooks/sortingHooks';
 import { BrandFilter, CategoryFilter, FilterParams } from '../../app/models/common/commonModels';
+import { CurrencyCode } from '../../app/models/common/currency';
 import AppMultiCategorySelector from '../categories/AppMultiCategorySelector';
 
 interface FilterComponentProps {
@@ -18,9 +21,11 @@ interface FilterComponentProps {
 }
 
 const CatalogFilter: React.FC<FilterComponentProps> = ({ type, expanded, setExpanded }) => {
+  const [currencyCode, setCurrencyCode] = useState<CurrencyCode>('USD')
   const { filterParams, updateFilterParams, clearFilterParams } = useFiltering();
   const { categories } = useCategories();
   const { brands } = useProductBrands();
+  const { currencies } = useCurrencies()
 
   const [selectedCategories, setSelectedCategories] = useState<CategoryFilter[]>(filterParams.categories || []);
   const [selectedBrands, setSelectedBrands] = useState<BrandFilter[]>(filterParams.brands || []);
@@ -54,11 +59,12 @@ const CatalogFilter: React.FC<FilterComponentProps> = ({ type, expanded, setExpa
     };
 
     if (priceRange) {
+      const rate = currencies?.find(x => x.code === currencyCode)?.rate || 1
       const [minPrice, maxPrice] = priceRange;
       filters.columnsFilter?.push({
         filterColumn: CATALOG_FILTER_COLUMNS.RETAIL_PRICE,
-        value: minPrice.toString(),
-        valueTo: maxPrice.toString(),
+        value: (minPrice * (1 / rate)).toString(),
+        valueTo: (maxPrice * (1 / rate)).toString(),
         operation: 'Between',
       });
     }
@@ -81,7 +87,7 @@ const CatalogFilter: React.FC<FilterComponentProps> = ({ type, expanded, setExpa
   const handleClearFilters = () => {
     setSelectedCategories([]);
     setSelectedBrands([]);
-    setPriceRange([0, 100000]);
+    setPriceRange([0, 10000000]);
     setRating(null);
     setInStock(false);
     setSortField(null);
@@ -90,14 +96,14 @@ const CatalogFilter: React.FC<FilterComponentProps> = ({ type, expanded, setExpa
   };
 
   return (
-    
+
     <Box
       sx={{
         p: 2,
         width: expanded ? 250 : 0,
         transition: 'width 0.3s ease',
         position: 'relative',
-        overflow: 'hidden',
+        overflowY: 'scroll',
         height: '100vh',
       }}
     >
@@ -128,6 +134,7 @@ const CatalogFilter: React.FC<FilterComponentProps> = ({ type, expanded, setExpa
                   categories={categories || []}
                 />
               </Box>
+              <AppDivider />
 
               <Box sx={{ my: 2 }}>
                 <Typography gutterBottom>Brands</Typography>
@@ -143,18 +150,32 @@ const CatalogFilter: React.FC<FilterComponentProps> = ({ type, expanded, setExpa
                   }}
                 />
               </Box>
-
+              <AppDivider />
               <Box sx={{ my: 2 }}>
-                <Typography gutterBottom>Price Range</Typography>
+                <Typography sx={{ mb: 2 }}>Prices</Typography>
+                <Box sx={{ mb: 2 }}>
+                  <Typography variant='body1' color={'text.secondary'} gutterBottom>Currency</Typography>
+                  <AppSelector
+                    options={currencies?.map(x => ({ id: x.code, name: x.code }))}
+                    value={{ id: currencyCode, name: currencyCode }}
+                    label='Select Currency'
+                    onChange={(o) => {
+                      const option: Option = o as Option
+                      setCurrencyCode(option.id as CurrencyCode)
+                    }}
+                  />
+                </Box>
+                <Typography variant='body1' color={'text.secondary'} gutterBottom>Price Range</Typography>
                 <Slider
-                  value={priceRange || [0, 100000]}
+                  value={priceRange || [0, 10000000]}
                   onChange={(e, newValue) => setPriceRange(newValue as number[])}
                   valueLabelDisplay="auto"
                   min={0}
-                  max={100000}
+                  max={10000000}
                   sx={{ width: '90%', mx: 'auto' }}
                 />
               </Box>
+              <AppDivider />
 
               <Box sx={{ my: 2 }}>
                 <Typography gutterBottom>Minimum Rating</Typography>

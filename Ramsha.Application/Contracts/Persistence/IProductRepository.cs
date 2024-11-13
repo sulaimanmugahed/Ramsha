@@ -31,6 +31,6 @@ public interface IProductRepository : IGenericRepository<Product, ProductId>
     Task<PaginationResponseDto<CatalogProductDto>> GetCatalogProductsPaged(PaginationParams paginationParams, FilterParams filterParams, SortingParams sortingParams);
     Task<ProductVariant?> GetVariant(ProductId productId, ProductVariantId productVariantId);
 
-    Task<Product?> GetProductCatalogDetail(ProductId productId);
+    Task<CatalogProductDetailDto?> GetProductCatalogDetail(ProductId productId);
 
 }

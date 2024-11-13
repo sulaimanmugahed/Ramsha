@@ -27,7 +27,6 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
     [`& .${linearProgressClasses.bar}`]: {
         borderRadius: 5,
         backgroundColor: theme.palette.error
-
     },
 }));
 
@@ -343,10 +342,6 @@ const CatalogProductDetailPage = () => {
                                             </Box>
                                         </AppDialog>
                                     </Grid>
-
-
-
-
 
                                     <Grid item xs={12} md={12}>
                                         <Typography sx={{ mb: 2 }} variant='h6' fontWeight={'bold'}>Product Image From The Supplier</Typography>
