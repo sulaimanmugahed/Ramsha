@@ -16,19 +16,20 @@ public class Order : BaseEntity
     }
 
 
-    private Order(OrderId id, CustomerId customerId, ShippingAddress shippingAddress)
+    private Order(OrderId id, CustomerId customerId, string paymentIntentId,ShippingAddress shippingAddress)
     {
         Id = id;
         CustomerId = customerId;
         OrderStatus = OrderStatus.Pending;
         OrderDate = DateTime.UtcNow;
         ShippingAddress = shippingAddress;
+        PaymentIntentId = paymentIntentId;
     }
 
 
-    public static Order Create(CustomerId customerId, ShippingAddress shippingAddress)
+    public static Order Create(CustomerId customerId,string paymentIntentId, ShippingAddress shippingAddress)
     {
-        var order = new Order(new OrderId(Guid.NewGuid()), customerId, shippingAddress);
+        var order = new Order(new OrderId(Guid.NewGuid()), customerId, paymentIntentId, shippingAddress);
         order.RaiseDomainEvent(new NewOrderCreatedEvent(order.Id, order.ShippingAddress));
         return order;
     }
@@ -97,6 +98,12 @@ public class Order : BaseEntity
             OrderStatus = OrderStatus.Processing;
         }
         existFulfillment.SetStatus(FulfillmentRequestStatus.Shipped);
+    }
+
+
+    public void SetStatus(OrderStatus status)
+    {
+        OrderStatus = status;
     }
 
 

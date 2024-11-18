@@ -13,6 +13,8 @@ public class Basket : BaseEntity
     public BasketId Id { get; set; }
     public string Buyer { get; set; }
     public List<BasketItem> Items { get; set; } = [];
+    public string? PaymentIntentId { get; set; }
+    public string? ClientSecret { get; set; }
 
     public static Basket Create(string buyer)
         => new()

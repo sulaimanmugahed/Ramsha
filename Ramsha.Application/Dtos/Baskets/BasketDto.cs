@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace Ramsha.Application.Dtos.Baskets;
 public record BasketDto(
 	List<BasketItemDto> Items,
-	string Buyer
+	string Buyer,
+	string? ClientSecret
 	);
 

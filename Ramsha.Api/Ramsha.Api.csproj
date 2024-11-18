@@ -33,6 +33,7 @@
     <ProjectReference Include="..\Ramsha.Identity\Ramsha.Identity.csproj" />
     <ProjectReference Include="..\Ramsha.Mail\Ramsha.Mail.csproj" />
     <ProjectReference Include="..\Ramsha.Persistence\Ramsha.Persistence.csproj" />
+    <ProjectReference Include="..\Ramsha.PaymentService\Ramsha.PaymentService.csproj" />
   </ItemGroup>
 
 </Project>

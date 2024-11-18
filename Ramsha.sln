@@ -31,6 +31,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ramsha.Mail", "Ramsha.Mail\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ramsha.PerformanceTests", "Ramsha.PerformanceTests\Ramsha.PerformanceTests.csproj", "{DE3D2379-479B-4728-B155-EB8B1C46DD38}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ramsha.PaymentService", "Ramsha.PaymentService\Ramsha.PaymentService.csproj", "{44F9AF5F-4965-4F5B-870E-0002F2CAD6B6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +75,10 @@ Global
 		{DE3D2379-479B-4728-B155-EB8B1C46DD38}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE3D2379-479B-4728-B155-EB8B1C46DD38}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE3D2379-479B-4728-B155-EB8B1C46DD38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44F9AF5F-4965-4F5B-870E-0002F2CAD6B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44F9AF5F-4965-4F5B-870E-0002F2CAD6B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44F9AF5F-4965-4F5B-870E-0002F2CAD6B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44F9AF5F-4965-4F5B-870E-0002F2CAD6B6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

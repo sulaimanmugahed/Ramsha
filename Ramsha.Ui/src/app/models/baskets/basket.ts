@@ -1,6 +1,8 @@
 export type Basket = {
     items: BasketItem[];
     buyer: string
+    paymentIntentId: string
+    clientSecret: string
 }
 
 

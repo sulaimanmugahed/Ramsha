@@ -33,7 +33,7 @@ public class CreateOrderCommandHandler(
         if (basket is null)
             return new Error(ErrorCode.RequestedDataNotExist);
 
-        var order = Order.Create(customer.Id, request.ShippingAddress);
+        var order = Order.Create(customer.Id,basket.PaymentIntentId, request.ShippingAddress);
 
 
         var itemsGroups = basket.Items.GroupBy(x => x.InventoryItem.Supplier);

@@ -23,7 +23,8 @@ public static class BasketExtensions
 		=> new(
 			basket.Items.Select(x => x.AsItemDto())
 			.ToList(),
-			basket.Buyer
+			basket.Buyer,
+			basket.ClientSecret
 			);
 
 

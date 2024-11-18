@@ -6,7 +6,7 @@ export interface StockPrice {
 }
 
 export interface SupplierInventoryItem {
-    id: string;      // UUID for the inventory item
+    inventoryItemId: string;      // UUID for the inventory item
     productName: string;          // Name of the product
     sku: string;                  // Stock Keeping Unit (SKU)
     availableQuantity: number;    // Quantity available for sale

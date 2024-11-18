@@ -1,4 +1,4 @@
-import { PaginationResponse ,PagedParams} from "../../models/common/commonModels";
+import { PagedParams, PaginationResponse } from "../../models/common/commonModels";
 import { FulfillmentRequest, FulfillmentRequestDetail } from "../../models/orders/fulfillmentRequest";
 import { Order, OrderDetailType } from "../../models/orders/order";
 import request from "../Request";

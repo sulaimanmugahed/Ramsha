@@ -16,7 +16,7 @@ const SupplierInventoryItemsTable = ({ items, onApplyDiscountButtonClick, onSupp
     const columnHelper = createColumnHelper<SupplierInventoryItem>();
 
     const columns = [
-        columnHelper.accessor('id', {
+        columnHelper.accessor('inventoryItemId', {
             meta: {
                 excludeFromTable: true,
                 excludeFromExport: true,
@@ -110,7 +110,7 @@ const SupplierInventoryItemsTable = ({ items, onApplyDiscountButtonClick, onSupp
     const { getRows, getHeaderGroups } = useServerDataTable({
         data: items,
         columns,
-        rowIdAccessor: 'id'
+        rowIdAccessor: 'inventoryItemId'
     })
 
 
