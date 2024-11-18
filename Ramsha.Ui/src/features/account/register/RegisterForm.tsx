@@ -134,6 +134,8 @@ const RegisterForm = () => {
                         label={t('confirmPassword')}
                         fullWidth
                     />
+                </Grid>
+                <Grid item >
                     <AppSelector options={currencies?.map(x => ({ id: x.code, name: x.code }))} control={control} name='preferredCurrency' />
                 </Grid>
             </Grid>

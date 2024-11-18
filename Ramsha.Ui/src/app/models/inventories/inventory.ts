@@ -8,3 +8,13 @@ export type InventoryItemDto = {
     status: string;
     imageUrl?: string;
 };
+
+export type DiscountType = 'Percentage' | 'FixedAmount'
+
+
+export type Discount = {
+    type: DiscountType;
+    value: number;
+    startDate: string;
+    endDate: string;
+}

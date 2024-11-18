@@ -1,3 +1,5 @@
+import { ProductImageDto } from "../products/product";
+
 export type CatalogProduct = {
     id: string;
     name: string;
@@ -22,6 +24,9 @@ export interface CatalogInventoryItem {
     sku: string;
     basePrice: number;
     finalPrice: number;
+    averageRating: number,
+    numberOfRatings: number
+    images: ProductImageDto[]
 }
 
 export interface CatalogVariantValue {

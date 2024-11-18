@@ -1,16 +1,17 @@
 import { createColumnHelper } from "@tanstack/react-table"
-import { useServerDataTable } from "../../../app/hooks/tableHooks"
-import { SupplierInventoryItem } from "../../../app/models/suppliers/supplierInventoryItem"
 import AppTable from "../../../app/components/AppTable"
 import AppActionsMenu from "../../../app/components/table/AppActionsMenu"
+import { useServerDataTable } from "../../../app/hooks/tableHooks"
+import { SupplierInventoryItem } from "../../../app/models/suppliers/supplierInventoryItem"
 
 type Props = {
     items: SupplierInventoryItem[],
     onSupplyButtonClick: (item: SupplierInventoryItem) => void,
-    onShowDetailsButtonClick: (item: SupplierInventoryItem) => void
+    onShowDetailsButtonClick: (item: SupplierInventoryItem) => void,
+    onApplyDiscountButtonClick: (item: SupplierInventoryItem) => void,
 }
 
-const SupplierInventoryItemsTable = ({ items, onSupplyButtonClick, onShowDetailsButtonClick }: Props) => {
+const SupplierInventoryItemsTable = ({ items, onApplyDiscountButtonClick, onSupplyButtonClick, onShowDetailsButtonClick }: Props) => {
 
     const columnHelper = createColumnHelper<SupplierInventoryItem>();
 
@@ -87,11 +88,13 @@ const SupplierInventoryItemsTable = ({ items, onSupplyButtonClick, onShowDetails
                         label: 'Supply',
                         action: onSupplyButtonClick
                     },
-
                     {
                         action: onShowDetailsButtonClick,
                         label: 'Show Details',
-
+                    },
+                    {
+                        action: onApplyDiscountButtonClick,
+                        label: 'Apply Discount',
                     }
                 ]} />,
             enableSorting: false,

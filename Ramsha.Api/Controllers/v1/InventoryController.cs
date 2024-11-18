@@ -31,8 +31,8 @@ public class InventoryController : BaseApiController
     public async Task<BaseResult<List<SupplyDto>>> GetSupplyList(GetSupplyListQuery query)
     => await Mediator.Send(query);
 
-    [HttpPost("discount")]
-    public async Task<BaseResult> ApplyInventoryItemDiscount(ApplyInventoryItemDiscountCommand command)
-    => await Mediator.Send(command);
+    [HttpPost("{id}/discount")]
+    public async Task<BaseResult> ApplyInventoryItemDiscount([FromRoute] Guid id, DiscountRequest discountRequest)
+    => await Mediator.Send(new ApplyInventoryItemDiscountCommand { InventoryItemId = id, Discount = discountRequest });
 
 }

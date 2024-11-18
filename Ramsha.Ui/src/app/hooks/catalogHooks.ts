@@ -37,7 +37,7 @@ export const useCatalogProductVariant = (productId: string, variantId?: string |
 
 
 
-export const useInfiniteInventoryItems = (productId: string, params: PagedParams, productVariantId?: string, enabled: boolean = true) => {
+export const useInfiniteInventoryItems = (productId: string, params: PagedParams, enabled: boolean = true) => {
 
     const {
         data,
@@ -51,11 +51,11 @@ export const useInfiniteInventoryItems = (productId: string, params: PagedParams
         refetch,
         isFetchingNextPage } = useInfiniteQuery(
             {
-                queryKey: [INVENTORY_ITEMS_QUERY_KEY, productId, productVariantId, params],
+                queryKey: [INVENTORY_ITEMS_QUERY_KEY, productId, { ...params }],
                 enabled,
                 queryFn: async ({ pageParam }: { pageParam: number }) => {
                     const { paginationParams, ...others } = params
-                    return await catalogService.getInventoryItems(productId, { paginationParams: { ...paginationParams, pageNumber: pageParam }, ...others }, productVariantId)
+                    return await catalogService.getInventoryItems(productId, { paginationParams: { ...paginationParams, pageNumber: pageParam }, ...others })
                 },
                 initialPageParam: 1,
 

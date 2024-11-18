@@ -1,12 +1,10 @@
-import { TextFieldProps, TextField } from "@mui/material";
+import { SxProps, TextField, TextFieldProps, Theme } from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useController, UseControllerProps } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { SxProps, Theme } from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { useCustomStylesStore } from "../store/customStylesStore";
 
 const CustomTextField = ({ trulyAnError, ...props }: TextFieldProps & { trulyAnError?: boolean }) => {
-  return <TextField {...props} error={trulyAnError ?? props.error} />;
+    return <TextField {...props} error={trulyAnError ?? props.error} />;
 };
 
 type FormDatePickerProps = UseControllerProps & TextFieldProps & {
@@ -16,7 +14,6 @@ type FormDatePickerProps = UseControllerProps & TextFieldProps & {
 const AppDatePickerInput = ({ inputStyle, ...props }: FormDatePickerProps) => {
     const { fieldState, field } = useController({ ...props, defaultValue: null });
     const { i18n, t } = useTranslation();
-    const { inputBorderRadius } = useCustomStylesStore();
 
     return (
         <DatePicker
@@ -30,7 +27,7 @@ const AppDatePickerInput = ({ inputStyle, ...props }: FormDatePickerProps) => {
                     helperText: t(fieldState.error?.message!) || "",
                     error: !!fieldState.error,
                     InputProps: {
-                        sx: { ...inputStyle, borderRadius: inputBorderRadius }
+                        sx: { ...inputStyle }
                     },
                     FormHelperTextProps: {
                         sx: {

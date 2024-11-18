@@ -17,9 +17,9 @@ public static class ProductExtensions
    productVariant.VariantValues.Select(x => x.AsSelectableVariantValuesDto()).ToList());
 
 
-   public static ProductVariantSelectionDto AsProductVariantSelectionDto(this Product product)
+   public static ProductVariantSelectionDto AsProductVariantSelectionDto(this Product product, bool isCatalog = false)
    {
-      var variants = product.Variants;
+      var variants = product.Variants.Where(x => isCatalog ? x.InventoryItems.Any() : true);
       return new(
          variants.Select(x => x.AsSelectableVariantsDto()).ToList(),
          variants.SelectMany(x => x.VariantValues).DistinctBy(x => x.Option.Name).Select(x => x.Option.Name).ToList()
@@ -33,9 +33,6 @@ public static class ProductExtensions
            variant.Id.Value,
            variant.Code,
            variant.ImageUrl,
-           variant.TotalQuantity,
-           variant.Price,
-           variant.FinalPrice,
            variant.VariantValues.Select(v => v.AsDto()).ToList(),
          variant.Images.Select(x => new ProductImageDto(x.Url, x.IsHome)).ToList()
         );
@@ -70,7 +67,6 @@ public static class ProductExtensions
          product.Id.Value,
          product.Name,
          product.Description,
-         product.Price ?? 0,
          product.Category?.AsCategoryDto(),
          product.Brand?.AsDto(),
          product.ImageUrl,
@@ -107,16 +103,12 @@ public static class ProductExtensions
 
    public static ProductDto AsDto(this Product product)
    {
-      var basePrice = product.Price ?? 0;
       return new ProductDto(
          product.Id.Value,
          product.Name,
          product.Description,
          product.Created,
          product.Status.ToString(),
-         product.TotalQuantity,
-         basePrice,
-         product.FinalPrice ?? basePrice,
          product.ImageUrl,
          product.Category.Name,
          product.Brand?.Name
@@ -146,7 +138,7 @@ public static class ProductExtensions
    {
       return new ProductVariantDto(
          variant.Id.Value,
-         variant.Price,
+         variant.IsDefault,
          variant.Code,
          variant.ImageUrl,
          variant.VariantValues.Select(v => v.AsDto()).ToList(),

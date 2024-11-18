@@ -12,7 +12,7 @@ public interface IProductRepository : IGenericRepository<Product, ProductId>
     Task<Product?> GetProductWithVariantsAndOptions(ProductId productId);
     Task<CatalogVariantDto?> GetCatalogProductVariant(ProductId productId, ProductVariantId? productVariantId = null);
 
-    Task<ProductVariantSelectionDto?> GetProductVariantSelection(ProductId productId);
+    Task<ProductVariantSelectionDto?> GetProductVariantSelection(ProductId productId, bool isCatalog = false);
 
     Task<PaginationResponseDto<ProductDto>> GetProductsPaged(PaginationParams paginationParams, FilterParams? filterParams = null, SortingParams? sortingParams = null);
     Task<IEnumerable<Product>> GetAllProductsDetails();

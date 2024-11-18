@@ -4,11 +4,18 @@ using Ramsha.Domain.Common;
 using Ramsha.Domain.Inventory.Entities;
 using Ramsha.Domain.Products.Entities;
 using Ramsha.Domain.Products.Enums;
+using Ramsha.Domain.Suppliers.Entities;
 
 namespace Ramsha.Application.Extensions;
 
 public static class CatalogExtensions
 {
+    public static CatalogSupplierItemDetailDto AsCatalogSupplierItemDto(SupplierVariant supplierVariant)
+    {
+        return new CatalogSupplierItemDetailDto(
+            supplierVariant.SupplierProductImages.Select(x => new Dtos.Products.ProductImageDto(x.Url, x.IsHome)).ToList()
+        );
+    }
 
     public static CatalogCategoryDto AsCatalogCategoryDto(this Category category)
     {
@@ -24,9 +31,12 @@ public static class CatalogExtensions
     }
     public static CatalogProductDto AsProductCatalogDto(this Product product)
     {
-        var basePrice = product.Price ?? 0;
         var minPrice = product.Inventories.MinBy(x => x.FinalPrice.Amount)?.FinalPrice.Amount ?? 0;
         var maxPrice = product.Inventories.MaxBy(x => x.FinalPrice.Amount)?.FinalPrice.Amount ?? 0;
+        var totalQuantity = product.Inventories.Sum(x => x.TotalQuantity);
+        var availableQuantity = product.Inventories.Sum(x => x.AvailableQuantity);
+
+
 
         return new CatalogProductDto(
            product.Id.Value,
@@ -36,11 +46,10 @@ public static class CatalogExtensions
            product.ImageUrl,
            minPrice,
            maxPrice,
-           basePrice,
-           product.FinalPrice ?? basePrice,
-           product.TotalQuantity,
-           product.AverageRating,
-           product.NumberOfRatings
+       totalQuantity,
+       availableQuantity,
+         0,
+         0
         );
     }
 
@@ -57,7 +66,8 @@ public static class CatalogExtensions
             item.TotalQuantity,
             item.InventorySKU,
             item.RetailPrice.Amount,
-            item.FinalPrice.Amount
+            item.FinalPrice.Amount,
+            item.SupplierVariant.SupplierProductImages.Select(x => new Dtos.Products.ProductImageDto(x.Url, x.IsHome)).ToList()
         );
     }
 
@@ -80,7 +90,6 @@ public static class CatalogExtensions
 
     public static CatalogProductDetailDto AsCatalogProductDetailDto(this Product product)
     {
-        var basePrice = product.Price ?? 0;
         var TotalVariants = product.Inventories.DistinctBy(x => x.ProductVariantId).Count();
         var TotalSuppliers = product.Inventories.DistinctBy(x => x.SupplierId).Count();
         var minPrice = product.Inventories.MinBy(x => x.FinalPrice.Amount)?.FinalPrice.Amount ?? 0;
@@ -99,8 +108,6 @@ public static class CatalogExtensions
            product.ImageUrl,
            totalQuantity,
            availableQuantity,
-           product.AverageRating,
-           product.NumberOfRatings,
            TotalVariants,
            TotalSuppliers
         );

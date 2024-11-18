@@ -13,7 +13,7 @@ public class SupplyRequest : BaseEntity
     }
     public SupplyRequestId Id { get; set; }
 
-    public Currency Currency { get; set; }
+    public CurrencyCode Currency { get; set; }
 
     public string Supplier { get; set; }
 

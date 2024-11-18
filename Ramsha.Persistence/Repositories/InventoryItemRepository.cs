@@ -66,6 +66,8 @@ IInventoryItemRepository
     public async Task<PaginationResponseDto<CatalogInventoryItemDetailDto>> GetCatalogItemsPagedListAsync(ProductId productId, PaginationParams paginationParams, SortingParams? sortingParams = null, FilterParams? filterParams = null, ProductVariantId? productVariantId = null)
     {
         var query = _items
+        .Include(x => x.SupplierVariant)
+        .ThenInclude(x => x.SupplierProductImages)
         .Where(x => x.ProductId == productId)
         .AsQueryable();
 
@@ -73,6 +75,18 @@ IInventoryItemRepository
         {
             query = query.Where(x => x.ProductVariantId == productVariantId);
         }
+        else
+        {
+
+            var variantId = await GetVariantIdByPricingStrategy(productId, settings.Value.ProductPricingStrategy);
+            if (variantId != null)
+            {
+                query = query.Where(x => x.ProductVariantId == variantId);
+            }
+        }
+
+
+
         if (sortingParams is not null)
         {
             query = query.OrderByColumnName(sortingParams.ColumnsSort);
@@ -146,6 +160,36 @@ IInventoryItemRepository
     public async Task<InventoryItem?> GetInventoryItemBySku(string sku)
     {
         return await _items.FirstOrDefaultAsync(x => x.InventorySKU == sku);
+    }
+
+    public async Task<InventoryItem?> GetWithStocksDetail(InventoryItemId id)
+    {
+        return await _items.Include(x => x.Stocks)
+        .ThenInclude(x => x.Discounts).FirstOrDefaultAsync(x => x.Id == id);
+    }
+
+    private async Task<ProductVariantId?> GetVariantIdByPricingStrategy(
+    ProductId productId,
+    ProductPricingStrategy pricingStrategy)
+    {
+        var variantQuery = _items
+            .Where(x => x.ProductId == productId && x.SupplierVariant != null)
+            .GroupBy(x => x.ProductVariantId);
+
+        return pricingStrategy switch
+        {
+            ProductPricingStrategy.MinPrice => await variantQuery
+                .OrderBy(group => group.Min(x => x.FinalPrice.Amount)) 
+                .Select(group => group.Key)
+                .FirstOrDefaultAsync(),
+
+            ProductPricingStrategy.MaxPrice => await variantQuery
+                .OrderByDescending(group => group.Max(x => x.FinalPrice.Amount))
+                .Select(group => group.Key)
+                .FirstOrDefaultAsync(),
+
+            _ => null
+        };
     }
 }
 

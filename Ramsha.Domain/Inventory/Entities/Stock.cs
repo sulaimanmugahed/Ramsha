@@ -48,22 +48,16 @@ public class Stock : BaseEntity
 
     public void SetPrice(Price wholesalePrice)
     {
-        WholesalePrice = new Price(wholesalePrice.Amount, wholesalePrice.Currency);
-
-        RetailPrice = new Price(ApplyMarkupPercentage(wholesalePrice).Amount, wholesalePrice.Currency);
-        FinalPrice = new Price(ApplyDiscount(RetailPrice).Amount, RetailPrice.Currency);
+        WholesalePrice = wholesalePrice;
+        RetailPrice = ApplyMarkupPercentage(wholesalePrice);
+        FinalPrice = ApplyDiscount(RetailPrice);
     }
 
-    public void AddDiscount(Discount discount)
+    public Price ApplyDiscount(Discount discount)
     {
-        var discountChain = DiscountChain.Create();
-        var strategy = DiscountStrategyFactory.Create(discount);
-        if (strategy is not null)
-            discountChain.AddDiscount(strategy);
-
-        FinalPrice = discountChain.ApplyDiscount(RetailPrice);
         Discounts.Add(discount);
-
+        FinalPrice = ApplyDiscount(RetailPrice);
+        return FinalPrice;
     }
 
     private Price ApplyMarkupPercentage(Price wholePrice)

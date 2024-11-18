@@ -57,6 +57,8 @@ public class InventoryItem : BaseEntity, IAuditable
 
     public ProductVariantId? ProductVariantId { get; set; }
     public ProductVariant ProductVariant { get; set; }
+    public SupplierVariant SupplierVariant { get; set; }
+
     public Product Product { get; set; }
     public SupplierId SupplierId { get; set; }
     public Supplier Supplier { get; set; }
@@ -86,6 +88,17 @@ public class InventoryItem : BaseEntity, IAuditable
         IncreaseTotalQuantity(quantity);
         UpdateInventoryBasedOnSelectionStockStrategy(StockSelectionType);
         RaiseDomainEvent(new StockUpdatedEvent(ProductId, ProductVariantId));
+    }
+
+    public void ApplyDiscount(Discount discount)
+    {
+        var stock = GetStock(StockSelectionType);
+        if (stock is null)
+        {
+            throw new Exception("stock null");
+        }
+
+        FinalPrice = stock.ApplyDiscount(discount);
     }
 
 

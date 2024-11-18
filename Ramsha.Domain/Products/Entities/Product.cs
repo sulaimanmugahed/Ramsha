@@ -11,7 +11,6 @@ namespace Ramsha.Domain.Products.Entities;
 
 public sealed class Product : BaseEntity, IAuditable, ISoftDeletable
 {
-    // i add this constractor to generate fakedata with bogus
     private Product() { }
 
     private Product(ProductId id, string name, string description, ProductStatus status)
@@ -25,12 +24,6 @@ public sealed class Product : BaseEntity, IAuditable, ISoftDeletable
     public ProductId Id { get; private set; }
     public string Name { get; private set; }
     public string Code { get; private set; }
-
-    public int TotalQuantity { get; private set; }
-    public int AvailableQuantity { get; private set; }
-
-    public decimal? Price { get; private set; }
-    public decimal? FinalPrice { get; private set; }
     public string Description { get; private set; }
     public string? ImageUrl { get; private set; }
     public ProductStatus Status { get; private set; }
@@ -48,42 +41,12 @@ public sealed class Product : BaseEntity, IAuditable, ISoftDeletable
 
     public List<Rating> Ratings { get; set; } = [];
 
-    public decimal AverageRating { get; private set; }
-    public int NumberOfRatings { get; private set; }
-
 
     public void SetSeoSettings(SeoSettings seoSettings)
     {
         SeoSettings = seoSettings;
     }
 
-
-
-    public void UpdatePrice(decimal basePrice, decimal finalPrice)
-    {
-        Price = basePrice;
-        FinalPrice = finalPrice;
-    }
-
-
-
-
-
-    public void UpdatePrice(decimal price, decimal? finalPrice = null)
-    {
-        Price = price;
-        FinalPrice = finalPrice;
-    }
-
-    public void IncreaseQuantity(int? value = null)
-    {
-        TotalQuantity += value ?? 1;
-    }
-
-    public void DecreaseQuantity(int? value = null)
-    {
-        TotalQuantity -= value ?? 1;
-    }
 
     public void SetName(string name)
     {
@@ -144,14 +107,6 @@ public sealed class Product : BaseEntity, IAuditable, ISoftDeletable
         }
     }
 
-    public void UpdateQuantity(int availableQuantity, int totalQuantity)
-    {
-        TotalQuantity = totalQuantity;
-        AvailableQuantity = availableQuantity;
-    }
-
-
-
     public void AddVariant(ProductVariant variant)
     {
         Variants.Add(variant);
@@ -171,38 +126,6 @@ public sealed class Product : BaseEntity, IAuditable, ISoftDeletable
         var productOption = new ProductOption(this, option, priority);
         Options.Add(productOption);
     }
-
-    public void UpdateQuantity(int quantity)
-    {
-        TotalQuantity = quantity;
-    }
-
-    public void UpdateQuantityFromInventories()
-    {
-        if (Inventories.Count != 0)
-            TotalQuantity = Inventories.Select(x => x.TotalQuantity).Sum();
-    }
-
-    public void AdjustQuantity(int quantityChange)
-    {
-        if (TotalQuantity + quantityChange < 0)
-        {
-            throw new InvalidOperationException("Cannot reduce quantity below zero.");
-        }
-        TotalQuantity += quantityChange;
-    }
-
-    public void UpdatePriceFromVariants()
-    {
-        if (Variants.Count != 0)
-        {
-            var variant = Variants.MinBy(v => v.Price);
-            Price = variant?.Price;
-            FinalPrice = variant?.FinalPrice;
-        }
-    }
-
-
 
 
     public Guid CreatedBy { get; set; }

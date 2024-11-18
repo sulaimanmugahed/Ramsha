@@ -134,9 +134,9 @@ const changeProductStatus = async (productId: string, status: string) => {
 }
 
 
-const getProductVariantSelection = async (productId: string) =>
+const getProductVariantSelection = async (productId: string, isCatalog: boolean = false) =>
     await request<ProductVariantSelection>({
-        url: `${BASE_URL}/${productId}/selection`
+        url: `${BASE_URL}/${productId}/selection/?isCatalog=${isCatalog}`,
     })
 
 

@@ -37,7 +37,7 @@ public class CatalogController : BaseApiController
 
 
     [HttpPost("{productId}/inventoryItems/{productVariantId?}")]
-    public async Task<BaseResult<List<CatalogInventoryItemDetailDto>>> GetInventoryItems(Guid productId, [FromBody] GetCatalogInventoryItemsQuery query, Guid? productVariantId = null)
+    public async Task<BaseResult<List<CatalogInventoryItemDetailDto>>> GetInventoryItems(Guid productId, [FromBody] GetCatalogInventoryItemsQuery query, [FromRoute]Guid? productVariantId = null)
     {
         query.ProductId = productId;
         query.ProductVariantId = productVariantId;

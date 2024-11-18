@@ -1,12 +1,12 @@
 
-import { Autocomplete, Box, Button, Card, CardMedia, Chip, Grid, IconButton, InputAdornment, TextField, Tooltip, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, Chip, Divider, Grid, Typography } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 
 import LoadingButton from "@mui/lab/LoadingButton";
+import { alpha } from '@mui/material/styles';
 import { useParams } from "react-router-dom";
+import AppDivider from "../../app/components/AppDivider";
 import AppBagIcon from "../../app/components/icons/AppBagIcon";
-import { AppSortIcon } from "../../app/components/icons/AppSortIcon";
-import AppGridDetail from "../../app/components/ui/AppGridDetail";
 import AppQuantitySelector from "../../app/components/ui/AppQuantitySelector";
 import AppSlider from "../../app/components/ui/AppSlider";
 import { useAccount } from "../../app/hooks/accountHooks";
@@ -22,11 +22,14 @@ import VariantValuesSelector from "../products/variants/VariantValuesSelector";
 
 
 
+
 type Props = {
-    product: CatalogProductDetailType
+    product: CatalogProductDetailType,
+
+
 }
 
-const CatalogProductOvers = ({ }: Props) => {
+const CatalogProductOvers = ({ product }: Props) => {
     const [selectedQuantity, setSelectedQuantity] = useState<number>(1);
 
     const { productId } = useParams()
@@ -88,6 +91,14 @@ const CatalogProductOvers = ({ }: Props) => {
 
     }
 
+
+    const handleOverClick = (item: CatalogInventoryItem) => {
+        setSelectedInventory(item);
+        setParams({ sku: item.sku });
+    }
+
+
+
     const hasDiscount = useMemo(() => selectedInventory && selectedInventory.finalPrice < selectedInventory.basePrice, [selectedInventory]);
 
     const { variant } = useProductVariant(productId, selectedInventory?.variantId!)
@@ -101,198 +112,174 @@ const CatalogProductOvers = ({ }: Props) => {
     const formattedFinalPrice = currency && selectedInventory && formatCurrency(currency?.rate * selectedInventory.finalPrice, currency?.code).toString() || ''
 
 
+    const isActiveItem = (id: string) => selectedInventory?.id === id;
+
+
     return (
-        <Grid container spacing={2}>
-            <Grid item xs={12} md={12}>
-                <Typography sx={{ mb: 2 }} variant='h6' fontWeight={'bold'}>Overs</Typography>
+        <Grid item xs={12} md={12}>
 
-                <Grid container sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
-                    <Grid item xs={12} md={6}>
+            <Grid container spacing={2}>
+                <Grid sx={{ mb: 2 }} item xs={12} md={12}>
+                    <Grid container>
+                        <Grid sx={{ display: 'flex', position: 'relative' }} item xs={12}>
+                            <Box sx={{ width: '50%' }}>
+                                <Typography gutterBottom color={'primary.main'} fontWeight={'bold'} variant='h6'>{product.name}</Typography>
+                                <Typography color={'text.secondary'} variant="body2">
+                                    {product.category} / {product.brand}
+                                </Typography>
+                            </Box>
+                            <Divider sx={{ mx: 2 }} variant="middle" orientation="vertical" flexItem />
+                            <Box >
+                                <Typography gutterBottom fontWeight={'bold'} variant='body1'>Options</Typography>
 
-                        <Button size='small' onClick={() => setOpenVariantDialog(true)} variant='outlined' sx={{ mt: 2, borderRadius: 20 }}>
-                            Select Variant
-                        </Button>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <Autocomplete
-                            options={items?.map(item => ({
-                                sku: item.sku,
-                                price: item.finalPrice,
-                            })) || []}
-                            clearOnEscape={false}
-                            disableClearable
-                            // onInputChange={(event, newInputValue) => setParams({ filterParams: { globalFilterValue: newInputValue } })}
-                            getOptionLabel={(option) => option.sku}
-                            value={selectedInventory ? { sku: selectedInventory.sku, price: selectedInventory.finalPrice } : undefined}
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    size='small'
-                                    label="Select Over for current variant"
-                                    variant="outlined"
-                                    fullWidth
-                                    InputProps={{
-                                        ...params.InputProps,
-                                        endAdornment: (
-                                            <InputAdornment position="end">
-                                                <IconButton onClick={() => { }} aria-label="sort">
-                                                    <AppSortIcon color="inherit" />
-                                                </IconButton>
-                                                {params.InputProps.endAdornment}
-                                            </InputAdornment>
-                                        ),
+                                <Button size='small' onClick={() => setOpenVariantDialog(true)} variant='outlined' sx={{ borderRadius: 20, position: 'absolute', right: 0, top: 0 }}>
+                                    Change
+                                </Button>
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        flexWrap: 'nowrap',
+                                        overflowX: 'auto',
+
+                                        gap: 1,
+                                        width: 250,
+                                        padding: '8px 0',
+                                        minWidth: 0,
+                                        flex: '1 1 auto',
+                                        marginRight: '16px',
+                                        "&::-webkit-scrollbar": {
+                                            display: 'none',
+                                        },
                                     }}
+                                >
+                                    <Chip
+                                        label={'Color:Red'}
+                                        variant="outlined"
+                                        color={"secondary"}
+                                        size="small"
+                                    />
+                                    <Chip
+                                        label={'Size:Small'}
+                                        variant="outlined"
+                                        color={"secondary"}
+                                        size="small"
+                                    />
+                                </Box>
+                            </Box>
+                        </Grid>
+                    </Grid>
+                    <AppDivider />
+                    <Card sx={{
+                        borderRadius: '20px',
+                        boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        gap: 2,
+                        padding: 2,
+                        position: 'relative',
+                        overflow: 'visible',
+                        '&:hover': { boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.15)' },
+                    }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <Box>
+                                {!hasDiscount && (
+                                    <Typography variant="body2" color="text.secondary" sx={{ textDecoration: 'line-through' }}>
+                                        {formattedBasePrice ? formattedBasePrice : 'Not Available'}
+                                    </Typography>
+                                )}
+                                <Typography variant="h4" color="primary.main" fontWeight="bold">
+                                    {formattedFinalPrice ? formattedFinalPrice : 'Not Available'}
+                                </Typography>
+                            </Box>
+
+                            {hasDiscount && (
+                                <Chip
+                                    sx={{
+                                        position: 'absolute',
+                                        right: 10,
+                                        top: -10,  // Slightly overlapping the card for a modern look
+                                        borderRadius: '8px',
+                                    }}
+                                    label={getDiscountPercentage(selectedInventory?.basePrice!, selectedInventory?.finalPrice!)}
+                                    size="small"
+                                    color="error"
                                 />
                             )}
-                            renderOption={(props, option) => {
-                                const formattedOptionPrice = formatCurrency(option.price * (currency?.rate || 1), currency?.code || 'USD')
-                                return (
-                                    <li {...props}>
-                                        <Tooltip
-                                            title={(
-                                                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                                                    <Typography variant="body2">SKU: {option.sku}</Typography>
-                                                    <Typography variant="body2">Price: {formattedOptionPrice}</Typography>
-                                                </Box>
-                                            )}
-                                            placement="right"
-                                        >
-                                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                <Typography variant="body2">{option.sku} - ${formattedOptionPrice}</Typography>
-                                            </Box>
-                                        </Tooltip>
-                                    </li>
-                                )
-                            }}
-                            onChange={(event, value) => {
-                                const inventory = value ? items?.find(item => item.sku === value.sku) : null;
-                                setSelectedInventory(inventory || null);
-                                setParams({ sku: inventory.sku });
-                            }}
-                        />
-                    </Grid>
+                        </Box>
 
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
+                            <AppQuantitySelector
+                                availableQuantity={selectedInventory?.availableQuantity!}
+                                onChange={(newValue) => setSelectedQuantity(newValue)}
+                                quantity={selectedQuantity}
+
+                            />
+
+                            <LoadingButton
+                                loading={isAddPending || isRemovePending}
+                                disabled={basketItem && basketItem.quantity === selectedQuantity}
+                                size="small"
+                                variant="contained"
+                                sx={{
+                                    borderRadius: '20px',
+                                    paddingX: 3,
+                                    '&:hover': { boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.15)' },
+                                }}
+                                endIcon={<AppBagIcon />}
+                                onClick={handleAddToBasket}
+                            >
+                                {basketItem ? 'Update Bag' : 'Add To Bag'}
+                            </LoadingButton>
+                        </Box>
+                    </Card>
                 </Grid>
+            </Grid>
 
+            <Grid item xs={12} md={12}>
                 <Card sx={{
                     borderRadius: '20px',
                     boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 2,
-                    padding: 2,
                     position: 'relative',
                     overflow: 'visible',
+                    p: 2,
                     '&:hover': { boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.15)' },
                 }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Box>
-                            {hasDiscount && (
-                                <Typography variant="body2" color="text.secondary" sx={{ textDecoration: 'line-through' }}>
-                                    {formattedBasePrice ? formattedBasePrice : 'Not Available'}
-                                </Typography>
-                            )}
-                            <Typography variant="h4" color="primary.main" fontWeight="bold">
-                                {formattedFinalPrice ? formattedFinalPrice : 'Not Available'}
-                            </Typography>
-                        </Box>
-
-                        {hasDiscount && (
-                            <Chip
+                    <Typography sx={{ mb: 2 }} variant='h6' fontWeight={'bold'}>Overs</Typography>
+                    <AppSlider
+                        items={items || []}
+                        slidesToShow={4}
+                        renderItem={(item) => (
+                            <Card
+                                onClick={() => handleOverClick(item)}
                                 sx={{
-                                    position: 'absolute',
-                                    right: 10,
-                                    top: -10,  // Slightly overlapping the card for a modern look
-                                    borderRadius: '8px',
-                                }}
-                                label={getDiscountPercentage(selectedInventory?.basePrice!, selectedInventory?.finalPrice!)}
-                                size="small"
-                                color="error"
-                            />
+                                    width: '100%',
+                                    height: 'auto',
+                                    maxWidth: 250,
+                                    maxHeight: 250,
+                                    borderRadius: 4,
+                                    border: isActiveItem(item.id) ? "2px solid" : 'none',
+                                    borderColor: isActiveItem(item.id) ? (theme) => alpha(theme.palette.primary.main, 0.5) : undefined,
+                                    boxShadow: isActiveItem(item.id) ? '0px 4px 12px rgba(0, 0, 0, 0.1)' : undefined,
+                                    '&:hover': { boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.15)' },
+                                }}>
+                                <CardContent>
+                                    {!hasDiscount && (
+                                        <Typography variant="caption" color="text.secondary" sx={{ textDecoration: 'line-through' }}>
+                                            {currency && formatCurrency(currency?.rate * item.basePrice, currency?.code)}
+                                        </Typography>
+                                    )}
+                                    <Typography variant="h5" color="primary.main" fontWeight="bold">
+                                        {currency && formatCurrency(currency?.rate * item.finalPrice, currency?.code)}
+                                    </Typography>
+                                    <Typography variant="caption" color="text.secondary" sx={{}}>
+                                        Qut {selectedInventory?.availableQuantity}
+                                    </Typography>
+                                </CardContent>
+                            </Card>
                         )}
-                    </Box>
-
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
-                        <AppQuantitySelector
-                            availableQuantity={selectedInventory?.availableQuantity!}
-                            onChange={(newValue) => setSelectedQuantity(newValue)}
-                            quantity={selectedQuantity}
-
-                        />
-
-                        <LoadingButton
-                            loading={isAddPending || isRemovePending}
-                            disabled={basketItem && basketItem.quantity === selectedQuantity}
-                            size="small"
-                            variant="contained"
-                            sx={{
-                                borderRadius: '20px',
-                                paddingX: 3,
-                                '&:hover': { boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.15)' },
-                            }}
-                            endIcon={<AppBagIcon />}
-                            onClick={handleAddToBasket}
-                        >
-                            {basketItem ? 'Update Bag' : 'Add To Bag'}
-                        </LoadingButton>
-                    </Box>
-                </Card>
-
-            </Grid>
-            <Grid item xs={12} md={12}>
-                <Card
-                    sx={{
-                        borderRadius: '12px',
-                        boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-                        padding: 3,
-                    }}
-                >
-                    <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
-                        Selected Over Details
-                    </Typography>
-
-                    <AppGridDetail
-                        grid={3}
-                        items={[
-                            ...variant?.variantValues.map(x => ({ label: x.optionName, value: x.valueName })) || [],
-                            { label: 'Base Price', value: formattedBasePrice },
-                            { label: 'Final Price', value: formattedFinalPrice },
-                            { label: 'Available Quantity', value: selectedInventory?.availableQuantity.toString() || '' },
-                            { label: 'Total Quantity', value: selectedInventory?.totalQuantity.toString() || '' },
-                        ]}
                     />
                 </Card>
             </Grid>
-
-            <Grid item xs={12} md={12}>
-                <Typography sx={{ mb: 2 }} variant='h6' fontWeight={'bold'}>Images From The Supplier</Typography>
-                <AppSlider
-                    items={Array.from(new Array(6)).map((index) => ({ url: `https://picsum.photos/200?random=${index}` }))}
-                    slidesToShow={4}
-                    renderItem={(img) => (
-                        <Box sx={{
-                            width: '100%',
-                            height: 'auto',
-                            maxWidth: 250,
-                            maxHeight: 250,
-                        }}>
-                            <CardMedia
-                                component="img"
-                                image={img.url}
-                                alt={"inventory item"}
-                                sx={{
-                                    borderRadius: 2,
-                                    objectFit: 'cover',
-                                    boxShadow: 2,
-                                    width: '100%',
-                                    height: 'auto',
-                                }}
-                            />
-                        </Box>
-                    )}
-                />
-            </Grid>
-
             {
                 variants && availableOptionsNames && (
                     <VariantValuesSelector
@@ -309,3 +296,35 @@ const CatalogProductOvers = ({ }: Props) => {
 }
 
 export default CatalogProductOvers
+
+
+
+
+{/* <Grid item xs={12} md={12}>
+<Typography sx={{ mb: 2 }} variant='h6' fontWeight={'bold'}>Images From The Supplier</Typography>
+<AppSlider
+    items={selectedInventory?.images || []}
+    slidesToShow={4}
+    renderItem={(img) => (
+        <Box sx={{
+            width: '100%',
+            height: 'auto',
+            maxWidth: 250,
+            maxHeight: 250,
+        }}>
+            <CardMedia
+                component="img"
+                image={img.url}
+                alt={"inventory item"}
+                sx={{
+                    borderRadius: 2,
+                    objectFit: 'cover',
+                    boxShadow: 2,
+                    width: '100%',
+                    height: 'auto',
+                }}
+            />
+        </Box>
+    )}
+/>
+</Grid> */}

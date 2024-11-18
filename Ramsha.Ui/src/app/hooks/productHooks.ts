@@ -1,11 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { productService } from "../api/services/productService"
-import { BrandDto, ProductDetail, ProductDto, ProductOption, ProductStatus, ProductTag, ProductVariantDto } from "../models/products/product"
 import { toast } from "sonner"
-import { BRANDS_QUERY_KEY, PRODUCT_TAGS_QUERY_KEY, PRODUCTS_QUERY_KEY, PRODUCT_VARIANTS_QUERY_KEY, PRODUCT_OPTIONS_QUERY_KEY, PRODUCT_SELECTION_QUERY_KEY } from "../constants/queriesKey"
+import { productService } from "../api/services/productService"
+import { BRANDS_QUERY_KEY, PRODUCT_OPTIONS_QUERY_KEY, PRODUCT_SELECTION_QUERY_KEY, PRODUCT_TAGS_QUERY_KEY, PRODUCT_VARIANTS_QUERY_KEY, PRODUCTS_QUERY_KEY } from "../constants/queriesKey"
 import { PagedParams, PaginationResponse } from "../models/common/commonModels"
-import { Option } from "../models/options/option"
-import AppError from "../utils/appError"
+import { BrandDto, ProductDetail, ProductDto, ProductOption, ProductStatus, ProductVariantDto } from "../models/products/product"
 
 
 
@@ -246,10 +244,10 @@ export const useAddVariant = () => {
     }
 }
 
-export const useProductVariantSelection = (productId: string) => {
+export const useProductVariantSelection = (productId: string, isCatalog: boolean = false) => {
     const { data } = useQuery({
-        queryKey: [PRODUCT_SELECTION_QUERY_KEY, productId],
-        queryFn: async () => await productService.getProductVariantSelection(productId)
+        queryKey: [PRODUCT_SELECTION_QUERY_KEY, productId, isCatalog],
+        queryFn: async () => await productService.getProductVariantSelection(productId, isCatalog)
     })
 
     return {

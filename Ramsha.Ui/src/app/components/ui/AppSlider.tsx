@@ -1,12 +1,12 @@
-import Slider from 'react-slick';
-import { useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import { useTheme } from '@mui/material/styles';
 import React, { useRef } from 'react';
+import Slider from 'react-slick';
+import "slick-carousel/slick/slick-theme.css";
+import "slick-carousel/slick/slick.css";
 
 type ResponsiveSetting = {
     breakpoint: number;
@@ -25,6 +25,9 @@ type Props<T> = {
     responsive?: ResponsiveSetting[];
     arrows?: boolean
     dots?: boolean
+    infinite?: boolean
+    autoplay?: boolean
+
 
 };
 
@@ -63,12 +66,12 @@ const AppSlider = <T,>({
     slidesToShow = 3,
     responsive = [],
     arrows = false,
-    dots = false
+    dots = false,
+    infinite,
+    autoplay
 }: Props<T>) => {
-    const theme = useTheme();
-    const sliderRef = useRef<Slider>(null); // Create a ref for the slider
+    const sliderRef = useRef<Slider>(null);
 
-    // Default responsive settings
     const defaultResponsiveSettings: ResponsiveSetting[] = [
         {
             breakpoint: 1024,
@@ -92,7 +95,6 @@ const AppSlider = <T,>({
         },
     ];
 
-    // Combine default and custom responsive settings
     const combinedResponsiveSettings = [
         ...defaultResponsiveSettings,
         ...responsive.map((setting) => ({
@@ -108,11 +110,11 @@ const AppSlider = <T,>({
 
     const sliderSettings = {
         dots,
-        infinite: items.length > slidesToShow,
+        infinite,
         speed: 500,
         slidesToShow,
         slidesToScroll: 1,
-        autoplay: true,
+        autoplay,
         arrows,
         autoplaySpeed: 3000,
         appendDots: (dots: React.ReactNode) => (

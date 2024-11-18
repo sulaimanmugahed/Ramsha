@@ -15,9 +15,8 @@ string Brand,
 string? ImageUrl,
 decimal MinPrice,
 decimal MaxPrice,
-decimal BasePrice,
-decimal FinalPrice,
 int TotalQuantity,
+int AvailableQuantity,
 decimal AverageRating,
 int NumberOfRatings
 );
@@ -33,8 +32,6 @@ string Brand,
 string? ImageUrl,
 int TotalQuantity,
 int AvailableQuantity,
-decimal AverageRating,
-int NumberOfRatings,
 int TotalVariants,
 int TotalSuppliers
 );
@@ -64,13 +61,17 @@ Guid VariantId,
  int TotalQuantity,
  string Sku,
  decimal BasePrice,
- decimal FinalPrice
-
-
+ decimal FinalPrice,
+ List<ProductImageDto> Images
 );
 public record CatalogSupplierDetailDto(
 string FirstName,
 string LastName
+);
+
+
+public class CatalogSupplierItemDetailDto(
+    List<ProductImageDto> Images
 );
 
 

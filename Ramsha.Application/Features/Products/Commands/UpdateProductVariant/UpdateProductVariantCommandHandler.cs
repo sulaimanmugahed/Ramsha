@@ -61,40 +61,6 @@ public class UpdateProductVariantCommandHandler(
             }
         }
 
-        // variant.SetSKU(variantService.GenerateSKU(product.Name,))
-        if (request.VariantImagesUrlToRemove.HasItems())
-        {
-            foreach (var imageUrl in request.VariantImagesUrlToRemove)
-            {
-                var imageToRemove = variant.GetImageByUrl(imageUrl);
-                if (imageToRemove is not null)
-                {
-                    
-                    var isDeleted = await storageService.DeleteFile(imageToRemove.Path);
-                    if (!isDeleted)
-                        return new Error(ErrorCode.Exception, "we couldn't remove the image file");
-
-                    variant.RemoveImage(imageToRemove);
-
-                }
-
-            }
-
-        }
-
-        var variantImage = request.VariantImagesToAdd;
-
-        if (request.VariantImagesToAdd.HasItems())
-        {
-            for (var index = 0; index < variantImage.Count; index++)
-            {
-                variant.AddImage(
-                    variantImage[index].Url,
-                    variantImage[index].FullPath,
-                    index == 0
-                );
-            }
-        }
 
         await unitOfWork.SaveChangesAsync();
 

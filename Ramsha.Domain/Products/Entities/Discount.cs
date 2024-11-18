@@ -22,6 +22,7 @@ public class Discount
     public DiscountType Type { get; set; }
     public decimal Value { get; set; }
     public DateTime StartDate { get; set; }
+
     public DateTime EndDate { get; set; }
 
 }

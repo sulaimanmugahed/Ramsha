@@ -38,13 +38,7 @@ const CatalogProductDetailPage = () => {
     const [rateValue, setRateValue] = useState<number | null>(null)
     const [rateModalOpen, setRateModalOpen] = useState(false)
 
-    const supplierDetails = {
-        firstName: "Sulaiman",
-        lastName: "Mugahed",
-        email: "sulaimanmugahed@gmail.com",
-        phone: "00967773050577",
-        returnPolicy: "30-day return policy.",
-    };
+
 
     const { productId } = useParams()
     if (!productId) return null;
@@ -387,15 +381,7 @@ const CatalogProductDetailPage = () => {
                     </Card>
                 </Grid>
 
-                <AppDialog maxWidth='md' onClose={handleCloseSupplierDetails} open={openSupplierDetails}>
-                    <Box sx={{ p: 3 }}>
-                        <Typography variant="h6" fontWeight="bold">Supplier Details</Typography>
-                        <Divider sx={{ mb: 2 }} />
-                        <Typography><strong>Name:</strong> {supplierDetails.firstName} {supplierDetails.lastName}</Typography>
-                        <Typography><strong>Email:</strong> {supplierDetails.email}</Typography>
-                        <Typography><strong>Phone:</strong> {supplierDetails.phone}</Typography>
-                    </Box>
-                </AppDialog>
+               
 
             </Grid >
         </AppDialog >

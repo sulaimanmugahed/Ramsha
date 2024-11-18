@@ -13,25 +13,7 @@ public class InventoryItemPriceChangeEventHandler(
 {
     public async Task Handle(InventoryItemPriceChangeEvent notification, CancellationToken cancellationToken)
     {
-        var product = await productRepository.GetAsync(
-            x => x.Id == notification.ProductId,
-            x => x.Variants);
-
-        if (product == null) return;
-
-        if (notification.ProductVariantId is not null)
-        {
-            var variant = product.Variants.FirstOrDefault(x => x.Id == notification.ProductVariantId);
-            if (variant == null) return;
-
-            variant.UpdatePrice(notification.RetailPrice.Amount, notification.FinalPrice.Amount);
-            product.UpdatePriceFromVariants();
-        }
-        else
-        {
-            product.UpdatePrice(notification.RetailPrice.Amount, notification.FinalPrice.Amount);
-        }
-
-        await unitOfWork.SaveChangesAsync();
+        
+      
     }
 }

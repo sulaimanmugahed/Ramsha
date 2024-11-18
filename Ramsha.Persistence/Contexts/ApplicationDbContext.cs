@@ -249,6 +249,10 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
               .HasConversion(id => id.Value, value => new ProductVariantId(value));
 
         builder.Entity<ProductVariant>()
+      .Property(o => o.ProductId)
+      .HasConversion(id => id.Value, value => new ProductId(value));
+
+        builder.Entity<ProductVariant>()
         .HasQueryFilter(x => !x.Product.IsDeleted);
 
 
@@ -301,7 +305,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
               .HasForeignKey(x => new { x.SupplierId, x.ProductId })
               .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne<SupplierVariant>()
+            builder.HasOne(x => x.SupplierVariant)
             .WithOne(x => x.InventoryItem)
             .HasForeignKey<InventoryItem>(x => new { x.SupplierId, x.ProductId, x.ProductVariantId })
             .OnDelete(DeleteBehavior.Restrict);
@@ -408,7 +412,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
             entity.ComplexProperty(p => p.RetailPrice, price =>
       {
-        
+
           price.Property(x => x.Amount).HasColumnName("StockRetailPriceAmount").HasColumnType("decimal(18,6)");
           price.Property(x => x.Currency).HasColumnName("StockRetailPriceCurrency");
       });

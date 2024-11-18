@@ -34,14 +34,16 @@ const getProductVariant = async (productId: string, productVariantId?: string | 
 };
 
 
-const getInventoryItems = async (productId: string, params: PagedParams, productVariantId?: string | null) => {
-    const url = productVariantId
-        ? `${BASE_URL}/${productId}/inventoryItems/${productVariantId}`
+const getInventoryItems = async (productId: string, params: PagedParams) => {
+    const { variantId, ...others } = params
+    console.log('variantId:', variantId)
+    const url = variantId
+        ? `${BASE_URL}/${productId}/inventoryItems/${variantId}`
         : `${BASE_URL}/${productId}/inventoryItems`;
     return await request<any>({
         url,
         method: 'POST',
-        data: params
+        data: others
     })
 }
 

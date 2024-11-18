@@ -120,11 +120,12 @@ export const router = createBrowserRouter([
                         element: <CatalogPage />,
                         path: 'catalog',
                         children: [
-                            {
-                                element: <CatalogProductDetailsModal />,
-                                path: ':productId'
-                            }
+
                         ]
+                    },
+                    {
+                        element: <CatalogProductDetailsModal />,
+                        path: 'catalog/:productId'
                     },
                     {
                         element: <BasketDetailPage />,

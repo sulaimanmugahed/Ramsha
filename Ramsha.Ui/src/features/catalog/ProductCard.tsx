@@ -23,6 +23,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product: { averageRating, bra
     const formattedMaxPrice = currency && formatCurrency(currency?.rate * maxPrice, currency?.code)
 
 
+
+
     return (
         <Card
             sx={{
@@ -157,19 +159,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product: { averageRating, bra
                                     `${formattedMinPrice} - ${formattedMaxPrice}`
                             )}
                         </Typography>
-                        {/* {product?.finalPrice < product?.basePrice && (
-                            <Typography
-                                variant="body2"
-                                color="text.secondary"
-                                sx={{
-                                    textDecoration: "line-through",
-                                    marginLeft: 1,
-                                    fontSize: { xs: "0.6rem", sm: "0.7rem" },
-                                }}
-                            >
-                                ${product?.basePrice}
-                            </Typography>
-                        )} */}
+                       
                     </Box>
                     <IconButton
                         aria-label="add to favorites"

@@ -12,6 +12,6 @@ public class GetProductVariantSelectionQueryHandler(
 {
     public async Task<BaseResult<ProductVariantSelectionDto?>> Handle(GetProductVariantSelectionQuery request, CancellationToken cancellationToken)
     {
-        return await productRepository.GetProductVariantSelection(new Domain.Products.ProductId(request.ProductId));
+        return await productRepository.GetProductVariantSelection(new Domain.Products.ProductId(request.ProductId), request.IsCatalog);
     }
 }

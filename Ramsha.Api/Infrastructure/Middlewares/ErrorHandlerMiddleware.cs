@@ -9,7 +9,6 @@ namespace Ramsha.Api.Infrastructure.Middlewares;
 public class ErrorHandlerMiddleware(RequestDelegate next)
 {
     public async Task Invoke(HttpContext context)
-
     {
         try
         {

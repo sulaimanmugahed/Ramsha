@@ -33,8 +33,8 @@ public class ProductsController : BaseApiController
    => await Mediator.Send(query);
 
     [HttpGet("{productId}/selection")]
-    public async Task<BaseResult<ProductVariantSelectionDto?>> GetProductVariantSelection(Guid productId)
-    => await Mediator.Send(new GetProductVariantSelectionQuery { ProductId = productId });
+    public async Task<BaseResult<ProductVariantSelectionDto?>> GetProductVariantSelection(Guid productId, bool isCatalog)
+    => await Mediator.Send(new GetProductVariantSelectionQuery { ProductId = productId, IsCatalog = isCatalog });
 
     [HttpGet("{productId}/options")]
     public async Task<BaseResult<List<ProductOptionDto>?>> GetProductOption(Guid productId)

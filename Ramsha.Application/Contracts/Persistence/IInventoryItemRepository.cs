@@ -15,6 +15,7 @@ public interface IInventoryItemRepository : IGenericRepository<InventoryItem, In
     Task<IEnumerable<InventoryItem>> GetAllWithDetails(Expression<Func<InventoryItem, bool>> criteria);
     Task<InventoryItem?> GetWithDetails(Expression<Func<InventoryItem, bool>> criteria);
     Task<IEnumerable<InventoryItem>> GetAllWithDetails();
+    Task<InventoryItem?> GetWithStocksDetail(InventoryItemId id);
 
     Task<InventoryItem?> GetInventoryItemBySku(string sku);
 

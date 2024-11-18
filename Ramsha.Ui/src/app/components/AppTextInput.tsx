@@ -17,6 +17,7 @@ const AppTextInput = ({ inputStyle, InputProps, ...props }: Props) => {
             {...props}
             {...field}
             error={!!fieldState.error}
+            
             helperText={t(fieldState.error?.message!)}
             InputProps={{
                 sx: { ...inputStyle }, ...InputProps

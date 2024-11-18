@@ -1,5 +1,5 @@
 import { PagedParams, PaginationResponse } from "../../models/common/commonModels";
-import { InventoryItemDto } from "../../models/inventories/inventory";
+import { Discount, InventoryItemDto } from "../../models/inventories/inventory";
 import request from "../Request";
 
 
@@ -13,7 +13,17 @@ const getInventoryItems = async (params: PagedParams) =>
     })
 
 
+const applyDiscount = async (itemId: string, data: Discount) => {
+    return await request({
+        url: `${BASE_URL}/${itemId}/discount`,
+        method: 'POST',
+        data
+    })
+}
+
+
 
 export const inventoryService = {
-    getInventoryItems
+    getInventoryItems,
+    applyDiscount
 }

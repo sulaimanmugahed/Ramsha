@@ -15,12 +15,12 @@ public class ApplyInventoryItemDiscountCommandHandler(
 {
     public async Task<BaseResult> Handle(ApplyInventoryItemDiscountCommand request, CancellationToken cancellationToken)
     {
-        var inventoryItem = await inventoryItemRepository.GetInventoryItemBySku(request.Sku);
+        var inventoryItem = await inventoryItemRepository.GetWithStocksDetail(new Domain.Inventory.InventoryItemId(request.InventoryItemId));
         if (inventoryItem is null)
-            return new Error(ErrorCode.RequestedDataNotExist);
+            return new Error(ErrorCode.RequestedDataNotExist, "no item exist");
 
-        var discount = Discount.Create(request.DiscountValue, request.StartData, request.EndData, request.DiscountType);
-        //   inventoryItem.AddDiscount(discount);
+        var discount = Discount.Create(request.Discount.Value, request.Discount.StartDate, request.Discount.EndDate, request.Discount.Type);
+        inventoryItem.ApplyDiscount(discount);
 
         await unitOfWork.SaveChangesAsync();
 

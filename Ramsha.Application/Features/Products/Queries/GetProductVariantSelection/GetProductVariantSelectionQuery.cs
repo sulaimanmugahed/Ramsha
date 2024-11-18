@@ -8,4 +8,5 @@ namespace Ramsha.Application.Features.Products.Queries.GetProductVariantSelectio
 public class GetProductVariantSelectionQuery : IRequest<BaseResult<ProductVariantSelectionDto?>>
 {
     public Guid ProductId { get; set; }
+    public bool IsCatalog { get; set; }
 }

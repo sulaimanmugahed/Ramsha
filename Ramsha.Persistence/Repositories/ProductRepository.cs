@@ -13,11 +13,13 @@ using Ramsha.Application.Dtos.Catalog;
 using Ramsha.Application.Dtos.Common;
 using Ramsha.Domain.Products.Enums;
 using Ramsha.Domain.Common;
+using Microsoft.Extensions.Options;
+using Ramsha.Domain.Settings;
 
 
 
 namespace Ramsha.Persistence.Repositories;
-public class ProductRepository(ApplicationDbContext context)
+public class ProductRepository(ApplicationDbContext context, IOptionsSnapshot<GlobalAppSettings> settings)
     : GenericRepository<Product, ProductId>(context),
     IProductRepository
 {
@@ -67,6 +69,7 @@ public class ProductRepository(ApplicationDbContext context)
               .ThenInclude(vv => vv.Option)
           .Include(v => v.VariantValues)
               .ThenInclude(vv => vv.OptionValue)
+
           .Where(x => x.ProductId == productId)
           .AsQueryable();
 
@@ -74,11 +77,26 @@ public class ProductRepository(ApplicationDbContext context)
       {
          query = query.Where(x => x.Id == productVariantId);
       }
+      else
+      {
+         query = query.Include(v => v.InventoryItems).Where(x => x.InventoryItems.Any());
+         query = settings.Value.ProductPricingStrategy switch
+         {
+
+            ProductPricingStrategy.MaxPrice => query.OrderByDescending(x => x.InventoryItems.Max(i => i.FinalPrice.Amount)),
+            ProductPricingStrategy.MinPrice => query.OrderBy(x => x.InventoryItems.Min(i => i.FinalPrice.Amount)),
+            _ => query
+         };
+
+      }
 
       return await query
           .Select(x => x.AsCatalogVariantDto())
           .FirstOrDefaultAsync();
+
    }
+
+
 
 
 
@@ -139,7 +157,7 @@ public class ProductRepository(ApplicationDbContext context)
       return await _productsVariants.FindAsync(productId, productVariantId);
    }
 
-   public async Task<ProductVariantSelectionDto?> GetProductVariantSelection(ProductId productId)
+   public async Task<ProductVariantSelectionDto?> GetProductVariantSelection(ProductId productId, bool isCatalog = false)
    {
       var query = _product
       .AsSplitQuery()
@@ -151,9 +169,14 @@ public class ProductRepository(ApplicationDbContext context)
            .ThenInclude(x => x.OptionValue)
            .AsQueryable();
 
+      if (isCatalog)
+      {
+         query = query.Include(x => x.Variants).ThenInclude(x => x.InventoryItems);
+      }
+
       return await query
       .Where(x => x.Id == productId)
-      .Select(p => p.AsProductVariantSelectionDto())
+      .Select(p => p.AsProductVariantSelectionDto(isCatalog))
       .FirstOrDefaultAsync();
    }
 

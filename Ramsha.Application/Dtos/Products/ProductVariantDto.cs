@@ -1,13 +1,10 @@
 
 
-using Ramsha.Application.Dtos.Common;
-using Ramsha.Application.Dtos.Storage;
-
 namespace Ramsha.Application.Dtos.Products;
 
 public record ProductVariantDto(
     Guid Id,
-    decimal BasePrice,
+    bool IsDefault,
     string SKU,
 string ImageUrl,
 
@@ -27,15 +24,12 @@ public record VariantDetailDto(
 Guid Id,
 string SKU,
 string ImageUrl,
-int Quantity,
-decimal BasePrice,
-decimal DiscountedPrice,
 List<VariantValuesDto> Values,
 List<ProductImageDto> VariantImages);
 
 public record VariantValuesCommand(Guid Option, Guid Value);
 
-public record VariantCommand(List<VariantValuesCommand> VariantValues,decimal Length,decimal Width,decimal Height, decimal Weight, string? ImageUrl);
+public record VariantCommand(List<VariantValuesCommand> VariantValues, decimal Length, decimal Width, decimal Height, decimal Weight, string? ImageUrl);
 
 public class NewVariantDto
 {
