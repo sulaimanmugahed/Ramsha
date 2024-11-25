@@ -1,10 +1,10 @@
-import { FormProvider, useForm } from "react-hook-form"
-import AddressFormField from "../../common/AddressFormField"
-import AppDialog from "../../../app/components/AppDialog"
-import { useState } from "react"
-import { useGoToParent } from "../../../app/hooks/routeHooks"
 import LoadingButton from "@mui/lab/LoadingButton"
+import { useEffect, useState } from "react"
+import { FormProvider, useForm } from "react-hook-form"
+import AppDialog from "../../../app/components/AppDialog"
 import { useAccount, useUpdateAddress } from "../../../app/hooks/accountHooks"
+import { useGoToParent } from "../../../app/hooks/routeHooks"
+import AddressFormField from "../../common/AddressFormField"
 
 const ManageAddressPage = () => {
     const [open, SetOpen] = useState(true)
@@ -17,13 +17,21 @@ const ManageAddressPage = () => {
         back()
     }
 
+
     const form = useForm({
         defaultValues: {
-            fullName: account?.address?.fullName || '',
-            description: account?.address?.description || '',
-            addressInfo: account?.address
+
         }
     })
+
+    useEffect(() => {
+        if (account?.address) {
+            const { fullName, description, ...addressInfo } = account?.address
+            form.reset({ ...form.getValues(), fullName, description, addressInfo })
+        }
+
+
+    }, [form, account])
 
     const { handleSubmit, formState: { isSubmitting } } = form
 

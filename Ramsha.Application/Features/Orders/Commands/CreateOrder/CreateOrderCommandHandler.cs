@@ -6,6 +6,7 @@ using MediatR;
 using Ramsha.Application.Services;
 using Ramsha.Domain.Baskets.Entities;
 using Ramsha.Application.Contracts.Identity.UserInterfaces;
+using Ramsha.Domain.Common;
 
 namespace Ramsha.Application.Features.Orders.Commands.CreateOrder;
 
@@ -22,18 +23,40 @@ public class CreateOrderCommandHandler(
 {
     public async Task<BaseResult<string>> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {
+
         var customer = await customerRepository
         .GetAsync(x => x.Username == authenticatedUser.UserName);
 
         if (customer is null)
             return new Error(ErrorCode.ErrorInIdentity);
 
+        var shippingAddress = request.ShippingAddress;
+        if (shippingAddress is null)
+        {
+            var customerAddress = await userService.GetUserAddress(authenticatedUser.UserName);
+            if (customerAddress is null)
+            {
+                return new Error(ErrorCode.EmptyData, "Customer address is null");
+            }
+            shippingAddress = new ShippingAddress
+            {
+                City = customerAddress.City,
+                Country = customerAddress.Country,
+                Description = customerAddress.Description,
+                Display = customerAddress.Display,
+                FullName = customerAddress.FullName,
+                Latitude = customerAddress.Latitude,
+                Longitude = customerAddress.Longitude,
+                State = customerAddress.State,
+                Zip = customerAddress.Zip
+            };
+        }
 
         var basket = await basketRepository.GetDetail(authenticatedUser.UserName);
-        if (basket is null)
-            return new Error(ErrorCode.RequestedDataNotExist);
+        if (basket is null || basket.PaymentIntentId is null)
+            return new Error(ErrorCode.EmptyData, "basket is null");
 
-        var order = Order.Create(customer.Id,basket.PaymentIntentId, request.ShippingAddress);
+        var order = Order.Create(customer.Id, basket.PaymentIntentId, shippingAddress);
 
 
         var itemsGroups = basket.Items.GroupBy(x => x.InventoryItem.Supplier);
@@ -77,7 +100,7 @@ public class CreateOrderCommandHandler(
                 inventoryItem.DecreaseQuantity(supplierItem.Quantity);
 
                 var itemWight = supplierItem.InventoryItem.ProductVariant.CalculateShippingWeight(supplierItem.Quantity);
-                var distance = geocodingService.CalculateDistance(supplierCoordinates, (request.ShippingAddress.Latitude, request.ShippingAddress.Longitude));
+                var distance = geocodingService.CalculateDistance(supplierCoordinates, (shippingAddress.Latitude, shippingAddress.Longitude));
                 var deliveryFee = deliveryFeeService.CalculateDeliveryFee(itemWight, distance);
                 fulfillmentFee += deliveryFee;
             }
@@ -89,6 +112,9 @@ public class CreateOrderCommandHandler(
 
         await orderRepository.AddAsync(order);
         basketRepository.Delete(basket);
+
+
+
         await unitOfWork.SaveChangesAsync();
 
         return order.Id.Value.ToString();

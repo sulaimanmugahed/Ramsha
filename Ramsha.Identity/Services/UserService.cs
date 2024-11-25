@@ -26,6 +26,16 @@ public class UserService(UserManager<Account> userManager) : IUserService
 		return user?.Address;
 	}
 
+	public async Task UpdateUserAddress(string userName, Address address)
+	{
+		var user = await userManager.FindByNameAsync(userName);
+		if (user is not null)
+		{
+			user.Address = address;
+			await userManager.UpdateAsync(user);
+		}
+	}
+
 
 	public async Task<BaseResult<AccountDto>> GetAccount(string username)
 	{

@@ -12,17 +12,17 @@ public class ErrorHandlerMiddleware(RequestDelegate next)
     {
         try
         {
-        await next(context);
+            await next(context);
         }
         catch (Exception exception)
         {
             var response = context.Response;
             response.ContentType = "application/json";
-			var responseModel = BaseResult.Failure();
+            var responseModel = BaseResult.Failure();
 
 
-			//here add ur custom exceptions to catch and map them to baseResponse
-			switch (exception)
+            //here add ur custom exceptions to catch and map them to baseResponse
+            switch (exception)
             {
                 case ApplicationNotFoundException ex:
                     response.StatusCode = (int)HttpStatusCode.NotFound;
@@ -31,11 +31,11 @@ public class ErrorHandlerMiddleware(RequestDelegate next)
 
                 default:
                     response.StatusCode = (int)HttpStatusCode.InternalServerError;
-					responseModel.AddError(new Error(ErrorCode.Exception, exception.Message));
-					break;
+                    responseModel.AddError(new Error(ErrorCode.Exception, exception.Message));
+                    break;
             }
             var result = JsonSerializer.Serialize(responseModel,
-                new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase});
+                new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
 
             await response.WriteAsync(result);
         }

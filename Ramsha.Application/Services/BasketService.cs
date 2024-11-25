@@ -14,6 +14,7 @@ IBasketRepository basketRepository,
 IGeocodingService geocodingService,
 IAuthenticatedUserService authenticatedUserService,
 ICustomerRepository customerRepository,
+IUnitOfWork unitOfWork,
 IUserService userService,
 DeliveryFeeService deliveryFeeService)
 {
@@ -52,8 +53,6 @@ DeliveryFeeService deliveryFeeService)
                 var distance = geocodingService.CalculateDistance(supplierCoordinates, customerCoordinates);
                 var deliveryFee = deliveryFeeService.CalculateDeliveryFee(itemWight, distance);
 
-
-
                 var itemDetail = new BasketItemDetailDto(
                     supplierItem.InventoryItemId.Value,
                     supplierItem.InventoryItem.ProductName,
@@ -83,8 +82,20 @@ DeliveryFeeService deliveryFeeService)
         return new BasketDetailDto(
             supplierGroups,
             supplierGroups.Sum(x => x.TotalDeliveryFees),
-            supplierGroups.Sum(x => x.TotalPrice)
+            supplierGroups.Sum(x => x.TotalPrice),
+            basket.ClientSecret
         );
+    }
+
+    public async Task ClearBasket()
+    {
+        var basket = await basketRepository.FindByBuyer(authenticatedUserService.UserName);
+        if (basket is not null)
+        {
+            basketRepository.Delete(basket);
+            await unitOfWork.SaveChangesAsync();
+        }
+
     }
 
 

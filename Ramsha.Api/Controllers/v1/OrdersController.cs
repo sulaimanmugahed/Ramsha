@@ -9,6 +9,7 @@ using Ramsha.Application.Features.Orders.Queries.GetCurrentSupplierFulfillmentRe
 using Ramsha.Application.Features.Orders.Queries.GetCustomerOrders;
 using Ramsha.Application.Features.Orders.Queries.GetFulfillmentRequestDetail;
 using Ramsha.Application.Features.Orders.Queries.GetOrderDetail;
+using Ramsha.Application.Features.Orders.Queries.GetOrdersPaged;
 using Ramsha.Application.Wrappers;
 using Ramsha.Domain.Constants;
 
@@ -22,9 +23,13 @@ public class OrdersController : BaseApiController
     public async Task<BaseResult<string>> Create(CreateOrderCommand createOrderCommand)
         => await Mediator.Send(createOrderCommand);
 
-    [HttpGet]
+    [HttpGet("my-orders")]
     public async Task<BaseResult<List<OrderDto>>> GetMyOrders()
     => await Mediator.Send(new GetCustomerOrdersQuery());
+
+    [HttpPost("paged")]
+    public async Task<BaseResult<List<OrderDto>>> GetPaged(GetOrdersPagedQuery query)
+  => await Mediator.Send(query);
 
     [HttpGet("{orderId}/detail")]
     public async Task<BaseResult<OrderDetailDto?>> GetOrderDetail(Guid orderId)

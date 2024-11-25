@@ -16,7 +16,7 @@ public class Order : BaseEntity
     }
 
 
-    private Order(OrderId id, CustomerId customerId, string paymentIntentId,ShippingAddress shippingAddress)
+    private Order(OrderId id, CustomerId customerId, string paymentIntentId, ShippingAddress shippingAddress)
     {
         Id = id;
         CustomerId = customerId;
@@ -27,7 +27,7 @@ public class Order : BaseEntity
     }
 
 
-    public static Order Create(CustomerId customerId,string paymentIntentId, ShippingAddress shippingAddress)
+    public static Order Create(CustomerId customerId, string paymentIntentId, ShippingAddress shippingAddress)
     {
         var order = new Order(new OrderId(Guid.NewGuid()), customerId, paymentIntentId, shippingAddress);
         order.RaiseDomainEvent(new NewOrderCreatedEvent(order.Id, order.ShippingAddress));
@@ -101,9 +101,10 @@ public class Order : BaseEntity
     }
 
 
-    public void SetStatus(OrderStatus status)
+    public void ConfirmPaymentReceived()
     {
-        OrderStatus = status;
+        OrderStatus = OrderStatus.PaymentReceived;
+        FulfillmentRequests.ForEach(fulfillment => fulfillment.SetStatus(FulfillmentRequestStatus.Approved));
     }
 
 

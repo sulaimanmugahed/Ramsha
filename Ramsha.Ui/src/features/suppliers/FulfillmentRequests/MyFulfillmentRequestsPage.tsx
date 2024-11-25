@@ -1,6 +1,6 @@
 import { Box, Tab, Tabs, Typography } from "@mui/material";
 import { SyntheticEvent, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { useFiltering } from "../../../app/hooks/filteringHooks";
 import { useMarkFulfillmentRequest, useMyFulfillmentRequests } from "../../../app/hooks/orderHooks";
 import { usePagination } from "../../../app/hooks/paginationHooks";
@@ -66,6 +66,7 @@ const MyFulfillmentRequestsPage = () => {
           <Typography variant="body1">No fulfillment requests available for this status.</Typography>
         )}
       </Box>
+      <Outlet />
     </Box>
   );
 };

@@ -13,7 +13,7 @@ export const OPTIONS_QUERY_KEY = 'options'
 export const INVENTORY_ITEMS_QUERY_KEY = 'inventoryItems'
 export const BRANDS_QUERY_KEY = 'brands'
 export const BASKET_QUERY_KEY = 'basket'
-export const BASKET_DELIVERY_DETAIL_QUERY_KEY = 'basket-delivery-detail'
+export const BASKET_DETAIL_QUERY_KEY = 'basket-delivery-detail'
 
 export const ACCOUNT_QUERY_KEY = 'account'
 

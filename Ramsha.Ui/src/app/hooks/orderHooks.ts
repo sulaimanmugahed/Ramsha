@@ -5,6 +5,7 @@ import { BASKET_QUERY_KEY, MY_ORDERS_QUERY_KEY, ORDERS_FULFILLMENT_REQUESTS, ORD
 import { PagedParams, PaginationResponse } from "../models/common/commonModels"
 import { FulfillmentRequest, FulfillmentRequestDetail } from "../models/orders/fulfillmentRequest"
 import { Order, OrderDetailType } from "../models/orders/order"
+import { usePagedParams } from "./routeHooks"
 
 export const useCreateOrder = () => {
     const queryClient = useQueryClient()
@@ -22,11 +23,26 @@ export const useCreateOrder = () => {
         isCreateOrderSuccess: isSuccess,
     }
 }
+export const useOrders = () => {
+
+    const [params] = usePagedParams()
+    
+    const { data, isLoading } = useQuery<PaginationResponse<Order[]>>({
+        queryKey: [ORDERS_QUERY_KEY, MY_ORDERS_QUERY_KEY, params],
+        queryFn: async () => await orderService.getOrdersPaged(params)
+    })
+
+    return {
+        orders: data?.items,
+        ordersMeta: data?.metaData,
+        isOrdersLoading: isLoading
+    }
+}
 
 
 export const useMyOrders = () => {
     const { data, isLoading } = useQuery<Order[]>({
-        queryKey: [ORDERS_QUERY_KEY, MY_ORDERS_QUERY_KEY],
+        queryKey: [MY_ORDERS_QUERY_KEY],
         queryFn: async () => await orderService.getMyOrders()
     })
 

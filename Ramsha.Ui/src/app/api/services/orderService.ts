@@ -19,9 +19,17 @@ const getOrderDetail = async (orderId: string) => {
     })
 }
 
+const getOrdersPaged = async (params: PagedParams) => {
+    return await request<PaginationResponse<Order[]>>({
+        url: `${BASE_URL}/paged`,
+        method: 'POST',
+        data: params
+    })
+}
+
 const getMyOrders = async () => {
     return await request<Order[]>({
-        url: `${BASE_URL}`
+        url: `${BASE_URL}/my-orders`
     })
 }
 
@@ -54,6 +62,7 @@ export const orderService = {
     getOrderDetail,
     getMyFulfillmentRequests,
     getFulfillmentRequestDetail,
-    markFulfillmentRequest
+    markFulfillmentRequest,
+    getOrdersPaged
 }
 

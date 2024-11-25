@@ -3,9 +3,11 @@ import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppDivider from '../components/AppDivider';
 import AppBagIcon from '../components/icons/AppBagIcon';
+import { AppDeleteIcon } from '../components/icons/AppDeleteIcon';
 import { useAccount } from '../hooks/accountHooks';
-import { useBasket } from '../hooks/basketHooks';
+import { useBasket, useRemoveBasket } from '../hooks/basketHooks';
 import { BasketDropdownItem } from './BasketDropdownItem';
+
 
 const StyledMenu = styled(Menu)(({ theme }) => ({
     '& .MuiPaper-root': {
@@ -20,8 +22,9 @@ const BasketDropdown = () => {
     const navigate = useNavigate()
 
     const { account } = useAccount()
+    const { remove } = useRemoveBasket()
 
-    const { basket, isBasketLoading, isBasketError } = useBasket();
+    const { basket, isBasketLoading, isBasketError, clearBasket } = useBasket();
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -60,9 +63,15 @@ const BasketDropdown = () => {
             >
                 <Box sx={{ p: 2 }}>
                     <MenuList sx={{ width: 400, height: 350, overflowY: 'auto' }}>
-                        <Typography variant='h6' fontWeight='bold' mb={2}>
-                            Shopping Basket
-                        </Typography>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <Typography variant='h6' fontWeight='bold' mb={2}>
+                                Shopping Basket
+                            </Typography>
+                            <IconButton onClick={async () => await remove()} >
+                                <AppDeleteIcon />
+                            </IconButton>
+                        </Box>
+
 
                         {isBasketLoading ? (
                             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>

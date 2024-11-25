@@ -122,6 +122,11 @@ export default function Header() {
             icon: <AppDashboardIcon />,
         },
         {
+            label: 'Orders',
+            value: '/admin/orders',
+            icon: <AppOrderIcon />,
+        },
+        {
             label: 'Products',
             value: '/admin/products',
             icon: <AppGridIcon />,

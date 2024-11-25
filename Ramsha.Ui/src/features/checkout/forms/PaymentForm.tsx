@@ -1,11 +1,9 @@
-import { Checkbox, FormControlLabel, Grid, TextField, Typography, useTheme } from "@mui/material";
+import { Checkbox, FormControlLabel, Grid, TextField, Typography } from "@mui/material";
 import { CardCvcElement, CardExpiryElement, CardNumberElement } from "@stripe/react-stripe-js";
 import { StripeElementType } from "@stripe/stripe-js";
 import { useFormContext } from "react-hook-form";
 import AppTextInput from "../../../app/components/AppTextInput";
 import { StripeInput } from "../../../app/components/ui/StripeInput";
-
-
 
 interface Props {
   onCardInputChange: (event: any) => void;
@@ -13,24 +11,28 @@ interface Props {
 }
 
 export default function PaymentForm({ cardState, onCardInputChange }: Props) {
-
   const { control } = useFormContext();
-  const theme = useTheme()
-
 
   return (
     <>
-      <Typography variant="h6" gutterBottom>
-        Payment method
+      <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
+        Payment Method
       </Typography>
+
       <Grid container spacing={3}>
+        {/* Name on Card */}
         <Grid item xs={12} md={6}>
           <AppTextInput
-            name="nameOnCard"
-            label="Name on card"
+            name="paymentInfo.nameOnCard"
+            label="Name on Card"
             control={control}
+            fullWidth
+            variant="outlined"
+            InputLabelProps={{ shrink: true }}
           />
         </Grid>
+
+        {/* Card Number */}
         <Grid item xs={12} md={6}>
           <TextField
             onChange={onCardInputChange}
@@ -41,37 +43,35 @@ export default function PaymentForm({ cardState, onCardInputChange }: Props) {
             autoComplete="cc-number"
             variant="outlined"
             fullWidth
-
             InputLabelProps={{ shrink: true }}
             InputProps={{
               inputComponent: StripeInput,
               inputProps: {
                 component: CardNumberElement,
-                options: {
-                  style: {
-                    base: {
-                      fontSize: '16px',
-                      color: theme.palette.text.primary,
-                      '::placeholder': {
-                        color: theme.palette.text.secondary,
-                      },
-                    },
-                    invalid: {
-                      color: theme.palette.error.main,
-                    },
-                  }
-                }
-              }
+              },
+            }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderColor: cardState.elementError.cardNumber ? 'red' : '',
+                '&:hover fieldset': {
+                  borderColor: cardState.elementError.cardNumber ? 'red' : '',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: cardState.elementError.cardNumber ? 'red' : '',
+                },
+              },
             }}
           />
         </Grid>
+
+        {/* Expiry Date */}
         <Grid item xs={12} md={6}>
           <TextField
             onChange={onCardInputChange}
             error={!!cardState.elementError.cardExpiry}
             helperText={cardState.elementError.cardExpiry}
             id="expDate"
-            label="Expiry date"
+            label="Expiry Date"
             fullWidth
             autoComplete="cc-exp"
             variant="outlined"
@@ -79,11 +79,24 @@ export default function PaymentForm({ cardState, onCardInputChange }: Props) {
             InputProps={{
               inputComponent: StripeInput,
               inputProps: {
-                component: CardExpiryElement
-              }
+                component: CardExpiryElement,
+              },
+            }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderColor: cardState.elementError.cardExpiry ? 'red' : '',
+                '&:hover fieldset': {
+                  borderColor: cardState.elementError.cardExpiry ? 'red' : '',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: cardState.elementError.cardExpiry ? 'red' : '',
+                },
+              },
             }}
           />
         </Grid>
+
+        {/* CVV */}
         <Grid item xs={12} md={6}>
           <TextField
             onChange={onCardInputChange}
@@ -98,15 +111,39 @@ export default function PaymentForm({ cardState, onCardInputChange }: Props) {
             InputProps={{
               inputComponent: StripeInput,
               inputProps: {
-                component: CardCvcElement
-              }
+                component: CardCvcElement,
+              },
+            }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderColor: cardState.elementError.cardCvc ? 'red' : '',
+                '&:hover fieldset': {
+                  borderColor: cardState.elementError.cardCvc ? 'red' : '',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: cardState.elementError.cardCvc ? 'red' : '',
+                },
+              },
             }}
           />
         </Grid>
+
+        {/* Save Card Checkbox */}
         <Grid item xs={12}>
           <FormControlLabel
-            control={<Checkbox color="secondary" name="saveCard" value="yes" />}
-            label="Remember credit card details for next time"
+            control={
+              <Checkbox
+                color="primary"
+                name="saveCard"
+                value="yes"
+                sx={{
+                  '& .MuiSvgIcon-root': {
+                    fontSize: 28,
+                  },
+                }}
+              />
+            }
+            label="Remember my card details for next time"
           />
         </Grid>
       </Grid>

@@ -4,6 +4,7 @@ import LoginPage from "../../features/account/login/LoginPage";
 import RegisterPage from "../../features/account/register/RegisterPage";
 import AdminDashboard from "../../features/admin/AdminDashboard";
 import InventoryPage from "../../features/admin/inventory/InventoryPage";
+import AdminOrdersPage from "../../features/admin/orders/AdminOrdersPage";
 import AdminProductPage from "../../features/admin/products/AdminProductPage";
 import ProductVariantsPage from "../../features/admin/products/ProductVariantsPage";
 import AdminSuppliesPage from "../../features/admin/suppplies/AdminSuppliesPage";
@@ -147,6 +148,10 @@ export const router = createBrowserRouter([
                             {
                                 element: <AdminDashboard />,
                                 path: 'dashboard'
+                            },
+                            {
+                                element: <AdminOrdersPage />,
+                                path: 'orders'
                             },
                             {
                                 element: <AdminSuppliesPage />,

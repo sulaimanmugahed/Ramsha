@@ -1,6 +1,6 @@
 
 import { Box, Button, Card, CardContent, Chip, Divider, Grid, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import LoadingButton from "@mui/lab/LoadingButton";
 import { alpha } from '@mui/material/styles';
@@ -130,6 +130,9 @@ const CatalogProductDetail = ({ product }: Props) => {
 
 
     const isActiveItem = (id: string) => selectedInventory?.id === id;
+    const isOutOfStock = useMemo(() => (selectedInventory?.availableQuantity || 0) === 0, [selectedInventory])
+    const isPendingStock = useMemo(() => selectedInventory && selectedInventory.availableQuantity === 0 && selectedInventory.totalQuantity > 0, [selectedInventory])
+
 
 
     return (
@@ -260,7 +263,6 @@ const CatalogProductDetail = ({ product }: Props) => {
                                 </Typography>
                             </Box>
                         </Box>
-
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
                             <AppQuantitySelector
                                 availableQuantity={selectedInventory?.availableQuantity!}
@@ -271,7 +273,7 @@ const CatalogProductDetail = ({ product }: Props) => {
 
                             <LoadingButton
                                 loading={isAddPending || isRemovePending}
-                                disabled={basketItem && basketItem.quantity === selectedQuantity}
+                                disabled={basketItem && basketItem.quantity === selectedQuantity || isOutOfStock}
                                 size="small"
                                 variant="contained"
                                 sx={{
@@ -282,8 +284,9 @@ const CatalogProductDetail = ({ product }: Props) => {
                                 endIcon={<AppBagIcon />}
                                 onClick={handleAddToBasket}
                             >
-                                {basketItem ? 'Update Bag' : 'Add To Bag'}
+                                {isPendingStock ? 'Pending Stock' : isOutOfStock ? 'Out Of Stock' : basketItem ? 'Update Bag' : 'Add To Bag'}
                             </LoadingButton>
+
                         </Box>
 
                     </Box>

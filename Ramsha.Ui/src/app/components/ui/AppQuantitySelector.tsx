@@ -1,6 +1,6 @@
-import { Remove, Add } from '@mui/icons-material'
+import { Add, Remove } from '@mui/icons-material'
 import LoadingButton from '@mui/lab/LoadingButton'
-import { IconButton, Box, Typography } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import { AppDeleteIcon } from '../icons/AppDeleteIcon'
 
 
@@ -17,6 +17,8 @@ type Props = {
 
 const AppQuantitySelector = ({ availableQuantity, onChange, quantity, onIncrease, onDecrease, increasing, decreasing, allowDelete }: Props) => {
 
+
+    const disabled = () => availableQuantity ? quantity >= availableQuantity : false;
 
     return (
         <Box
@@ -49,7 +51,7 @@ const AppQuantitySelector = ({ availableQuantity, onChange, quantity, onIncrease
                 sx={{
                     padding: "3px",
                 }}
-                disabled={availableQuantity ? quantity >= availableQuantity : false}
+                disabled={disabled()}
             >
                 <Add />
             </LoadingButton>

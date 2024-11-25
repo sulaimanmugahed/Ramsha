@@ -6,7 +6,8 @@ namespace Ramsha.Application.Dtos.Baskets;
 public record BasketDetailDto(
         List<BasketSupplierGroupDetailDto> SupplierGroups,
         decimal TotalDeliveryFees,
-        decimal TotalPrice
+        decimal TotalPrice,
+        string? ClientSecret
     );
 
 public record BasketSupplierGroupDetailDto(Guid SupplierId, string Name, decimal TotalPrice, decimal TotalDeliveryFees, List<BasketItemDetailDto> Items);

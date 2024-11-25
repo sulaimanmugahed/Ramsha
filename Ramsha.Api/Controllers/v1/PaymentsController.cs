@@ -25,22 +25,27 @@ public class PaymentsController(IOptionsSnapshot<StripeSettings> settings, IOrde
     [HttpPost]
     public async Task<BaseResult<BasketDto>> CreateOrUpdatePaymentIntent(CreateOrUpdatePaymentIntentCommand command)
    => await Mediator.Send(command);
-   
+
 
     [AllowAnonymous]
     [HttpPost("webhook")]
     public async Task<ActionResult> StripeWebhook()
     {
         var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
-        var stripeEvent = EventUtility.ConstructEvent(json, Request.Headers["Stripe-Signature"], settings.Value.WhSecretKey);
+        var stripeEvent = EventUtility.ConstructEvent(
+    json,
+    Request.Headers["Stripe-Signature"],
+    settings.Value.WhSecretKey,
+    throwOnApiVersionMismatch: false
+);
 
         var charge = (Charge)stripeEvent.Data.Object;
 
-        var order = await orderRepository.GetAsync(x => x.PaymentIntentId == charge.PaymentIntentId);
+        var order = await orderRepository.GetAsync(x => x.PaymentIntentId == charge.PaymentIntentId, x => x.FulfillmentRequests);
 
 
         if (order is not null && charge.Status == "succeeded")
-            order.SetStatus(OrderStatus.PaymentReceived);
+            order.ConfirmPaymentReceived();
 
         await unitOfWork.SaveChangesAsync();
         return new EmptyResult();

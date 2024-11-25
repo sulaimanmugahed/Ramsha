@@ -1,7 +1,7 @@
-import { Typography, Grid } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import { useFormContext } from "react-hook-form";
-import AppTextInput from "../../../app/components/AppTextInput";
 import { AppCheckBox } from "../../../app/components/AppCheckBox";
+import AppTextInput from "../../../app/components/AppTextInput";
 
 export default function AddressForm() {
 
@@ -26,21 +26,12 @@ export default function AddressForm() {
         <Grid item xs={12}>
           <AppTextInput
             control={control}
-            name="address1"
+            name="description"
             label="Address line 1"
             fullWidth
-
           />
         </Grid>
-        <Grid item xs={12}>
-          <AppTextInput
-            control={control}
-            name="address2"
-            label="Address line 2"
-            fullWidth
 
-          />
-        </Grid>
         <Grid item xs={12} sm={6}>
           <AppTextInput
             control={control}
@@ -73,7 +64,6 @@ export default function AddressForm() {
             name="country"
             label="Country"
             fullWidth
-
           />
         </Grid>
         <Grid item xs={12}>

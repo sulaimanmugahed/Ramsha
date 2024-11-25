@@ -25,6 +25,11 @@ public class Basket : BaseEntity
 
     public BasketItem AddItem(InventoryItem inventoryItem, int quantity)
     {
+        if (inventoryItem.AvailableQuantity < quantity)
+        {
+            throw new Exception("quantity requested bigger than availableQuantity");
+        }
+
         var existItem = Items.FirstOrDefault(x => x.InventoryItemId == inventoryItem.Id);
 
         if (existItem is null)

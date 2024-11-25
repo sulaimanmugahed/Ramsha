@@ -1,7 +1,7 @@
-import { Typography, Button, Box, Grid } from "@mui/material"
-import { BasketItem } from "../models/baskets/basket"
+import { Box, Grid, Typography } from "@mui/material"
 import AppQuantitySelector from "../components/ui/AppQuantitySelector"
 import { useBasketItemCommands } from "../hooks/basketHooks"
+import { BasketItem } from "../models/baskets/basket"
 
 
 
@@ -38,7 +38,8 @@ export const BasketDropdownItem = ({ item }: Props) => {
                             decreasing={isRemovePending}
                             onIncrease={() => addItem({ inventoryItemId: item.inventoryItemId, quantity: 1 })}
                             onDecrease={() => removeItem({ inventoryItemId: item.inventoryItemId, quantity: 1 })}
-                            quantity={item.quantity} />
+                            quantity={item.quantity}
+                            allowDelete />
                     </Box>
                 </Box>
 

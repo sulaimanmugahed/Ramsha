@@ -1,18 +1,24 @@
-import { Grid, Typography, Box } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
+import { useEffect } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import AppTextInput from "../../app/components/AppTextInput";
 import AppMaps from "../../app/components/maps/AppMaps";
 import { AddressInfo } from "../../app/components/maps/mapUtils";
 
-export default function AddressFormField() {
+export default function AddressFormField({ groupName }: { groupName?: string }) {
     const { control, setValue } = useFormContext();
     const selectedAddress = useWatch({
-        name: 'addressInfo',
+        name: groupName ? `${groupName}.addressInfo` : 'addressInfo',
         control
     });
 
+    useEffect(() => {
+        console.log('selectedAddress: ', selectedAddress)
+
+    }, [selectedAddress])
+
     const handleAddressChange = (addressInfo: AddressInfo | null) => {
-        setValue('addressInfo', addressInfo);
+        setValue(groupName ? `${groupName}.addressInfo` : 'addressInfo', addressInfo);
     };
 
     return (
@@ -35,7 +41,7 @@ export default function AddressFormField() {
 
                     <AppTextInput
                         control={control}
-                        name="fullName"
+                        name={groupName ? `${groupName}.fullName` : 'fullName'}
                         label="Full Name"
                         inputStyle={{ borderRadius: 2 }}
                         fullWidth
@@ -44,7 +50,7 @@ export default function AddressFormField() {
 
                     <AppTextInput
                         control={control}
-                        name="description"
+                        name={groupName ? `${groupName}.description` : 'description'}
                         label={'Address Description'}
                         multiline
                         inputStyle={{ borderRadius: 2 }}
@@ -69,7 +75,7 @@ export default function AddressFormField() {
                     <AppMaps
                         sx={{ height: '100%', width: '100%' }}
                         onAddressChange={handleAddressChange}
-                        defaultMarker={selectedAddress && { popupText: selectedAddress.display, position: [selectedAddress.latitude, selectedAddress.longitude] }}
+                        defaultMarker={selectedAddress && selectedAddress.latitude && selectedAddress.longitude && { popupText: selectedAddress.display, position: [selectedAddress.latitude, selectedAddress.longitude] }}
                     />
                 </Box>
             </Grid>

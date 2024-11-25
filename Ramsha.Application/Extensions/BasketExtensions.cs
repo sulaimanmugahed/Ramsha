@@ -10,6 +10,7 @@ public static class BasketExtensions
 	public static BasketItemDto AsItemDto(this BasketItem basketItem)
 	=> new(
 				basketItem.InventoryItemId.Value,
+				basketItem.BasketId.Value,
 				basketItem.Quantity,
 				basketItem.InventoryItem.ProductName,
 				basketItem.InventoryItem.RetailPrice.Amount,

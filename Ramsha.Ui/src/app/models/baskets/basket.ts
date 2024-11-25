@@ -8,6 +8,7 @@ export type Basket = {
 
 export type BasketItem = {
     quantity: number;
+    basketId:string;
     inventoryItemId: string;
     name: string;
     basePrice: number;
@@ -43,6 +44,7 @@ export type BasketDetail = {
     supplierGroups: BasketSupplierGroupDetail[];
     totalDeliveryFees: number;
     totalPrice: number;
+    clientSecret: string
 };
 
 

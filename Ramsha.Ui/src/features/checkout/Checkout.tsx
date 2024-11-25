@@ -1,79 +1,119 @@
 import LoadingButton from "@mui/lab/LoadingButton";
 import { Box, Button, Paper, Step, StepLabel, Stepper, Typography } from "@mui/material";
-import { useState } from "react";
-import { FieldValues, FormProvider, useForm } from "react-hook-form";
-import AppDialog from "../../app/components/AppDialog";
+import { useEffect, useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 import { useCreateOrder } from "../../app/hooks/orderHooks";
-import { CheckoutSchemas } from "./forms/checkoutSchemas";
+import { checkoutFormSchema, CheckoutFormSchemaProps, CheckoutFormTypeEnums } from "./forms/checkoutSchemas";
 
 import { DevTool } from "@hookform/devtools";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { CardNumberElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { StripeElementType } from "@stripe/stripe-js";
 import { useAccount } from "../../app/hooks/accountHooks";
-import { useBasket } from "../../app/hooks/basketHooks";
-import { useGoToParent } from "../../app/hooks/routeHooks";
+import { useBasketDetail } from "../../app/hooks/basketHooks";
+import AddressFormField from "../common/AddressFormField";
 import CheckoutReview from "./CheckoutReview";
 import PaymentForm from "./forms/PaymentForm";
 
-const steps = ['Review your order', 'Payment details'];
+
+const steps = [
+    {
+        label: "Shipping Address",
+        formType: CheckoutFormTypeEnums.ShippingAddress,
+        component: () => <AddressFormField groupName="shippingAddress" />,
+    },
+    {
+        label: "Review your order",
+        formType: CheckoutFormTypeEnums.Review,
+        component: (props: any) => <CheckoutReview basketDetail={props.basketDetail} currencyCode={props.currencyCode} />,
+    },
+    {
+        label: "Payment details",
+        formType: CheckoutFormTypeEnums.PaymentInfo,
+        component: (props: any) => (
+            <PaymentForm
+                onCardInputChange={props.onCardInputChange}
+                cardState={props.cardState}
+            />
+        ),
+    },
+];
 
 const Checkout = () => {
     const [activeStep, setActiveStep] = useState(0);
-    const { createOrder, isCreateOrderSuccess, isCreateOrderPending } = useCreateOrder()
-    const [cardComplete, setCardComplete] = useState<any>({ cardNumber: false, cardExpiry: false, cardCvc: false });
-    const [cardState, setCardState] = useState<{ elementError: { [key in StripeElementType]?: string } }>({ elementError: {} })
+    const { createOrder } = useCreateOrder()
+
+    const [cardState, setCardState] = useState<{
+        elementError: { [key in StripeElementType]?: string }
+        , cardComplete: { cardNumber: false, cardExpiry: false, cardCvc: false }
+    }>({
+        elementError: {},
+        cardComplete: { cardNumber: false, cardExpiry: false, cardCvc: false }
+    })
     const [loading, setLoading] = useState(false)
     const [paymentMessage, setPaymentMessage] = useState('');
     const [paymentSucceeded, setPaymentSucceeded] = useState(false);
-
-
-    const { basket, clearBasket } = useBasket()
     const stripe = useStripe();
     const elements = useElements();
 
-    function getStepContent(step: number) {
-        switch (step) {
-            case 0:
-                return <CheckoutReview />;
-            case 1:
-                return <PaymentForm onCardInputChange={onCardInputChange} cardState={cardState} />;
-            default:
-                throw new Error('Unknown step');
-        }
-    }
+    const { account } = useAccount()
+    const { basketDetail, clearBasket } = useBasketDetail()
 
-    function onCardInputChange(event: any) {
-        setCardState({
-            ...cardState,
+
+    const onCardInputChange = (event: any) => {
+        setCardState((prevState) => ({
+            ...prevState,
             elementError: {
-                ...cardState.elementError,
-                [event.elementType]: event.error?.message
-            }
-        })
+                ...prevState.elementError,
+                [event.elementType]: event.error?.message,
+            },
+            cardComplete: {
+                ...prevState.cardComplete,
+                [event.elementType]: event.complete,
+            },
+        }));
+    };
 
-        setCardComplete({ ...cardComplete, [event.elementType]: event.complete })
-    }
 
 
-
-    const methods = useForm<CheckoutSchemas>({
+    const methods = useForm<CheckoutFormSchemaProps>({
+        mode: 'all',
         defaultValues: {
+            formType: CheckoutFormTypeEnums.ShippingAddress,
+
         },
-        mode: 'all'
+        resolver: zodResolver(checkoutFormSchema)
     })
 
-    const { account } = useAccount()
 
-    const back = useGoToParent()
+    const { formState: { dirtyFields, isValid }, setValue, reset, getValues } = methods
 
 
-    const submitOrder = async (data: FieldValues) => {
+    useEffect(() => {
+        if (account?.address) {
+            const { fullName, description, ...addressInfo } = account.address;
+            reset({
+                formType: CheckoutFormTypeEnums.ShippingAddress,
+                shippingAddress: { fullName, description, addressInfo },
+                paymentInfo: {
+                    nameOnCard: ''
+                },
+            });
+        }
+    }, [account?.address, reset]);
+
+
+
+
+    const submitOrder = async (data: CheckoutFormSchemaProps) => {
+        console.log("data: ", data)
+
         setLoading(true)
-        const { nameOnCard, saveAddress, ...shippingAddress } = data
+        const { paymentInfo: { nameOnCard }, shippingAddress: { fullName, description, addressInfo } } = data
         if (!stripe || !elements) return;
         try {
             const cardElement = elements.getElement(CardNumberElement)
-            const paymentResult = await stripe.confirmCardPayment(basket?.clientSecret!, {
+            const paymentResult = await stripe.confirmCardPayment(basketDetail?.clientSecret!, {
                 payment_method: {
                     card: cardElement!,
                     billing_details: {
@@ -83,7 +123,7 @@ const Checkout = () => {
             })
             console.log('paymentResult ', paymentResult)
             if (paymentResult.paymentIntent?.status === "succeeded") {
-                await createOrder({ saveAddress, shippingAddress: account?.address });
+                await createOrder({ shippingAddress: (dirtyFields.shippingAddress) ? { fullName, description, ...addressInfo } : null });
 
                 setPaymentSucceeded(true)
                 setPaymentMessage('Thank you we have received your payment')
@@ -101,33 +141,45 @@ const Checkout = () => {
 
     }
 
-    const handleNext = async (data: CheckoutSchemas) => {
+    const setFormType = (type: CheckoutFormTypeEnums) => setValue('formType', type)
+
+    const handleNext = async () => {
         if (activeStep === steps.length - 1) {
-            await submitOrder(data)
+            const data = getValues()
+            await submitOrder(data);
         } else {
-            setActiveStep(prev => prev + 1)
+            setActiveStep((prev) => prev + 1);
+            setFormType(steps[activeStep + 1].formType);
         }
     };
 
+
     const handleBack = () => {
-        setActiveStep(activeStep - 1);
+        if (activeStep > 0) {
+            setActiveStep((prev) => prev - 1);
+            setFormType(steps[activeStep - 1].formType);
+        }
     };
 
-    const handleClose = () => {
-        back()
-    }
+    const submitDisabled = () => {
+        if (activeStep === steps.length - 1) {
+            const { cardComplete } = cardState;
+            return !isValid || !cardComplete.cardNumber || !cardComplete.cardExpiry || !cardComplete.cardCvc;
+        }
+        return !isValid;
+    };
 
     return (
-        <AppDialog open onClose={handleClose}>
+        <>
             <FormProvider {...methods}>
-                <Paper variant="outlined" sx={{ borderRadius: 4, my: 2, p: { xs: 2, md: 3 } }}>
+                <Paper variant="outlined" sx={{ borderRadius: 4, my: 2, p: { xs: 2, md: 2 } }}>
                     <Typography component="h1" variant="h4" align="center">
                         Checkout
                     </Typography>
                     <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>
-                        {steps.map((label) => (
-                            <Step key={label}>
-                                <StepLabel>{label}</StepLabel>
+                        {steps.map((step) => (
+                            <Step key={step.label}>
+                                <StepLabel>{step.label}</StepLabel>
                             </Step>
                         ))}
                     </Stepper>
@@ -155,7 +207,12 @@ const Checkout = () => {
                         ) : (
 
                             <form onSubmit={methods.handleSubmit(handleNext)}>
-                                {getStepContent(activeStep)}
+                                {steps[activeStep].component({
+                                    onCardInputChange,
+                                    cardState,
+                                    basketDetail,
+                                    currencyCode: account?.preferredCurrency
+                                })}
                                 <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                                     {activeStep !== 0 && (
                                         <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
@@ -166,7 +223,7 @@ const Checkout = () => {
                                         variant="contained"
                                         type={'submit'}
                                         loading={loading}
-                                        disabled={!methods.formState.isValid}
+                                        disabled={submitDisabled()}
 
                                         sx={{ mt: 3, ml: 1 }}
                                     >
@@ -179,7 +236,7 @@ const Checkout = () => {
                 </Paper>
             </FormProvider>
             <DevTool control={methods.control} />
-        </AppDialog>
+        </>
     )
 }
 

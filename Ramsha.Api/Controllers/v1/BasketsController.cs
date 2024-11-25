@@ -28,6 +28,13 @@ public class BasketsController(BasketService basketService) : BaseApiController
 	public async Task<BaseResult<BasketDto?>> GetBasket()
 		=> await Mediator.Send(new GetBasketQuery());
 
+	[HttpDelete, Authorize(Roles = Roles.Customer)]
+	public async Task<BaseResult> ClearBasket()
+	{
+		await basketService.ClearBasket();
+		return BaseResult.Ok();
+	}
+
 
 	[HttpGet("detail")]
 	public async Task<BaseResult<BasketDetailDto?>> FeeDetail()

@@ -16,14 +16,14 @@ export const useCurrencies = () => {
     }
 }
 
-export const useCurrency = (code: CurrencyCode) => {
+export const useCurrency = (code: CurrencyCode = 'USD') => {
     const { data, isLoading } = useQuery<Currency>({
         queryKey: [CURRENCIES_QUERY_KEY, code],
         queryFn: async () => await currencyService.get(code),
         staleTime: 1000 * 60 * 60 * 12
     })
 
-    
+
 
     return {
         currency: data,

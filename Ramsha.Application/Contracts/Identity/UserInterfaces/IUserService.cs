@@ -12,4 +12,5 @@ public interface IUserService
 	Task<BaseResult<AccountDto>> GetAccount(string username);
 	Task<BaseResult> DeleteAccount(string username);
 	Task<Address?> GetUserAddress(string userName);
+	Task UpdateUserAddress(string userName, Address address);
 }

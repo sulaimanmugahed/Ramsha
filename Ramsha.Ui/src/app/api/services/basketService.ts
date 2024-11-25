@@ -11,6 +11,14 @@ const getBasket = async () =>
         method: 'GET',
     })
 
+
+
+const removeBasket = async () =>
+    await request<Basket>({
+        url: `${BASE_URL}`,
+        method: 'DELETE',
+    })
+
 const addBasketItem = async (data: { inventoryItemId: string, quantity: number }) =>
     await request<BasketItem>({
         url: `${BASE_URL}/addItemToBasket`,
@@ -36,6 +44,7 @@ export const basketService = {
     getBasket,
     addBasketItem,
     removeBasketItem,
-    getBasketDetail
+    getBasketDetail,
+    removeBasket
 }
 

@@ -1,29 +1,42 @@
-import { z } from "zod"
+import { z } from "zod";
+import { addressSchema, AddressSchema } from "../../common/addressSchema";
 
 
-const addressSchema = z.object({
-    fullName: z.string().min(1, 'fullName required'),
-    address1: z.string().min(1, 'fullName required'),
-    address2: z.string(),
-    city: z.string().min(1, 'fullName required'),
-    state: z.string(),
-    zip: z.string(),
-    country: z.string().min(1, 'country required'),
-    saveAddress: z.boolean()
-})
+export enum CheckoutFormTypeEnums {
+    ShippingAddress = 'shippingAddress',
+    Review = 'review',
+    PaymentInfo = 'paymentInfo',
+}
+
 
 export const paymentSchema = z.object({
-
+    nameOnCard: z.string().nullish()
 })
 
-export const checkoutSchemas = [
-    addressSchema
+export const checkoutFormSchema = z.discriminatedUnion('formType', [
+    z.object({
+        formType: z.literal(CheckoutFormTypeEnums.ShippingAddress),
+        shippingAddress: addressSchema
+    }),
+    z.object({
+        formType: z.literal(CheckoutFormTypeEnums.Review),
+        review: z.object({}).nullish()
+    }),
+    z.object({
+        formType: z.literal(CheckoutFormTypeEnums.PaymentInfo),
+        paymentInfo: paymentSchema
+    })
+])
 
-]
+
+export type PaymentSchema = z.infer<typeof paymentSchema>;
 
 
-export type AddressSchema = z.infer<typeof addressSchema>;
-
-export type CheckoutSchemas = AddressSchema
+export type CheckoutFormSchemaProps = {
+    formType: CheckoutFormTypeEnums,
+    shippingAddress: AddressSchema,
+    review: {},
+    paymentInfo: PaymentSchema
+}
 
 
