@@ -1,11 +1,10 @@
 import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from "axios";
-import { router } from "../router/Routes";
-import { PaginationResponse } from "../models/common/commonModels";
-import { sleep } from "../utils/util";
-import { queryClient } from "../providers/AppQueryProvider";
-import { ACCOUNT_QUERY_KEY, BASKET_QUERY_KEY } from "../constants/queriesKey";
+import { ACCOUNT_QUERY_KEY } from "../constants/queriesKey";
 import { Account } from "../models/account";
-import { BaseResult, BaseError } from '../models/common/commonModels';
+import { BaseResult, PaginationResponse } from "../models/common/commonModels";
+import { queryClient } from "../providers/AppQueryProvider";
+import { router } from "../router/Routes";
+import { sleep } from "../utils/util";
 
 export const refresh = async () => {
     try {
@@ -67,7 +66,7 @@ const client = (() => {
 
     clientInstance.interceptors.response.use(
         async (response: AxiosResponse<BaseResult<any>>) => {
-            // if (import.meta.env.DEV) await sleep(2000);
+            if (import.meta.env.DEV) await sleep(4000);
 
             const pagination = response.headers['pagination'];
             if (pagination) {

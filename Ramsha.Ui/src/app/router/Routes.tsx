@@ -151,7 +151,13 @@ export const router = createBrowserRouter([
                             },
                             {
                                 element: <AdminOrdersPage />,
-                                path: 'orders'
+                                path: 'orders',
+                                children: [
+                                    {
+                                        path: ':orderId',
+                                        element: <OrderDetailPage />
+                                    }
+                                ]
                             },
                             {
                                 element: <AdminSuppliesPage />,

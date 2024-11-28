@@ -7,11 +7,11 @@ import request from "../Request";
 const BASE_URL = "catalog"
 
 
-const getProducts = async (params: PagedParams, preferredCurrency: CurrencyCode) =>
+const getProducts = async (params: PagedParams) =>
     await request<PaginationResponse<CatalogProduct[]>>({
         url: `${BASE_URL}/products`,
         method: 'POST',
-        data: { ...params, preferredCurrency }
+        data: params
     })
 
 

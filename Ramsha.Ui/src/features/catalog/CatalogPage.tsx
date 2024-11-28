@@ -1,3 +1,4 @@
+
 import { Box, Chip, IconButton, Tooltip } from "@mui/material";
 import { useMemo, useState } from "react";
 import { Outlet } from "react-router-dom";
@@ -127,7 +128,7 @@ const CatalogPage = () => {
                     </Box>
                 </Box>
 
-                <ProductList show={filterModal.open ? 4 : 3} />
+                <ProductList filterOpen={filterModal.open} />
             </Box>
             <Outlet />
         </Box>

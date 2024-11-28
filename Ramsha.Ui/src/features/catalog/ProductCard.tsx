@@ -10,10 +10,11 @@ import { CatalogProduct } from '../../app/models/catalog/catalogProduct';
 import { formatCurrency } from '../../app/utils/formatUtils';
 
 type ProductCardProps = {
-    product: CatalogProduct
+    product: CatalogProduct,
+    innerRef?: any
 };
 
-const ProductCard: React.FC<ProductCardProps> = ({ product: { averageRating, brand, category, id, imageUrl, maxPrice, minPrice, name, numberOfRatings, totalQuantity } }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ innerRef, product: { averageRating, brand, category, id, imageUrl, maxPrice, minPrice, name, numberOfRatings, totalQuantity } }) => {
     //const discountPercentage = Math.round(((product.basePrice - product.finalPrice) / product.basePrice) * 100);
     const [hovered, setHovered] = useState(false);
     const { account } = useAccount()
@@ -27,6 +28,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product: { averageRating, bra
 
     return (
         <Card
+            ref={innerRef}
             sx={{
                 width: { xs: '90%', sm: 250, md: 280 },
                 border: "1px solid",
@@ -159,7 +161,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product: { averageRating, bra
                                     `${formattedMinPrice} - ${formattedMaxPrice}`
                             )}
                         </Typography>
-                       
+
                     </Box>
                     <IconButton
                         aria-label="add to favorites"
