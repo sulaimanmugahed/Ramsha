@@ -4,7 +4,6 @@ import { Account } from "../models/account";
 import { BaseResult, PaginationResponse } from "../models/common/commonModels";
 import { queryClient } from "../providers/AppQueryProvider";
 import { router } from "../router/Routes";
-import { sleep } from "../utils/util";
 
 export const refresh = async () => {
     try {
@@ -66,7 +65,7 @@ const client = (() => {
 
     clientInstance.interceptors.response.use(
         async (response: AxiosResponse<BaseResult<any>>) => {
-            if (import.meta.env.DEV) await sleep(4000);
+            //  if (import.meta.env.DEV) await sleep(4000);
 
             const pagination = response.headers['pagination'];
             if (pagination) {
