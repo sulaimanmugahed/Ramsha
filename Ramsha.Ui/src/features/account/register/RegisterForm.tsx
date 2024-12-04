@@ -1,9 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import LoadingButton from '@mui/lab/LoadingButton'
 import { Box, Button, Grid } from '@mui/material'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FieldValues, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import AppSelector from '../../../app/components/AppSelector'
 import AppTextInput from '../../../app/components/AppTextInput'
 import { useRegister } from '../../../app/hooks/accountHooks'
@@ -25,16 +26,19 @@ const registrationRoles = [
 
 
 const RegisterForm = () => {
+    const [userEmail, setUserEmail] = useState('')
     const [who, setWho] = useState<string>('customers');
     const { t } = useTranslation()
+
+    const navigate = useNavigate()
 
     const handleWho = (roleValue: string) => {
         setWho(roleValue)
     }
 
-    const { registerUser } = useRegister()
+    const { registerUser, isSuccess } = useRegister()
 
-    const { handleSubmit, control, formState: { isSubmitting } } = useForm<FieldValues>({
+    const { handleSubmit, control, formState: { isSubmitting }, getValues } = useForm<FieldValues>({
         defaultValues: {
             firstName: '',
             lastName: '',
@@ -48,8 +52,14 @@ const RegisterForm = () => {
     })
 
     const onSubmit = async (userData: FieldValues) => {
+        setUserEmail(userData.email)
         await registerUser({ ...userData, who })
     }
+
+
+    useEffect(() => {
+        if (isSuccess && userEmail) navigate(`/confirm/${userEmail}`, { replace: true })
+    }, [isSuccess])
 
     const { currencies } = useCurrencies()
 

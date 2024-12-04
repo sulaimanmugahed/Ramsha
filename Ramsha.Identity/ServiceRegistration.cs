@@ -29,18 +29,25 @@ public static class ServiceRegistration
         services.AddIdentity<Account, ApplicationRole>(options =>
         {
 
-            options.SignIn.RequireConfirmedAccount = false;
-            options.SignIn.RequireConfirmedEmail = false;
-            options.User.RequireUniqueEmail = false;
-
+            options.SignIn.RequireConfirmedAccount = identitySettings.RequireConfirmedAccount;
+            options.SignIn.RequireConfirmedEmail = identitySettings.RequireConfirmedEmail;
+            options.User.RequireUniqueEmail = identitySettings.RequireUniqueEmail;
             options.Password.RequireDigit = identitySettings.PasswordRequireDigit;
             options.Password.RequiredLength = identitySettings.PasswordRequiredLength;
             options.Password.RequireNonAlphanumeric = identitySettings.PasswordRequireNonAlphanumic;
             options.Password.RequireUppercase = identitySettings.PasswordRequireUppercase;
             options.Password.RequireLowercase = identitySettings.PasswordRequireLowercase;
+            options.Tokens.EmailConfirmationTokenProvider = "emailConfirmation";
         })
             .AddEntityFrameworkStores<IdentityContext>()
-            .AddDefaultTokenProviders();
+            .AddDefaultTokenProviders()
+             .AddTokenProvider<EmailConfirmationTokenProvider<Account>>("emailConfirmation");
+
+        services.Configure<DataProtectionTokenProviderOptions>(opt =>
+        opt.TokenLifespan = TimeSpan.FromHours(2));
+        services.Configure<EmailConfirmationTokenProviderOptions>(opt =>
+            opt.TokenLifespan = TimeSpan.FromDays(3));
+
     }
     public static IServiceCollection AddIdentityInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {

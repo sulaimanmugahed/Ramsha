@@ -1,5 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import AboutPage from "../../features/about/AboutPage";
+import EmailVerificationPage from "../../features/account/confirm/EmailVerificationPage";
+import { SendConfirmEmailPage } from "../../features/account/confirm/SendConfirmEmailPage";
 import LoginPage from "../../features/account/login/LoginPage";
 import RegisterPage from "../../features/account/register/RegisterPage";
 import AdminDashboard from "../../features/admin/AdminDashboard";
@@ -116,6 +118,14 @@ export const router = createBrowserRouter([
                     {
                         element: <AboutPage />,
                         path: 'about'
+                    },
+                    {
+                        path: 'confirm/:userEmail',
+                        element: <SendConfirmEmailPage />
+                    },
+                    {
+                        path: 'verifyEmail',
+                        element: <EmailVerificationPage />
                     },
                     {
                         element: <CatalogPage />,

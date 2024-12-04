@@ -21,6 +21,7 @@ public class AccountServices(ITokenService tokenService,
 UserManager<Account> userManager,
 IAuthenticatedUserService authenticatedUser,
 SignInManager<Account> signInManager,
+IEmailService emailService,
 IOptionsSnapshot<JWTSettings> jwtSettings) : IAccountServices
 {
 
@@ -235,35 +236,6 @@ IOptionsSnapshot<JWTSettings> jwtSettings) : IAccountServices
         return response;
     }
 
-    //public async Task<BaseResult<string>> RegisterGostAccount()
-    //{
-    //    var user = new Account()
-    //    {
-    //        UserName = GenerateRandomString(7)
-    //    };
-
-    //    var identityResult = await userManager.CreateAsync(user);
-
-    //    if (identityResult.Succeeded)
-    //        return new BaseResult<string>(user.UserName);
-
-    //    return new BaseResult<string>(identityResult.Errors.Select(p => new Error(ErrorCode.ErrorInIdentity, p.Description)));
-
-    //    string GenerateRandomString(int length)
-    //    {
-    //        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    //        var random = new Random();
-    //        var result = new StringBuilder(length);
-
-    //        for (int i = 0; i < length; i++)
-    //        {
-    //            int index = random.Next(chars.Length);
-    //            result.Append(chars[index]);
-    //        }
-
-    //        return result.ToString();
-    //    }
-    //}
     private async Task<JwtSecurityToken> GenerateJwtToken(Account user)
     {
         await userManager.UpdateSecurityStampAsync(user);
@@ -278,8 +250,6 @@ IOptionsSnapshot<JWTSettings> jwtSettings) : IAccountServices
             expires: DateTime.UtcNow.AddMinutes(jwtSettings.Value.DurationInMinutes),
             signingCredentials: signingCredentials);
         return jwtSecurityToken;
-
-
     }
 
 
@@ -303,5 +273,118 @@ IOptionsSnapshot<JWTSettings> jwtSettings) : IAccountServices
             user.Address = address;
             await userManager.UpdateAsync(user);
         }
+    }
+
+    public async Task<bool> SendConfirmEmail(string userEmail)
+    {
+        var account = await userManager.FindByEmailAsync(userEmail);
+        if (account is null) return false;
+
+        var token = await GenerateConfirmationToken(account);
+        await SendConfirmationEmail(userEmail, token, account.UserName);
+        return true;
+    }
+
+    private async Task SendConfirmationEmail(string email, string token, string name)
+    {
+        var confirmationLink = $"http://localhost:3000/verifyEmail?userEmail={email}&token={token}";
+
+        string htmlContent = $@"
+<!DOCTYPE html>
+<html lang=""en"">
+<head>
+  <meta charset=""UTF-8"">
+  <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+  <title>Welcome to My Website</title>
+  <style>
+    body {{
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+    }}
+    .container {{
+      max-width: 600px;
+      margin: 50px auto;
+      background-color: #fff;
+      border-radius: 5px;
+      padding: 30px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }}
+    .header {{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }}
+    .logo {{
+      width: 100px;
+      height: auto;
+    }}
+    .content {{
+      font-size: 16px;
+      line-height: 1.5;
+    }}
+    .cta {{
+      display: inline-block;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      color: #fff;
+      background-color: #8DA290;
+      font-weight: bold;
+      margin-top: 20px;
+    }}
+    a{{
+        color:#8DA290;
+    }}
+    .footer {{
+      text-align: center;
+      font-size: 12px;
+      color: #aaa;
+      margin-top: 20px;
+    }}
+  </style>
+</head>
+<body>
+  <div class=""container"">
+    <div class=""header"">
+      <h2>Welcome!</h2>
+    </div>
+    <div class=""content"">
+      <p>Hi {name},</p>
+      <p>Thanks for signing up in Ramsha.</p>
+      <p>To confirm your email address and start using your account, please click the button below:</p>
+      <a href=""{confirmationLink}"" class=""cta"">Confirm Email Address</a>
+      <p>If you can't click the button, you can also paste the following link into your browser:</p>
+      <p>{confirmationLink}</p>
+      <p>**Please note:** This link will expire in 24 hours.</p>
+    </div>
+    <div class=""footer"">
+      <p>&copy; {DateTime.Now.Year} Ramsha. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>";
+
+
+
+        await emailService.SendEmailMessage(new Application.Contracts.Email.EmailMessage([email], "Confirm Your Email", htmlContent));
+    }
+
+    private async Task<string> GenerateConfirmationToken(Account account)
+    {
+        return await userManager.GenerateEmailConfirmationTokenAsync(account);
+    }
+
+    public async Task<bool> VerifyEmail(string userEmail, string token)
+    {
+        var user = await userManager.FindByEmailAsync(userEmail);
+
+        if (user is null) return false;
+
+        var result = await userManager.ConfirmEmailAsync(user, token.Replace(" ", "+"));
+
+        return result.Succeeded;
     }
 }

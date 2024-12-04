@@ -1,10 +1,43 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { accountService } from "../api/services/accountService"
-import { toast } from "sonner"
-import { Account, Address, loginRequest } from "../models/account"
-import { useLocation, useNavigate } from "react-router-dom"
 import { useTranslation } from "react-i18next"
+import { useLocation, useNavigate } from "react-router-dom"
+import { toast } from "sonner"
+import { accountService } from "../api/services/accountService"
 import { ACCOUNT_QUERY_KEY, BASKET_QUERY_KEY } from "../constants/queriesKey"
+import { Account, Address, loginRequest } from "../models/account"
+
+
+
+export const useVerifyEmail = (email: string, token: string) => {
+
+    const { isSuccess, isPending, isError } = useQuery({
+        queryKey: ["verifyEmail", email],
+        enabled: !!(email && token),
+        queryFn: async () => await accountService.verifyEmail(email, token),
+        meta: {
+            errorMessage: "error"
+        }
+    })
+
+    return {
+        isSuccess,
+        isPending,
+        isError
+    }
+}
+
+export const useSendConfirmEmail = () => {
+    const { mutateAsync, isPending } = useMutation({
+        mutationFn: async (userEmail: string) => await accountService.sendConfirmEmail(userEmail),
+        onError: () => toast.error('some_thing_went_wrong'),
+        onSuccess: () => toast.success('confirm_link_sent_success')
+    })
+
+    return {
+        send: mutateAsync,
+        isPending
+    }
+}
 
 export const useLogOut = () => {
     const queryClient = useQueryClient()
@@ -36,21 +69,22 @@ export const useUpdateAddress = () => {
 
 
 export const useRegister = () => {
-    const navigate = useNavigate()
+   // const navigate = useNavigate()
     const { t } = useTranslation()
 
-    const { mutateAsync } = useMutation({
+    const { mutateAsync, isSuccess } = useMutation({
 
         mutationFn: async (data: any) => await accountService.register(data),
         onError: () => toast.error("could not register"),
         onSuccess: (account) => {
-            navigate('/', { replace: true })
+            // navigate('/', { replace: true })
             return toast(t('register_success_message'))
         }
     })
 
     return {
-        registerUser: mutateAsync
+        registerUser: mutateAsync,
+        isSuccess
     }
 }
 

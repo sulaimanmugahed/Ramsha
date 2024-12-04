@@ -17,6 +17,8 @@ namespace Ramsha.Application.Contracts.Identity
         Task<BaseResult> Revoke(string token);
         Task LogoutCurrentUser();
         Task UpdateAddress(string userName, Address address);
+        Task<bool> SendConfirmEmail(string userEmail);
+        Task<bool> VerifyEmail(string userEmail, string token);
 
     }
 }
