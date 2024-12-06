@@ -4,6 +4,8 @@ import EmailVerificationPage from "../../features/account/confirm/EmailVerificat
 import { SendConfirmEmailPage } from "../../features/account/confirm/SendConfirmEmailPage";
 import LoginPage from "../../features/account/login/LoginPage";
 import RegisterPage from "../../features/account/register/RegisterPage";
+import ResetPasswordPage from "../../features/account/ResetPasswordPage";
+import SendResetPasswordEmail from "../../features/account/SendResetPasswordEmail";
 import AdminDashboard from "../../features/admin/AdminDashboard";
 import InventoryPage from "../../features/admin/inventory/InventoryPage";
 import AdminOrdersPage from "../../features/admin/orders/AdminOrdersPage";
@@ -25,6 +27,7 @@ import EditVariantPage from "../../features/products/variants/EditVariantPage";
 import OrderHistory from '../../features/profile/OrderHistory';
 import ProfilePage, { SavedItems } from "../../features/profile/ProfilePage";
 import AccountSettings from "../../features/profile/settings/AccountSettings";
+import ChangePasswordModal from "../../features/profile/settings/ChangePasswordModal";
 import ManageAddressPage from "../../features/profile/settings/ManageAddressPage";
 import SearchPage from "../../features/search/SearchPage";
 import FulfillmentRequestDetailPage from "../../features/suppliers/FulfillmentRequests/FulfillmentRequestDetailPage";
@@ -82,6 +85,10 @@ export const router = createBrowserRouter([
                                             {
                                                 element: <ManageAddressPage />,
                                                 path: 'manage-address'
+                                            },
+                                            {
+                                                element: <ChangePasswordModal />,
+                                                path: 'change-password'
                                             }
                                         ]
                                     },
@@ -106,6 +113,14 @@ export const router = createBrowserRouter([
                     {
                         element: <LoginPage />,
                         path: 'login'
+                    },
+                    {
+                        element: <SendResetPasswordEmail />,
+                        path: 'send-reset-password-email'
+                    },
+                    {
+                        element: <ResetPasswordPage />,
+                        path: 'reset-password'
                     },
                     {
                         element: <RegisterPage />,

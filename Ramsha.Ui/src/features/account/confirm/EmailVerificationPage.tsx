@@ -5,30 +5,25 @@ import { useNavigate, useSearchParams } from "react-router-dom"
 import { useVerifyEmail } from "../../../app/hooks/accountHooks"
 
 const EmailVerificationPage = () => {
-
   const [params] = useSearchParams()
-
   const navigate = useNavigate()
   const { t } = useTranslation()
-
-  const { isSuccess, isPending, isError } = useVerifyEmail(params.get('userEmail')!, params.get('token')!)
-
+  const email = params.get('userEmail');
+  const token = params.get('token')
+  const { isSuccess, isPending, isError } = useVerifyEmail(email!, token!)
 
   useEffect(() => {
     if (isSuccess) {
       const timeoutId = setTimeout(() => {
-        navigate(`/login?email=${params.get('userEmail')}`, { replace: true });
+        navigate(`/login?email=${email}`, { replace: true });
       }, 2000);
-
       return () => clearTimeout(timeoutId);
     }
   }, [isSuccess])
 
-
   useEffect(() => {
     if (isError) navigate(-1)
   }, [isError])
-
 
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', flexDirection: 'column', textAlign: 'center' }}>

@@ -7,12 +7,48 @@ import { ACCOUNT_QUERY_KEY, BASKET_QUERY_KEY } from "../constants/queriesKey"
 import { Account, Address, loginRequest } from "../models/account"
 
 
+export const useResetPassword = () => {
+    const { mutateAsync, isPending } = useMutation({
+        mutationFn: async (data: { token: string; newPassword: string }) => await accountService.resetPassword(data),
+        onError: () => toast.error('some_thing_went_wrong'),
+        onSuccess: () => toast.success('reset_password_success')
+    })
+
+    return {
+        reset: mutateAsync,
+        isPending
+    }
+}
+
+export const useSendResetPasswordEmail = () => {
+    const { mutateAsync, isPending } = useMutation({
+        mutationFn: async () => await accountService.sendResetPasswordEmail(),
+        onError: () => toast.error('some_thing_went_wrong'),
+        onSuccess: () => toast.success('reset_password_link_sent_success')
+    })
+
+    return {
+        send: mutateAsync,
+        isPending
+    }
+}
+
+export const useChangePassword = () => {
+    const { mutateAsync } = useMutation({
+        mutationFn: async (data: { currentPassword: string; newPassword: string }) => await accountService.changePassword(data),
+        onError: () => toast.error('some_thing_went_wrong'),
+        onSuccess: () => toast.success('password_changed_success')
+    })
+
+    return {
+        change: mutateAsync
+    }
+}
 
 export const useVerifyEmail = (email: string, token: string) => {
 
     const { isSuccess, isPending, isError } = useQuery({
         queryKey: ["verifyEmail", email],
-        enabled: !!(email && token),
         queryFn: async () => await accountService.verifyEmail(email, token),
         meta: {
             errorMessage: "error"
@@ -69,7 +105,7 @@ export const useUpdateAddress = () => {
 
 
 export const useRegister = () => {
-   // const navigate = useNavigate()
+    // const navigate = useNavigate()
     const { t } = useTranslation()
 
     const { mutateAsync, isSuccess } = useMutation({

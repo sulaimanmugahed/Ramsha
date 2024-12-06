@@ -1,5 +1,5 @@
-import { Grid, Box, Button } from '@mui/material';
-import { PrivacyTip, Notifications, Settings, AccountCircle, Payment, Home } from '@mui/icons-material';
+import { AccountCircle, Home, Notifications, Payment, PrivacyTip, Settings } from '@mui/icons-material';
+import { Box, Button, Grid } from '@mui/material';
 import { Outlet, useNavigate } from 'react-router-dom';
 
 const AccountSettings: React.FC = () => {
@@ -45,9 +45,9 @@ const AccountSettings: React.FC = () => {
           <Button
             variant="outlined"
             fullWidth
+            onClick={() => navigate('/profile/settings/change-password')}
             startIcon={<Settings />}
             sx={{ justifyContent: 'flex-start', borderRadius: 20, height: 50 }}
-
           >
             Change Password
           </Button>
@@ -58,7 +58,6 @@ const AccountSettings: React.FC = () => {
             fullWidth
             startIcon={<Notifications />}
             sx={{ justifyContent: 'flex-start', borderRadius: 20, height: 50 }}
-
           >
             Notifications
           </Button>

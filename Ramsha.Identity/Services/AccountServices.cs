@@ -13,6 +13,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Ramsha.Domain.Common;
+using Ramsha.Application.Dtos.Account.Requests;
 
 
 namespace Ramsha.Identity.Services;
@@ -25,19 +26,7 @@ IEmailService emailService,
 IOptionsSnapshot<JWTSettings> jwtSettings) : IAccountServices
 {
 
-    public async Task<BaseResult> ChangePassword(ChangePasswordRequest model)
-    {
-        var user = await userManager.FindByIdAsync(authenticatedUser.UserId);
 
-        var token = await userManager.GeneratePasswordResetTokenAsync(user);
-
-        var identityResult = await userManager.ResetPasswordAsync(user, token, model.Password);
-
-        if (identityResult.Succeeded)
-            return new BaseResult();
-
-        return new List<Error>(identityResult.Errors.Select(p => new Error(ErrorCode.ErrorInIdentity, p.Description)));
-    }
 
 
     public async Task<BaseResult> Revoke(string token)
@@ -372,6 +361,92 @@ IOptionsSnapshot<JWTSettings> jwtSettings) : IAccountServices
         await emailService.SendEmailMessage(new Application.Contracts.Email.EmailMessage([email], "Confirm Your Email", htmlContent));
     }
 
+    private async Task SendResetPasswordEmail(string email, string token, string name)
+    {
+        var confirmationLink = $"http://localhost:3000/reset-password?token={token}";
+
+        string htmlContent = $@"
+<!DOCTYPE html>
+<html lang=""en"">
+<head>
+  <meta charset=""UTF-8"">
+  <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+  <title>Welcome to My Website</title>
+  <style>
+    body {{
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+    }}
+    .container {{
+      max-width: 600px;
+      margin: 50px auto;
+      background-color: #fff;
+      border-radius: 5px;
+      padding: 30px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }}
+    .header {{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }}
+    .logo {{
+      width: 100px;
+      height: auto;
+    }}
+    .content {{
+      font-size: 16px;
+      line-height: 1.5;
+    }}
+    .cta {{
+      display: inline-block;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      color: #fff;
+      background-color: #8DA290;
+      font-weight: bold;
+      margin-top: 20px;
+    }}
+    a{{
+        color:#8DA290;
+    }}
+    .footer {{
+      text-align: center;
+      font-size: 12px;
+      color: #aaa;
+      margin-top: 20px;
+    }}
+  </style>
+</head>
+<body>
+  <div class=""container"">
+    <div class=""header"">
+      <h2>Hi {name}</h2>
+    </div>
+    <div class=""content"">
+     
+      <p>To reset your password, please click the button below:</p>
+      <a href=""{confirmationLink}"" class=""cta"">Reset Password</a>
+      <p>If you can't click the button, you can also paste the following link into your browser:</p>
+      <p>{confirmationLink}</p>
+      <p>**Please note:** This link will expire in 1 hours.</p>
+    </div>
+    <div class=""footer"">
+      <p>&copy; {DateTime.Now.Year} Ramsha. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>";
+
+
+
+        await emailService.SendEmailMessage(new Application.Contracts.Email.EmailMessage([email], "Reset Your Password", htmlContent));
+    }
+
     private async Task<string> GenerateConfirmationToken(Account account)
     {
         return await userManager.GenerateEmailConfirmationTokenAsync(account);
@@ -385,6 +460,50 @@ IOptionsSnapshot<JWTSettings> jwtSettings) : IAccountServices
 
         var result = await userManager.ConfirmEmailAsync(user, token.Replace(" ", "+"));
 
+        return result.Succeeded;
+    }
+
+    public async Task<bool> SendResetPasswordEmail(string username)
+    {
+        var account = await userManager.FindByNameAsync(username);
+        if (!(account is not null && await userManager.IsEmailConfirmedAsync(account)))
+        {
+            return false;
+        }
+
+        var token = await userManager.GeneratePasswordResetTokenAsync(account);
+        await SendResetPasswordEmail(account.Email, token, username);
+
+        return true;
+
+    }
+
+    public async Task<bool> ResetPassword(string username, ResetPasswordRequest request)
+    {
+        var account = await userManager.FindByNameAsync(username);
+        if (account is null)
+        {
+            return false;
+        }
+
+        var result = await userManager.ResetPasswordAsync(account, request.Token.Replace(" ", "+"), request.NewPassword);
+        return result.Succeeded;
+    }
+
+
+    public async Task<bool> ChangePassword(string username, ChangePasswordRequest request)
+    {
+        var account = await userManager.FindByNameAsync(username);
+        if (account is null)
+        {
+            return false;
+        }
+
+        var result = await userManager.ChangePasswordAsync(account, request.CurrentPassword, request.NewPassword);
+        if (result.Succeeded)
+        {
+            await signInManager.RefreshSignInAsync(account);
+        }
         return result.Succeeded;
     }
 }

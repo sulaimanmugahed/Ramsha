@@ -16,6 +16,7 @@ using Newtonsoft.Json.Serialization;
 using System.Security.Claims;
 using System.Text;
 using Ramsha.Application.Contracts.Identity.UserInterfaces;
+using Ramsha.Identity.Providers;
 
 namespace Ramsha.Identity;
 
@@ -38,15 +39,20 @@ public static class ServiceRegistration
             options.Password.RequireUppercase = identitySettings.PasswordRequireUppercase;
             options.Password.RequireLowercase = identitySettings.PasswordRequireLowercase;
             options.Tokens.EmailConfirmationTokenProvider = "emailConfirmation";
+            options.Tokens.PasswordResetTokenProvider = "passwordReset";
         })
             .AddEntityFrameworkStores<IdentityContext>()
             .AddDefaultTokenProviders()
-             .AddTokenProvider<EmailConfirmationTokenProvider<Account>>("emailConfirmation");
+             .AddTokenProvider<EmailConfirmationTokenProvider<Account>>("emailConfirmation")
+             .AddTokenProvider<PasswordResetTokenProvider<Account>>("passwordReset");
 
         services.Configure<DataProtectionTokenProviderOptions>(opt =>
         opt.TokenLifespan = TimeSpan.FromHours(2));
         services.Configure<EmailConfirmationTokenProviderOptions>(opt =>
             opt.TokenLifespan = TimeSpan.FromDays(3));
+
+        services.Configure<PasswordResetTokenProviderOptions>(opt =>
+        opt.TokenLifespan = TimeSpan.FromHours(1));
 
     }
     public static IServiceCollection AddIdentityInfrastructure(this IServiceCollection services, IConfiguration configuration)

@@ -6,23 +6,18 @@ namespace Ramsha.Application.DTOs.Account.Requests
 {
     public class ChangePasswordRequest
     {
-        public string Password { get; set; }
-        public string ConfirmPassword { get; set; }
+        public string CurrentPassword { get; set; }
+        public string NewPassword { get; set; }
     }
     public class ChangePasswordRequestValidator : AbstractValidator<ChangePasswordRequest>
     {
         public ChangePasswordRequestValidator()
         {
-            RuleFor(x => x.Password)
+            RuleFor(x => x.CurrentPassword)
                 .NotEmpty().NotNull()
                 .MinimumLength(6)
                 .Matches(Regexs.Password)
-                .WithName("Passwsord");
-
-            RuleFor(x => x.ConfirmPassword)
-                .Equal(x => x.Password)
-                .Matches(Regexs.Password)
-                .WithName("ConfirmPassword");
+                .WithName("NewPassword");
         }
     }
 

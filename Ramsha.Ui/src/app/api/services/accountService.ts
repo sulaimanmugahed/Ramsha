@@ -1,17 +1,43 @@
 
-import { Address } from "../../models/account"
-import request from "../Request"
+import { Address } from "../../models/account";
+import request from "../Request";
 
 const BASE_URL = "account"
 
+
+const resetPassword = async (data: { token: string; newPassword: string }) => {
+    return await request({
+        url: `${BASE_URL}/reset-password`,
+        method: 'POST',
+        data
+    })
+}
+
+
+const sendResetPasswordEmail = async () => {
+    return await request({
+        url: `${BASE_URL}/send-reset-password-email`,
+        method: 'POST'
+    })
+}
+
+
+const changePassword = async (data: { currentPassword: string; newPassword: string }) => {
+    return await request({
+        url: `${BASE_URL}/change-password`,
+        method: 'POST',
+        data
+    })
+}
+
 const verifyEmail = async (email: string, token: string) => {
     return await request({
-        url: `account/verify-email?email=${email}&token=${token}`,
+        url: `${BASE_URL}/verify-email?email=${email}&token=${token}`,
     })
 }
 const sendConfirmEmail = async (email: string) => {
     return await request({
-        url: `account/send-confirm-email?email=${email}`,
+        url: `${BASE_URL}/send-confirm-email?email=${email}`,
         method: 'POST'
     })
 }
@@ -65,6 +91,9 @@ export const accountService = {
     register,
     updateAddress,
     sendConfirmEmail,
-    verifyEmail
+    verifyEmail,
+    changePassword,
+    sendResetPasswordEmail,
+    resetPassword
 }
 
