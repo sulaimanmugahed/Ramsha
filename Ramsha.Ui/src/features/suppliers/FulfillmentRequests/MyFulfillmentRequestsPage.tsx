@@ -59,8 +59,16 @@ const MyFulfillmentRequestsPage = () => {
         {fulfillmentRequests && fulfillmentRequests.length > 0 ? (
           <FulfillmentRequestsTable
             fulfillmentRequests={fulfillmentRequests}
-            onShip={handleOnShip}
-            onRowView={(row) => navigate(row.id)}
+            actions={[
+              {
+                label: 'Ship',
+                action: handleOnShip
+              },
+              {
+                label: 'Detail',
+                action: (fulfillment) => navigate(fulfillment.id)
+              }
+            ]}
           />
         ) : (
           <Typography variant="body1">No fulfillment requests available for this status.</Typography>

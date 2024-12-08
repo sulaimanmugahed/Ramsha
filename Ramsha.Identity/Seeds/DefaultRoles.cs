@@ -18,6 +18,9 @@ namespace Ramsha.Identity.Seeds
             if (!await roleManager.RoleExistsAsync(Roles.Supplier))
                 await roleManager.CreateAsync(new ApplicationRole(Roles.Supplier));
 
+            if (!await roleManager.RoleExistsAsync(Roles.DeliveryAgent))
+                await roleManager.CreateAsync(new ApplicationRole(Roles.DeliveryAgent));
+
         }
     }
 }

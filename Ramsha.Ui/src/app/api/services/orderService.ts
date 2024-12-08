@@ -40,6 +40,13 @@ const getMyFulfillmentRequests = async (params: PagedParams) =>
         data: params
     })
 
+    const getDeliveryAgentFulfillmentRequests = async (params: PagedParams) =>
+        await request<PaginationResponse<FulfillmentRequest[]>>({
+            url: `${BASE_URL}/deliveryAgent-fulfillment-requests/paged`,
+            method: 'POST',
+            data: params
+        })
+
 
 const getFulfillmentRequestDetail = async (id: string) => {
     return await request<FulfillmentRequestDetail>({
@@ -48,9 +55,25 @@ const getFulfillmentRequestDetail = async (id: string) => {
 }
 
 
+const getAllFulfillmentRequests = async (params: PagedParams) => {
+    return await request<PaginationResponse<FulfillmentRequest[]>>({
+        url: `${BASE_URL}/fulfillment-requests/paged`,
+        method: 'POST',
+        data: params
+    })
+}
+
+
 const markFulfillmentRequest = async (markAs: 'ship' | 'deliver', id: string, orderId: string) => {
     return await request({
         url: `${BASE_URL}/${orderId}/fulfillment-requests/${id}/${markAs}`,
+        method: 'POST'
+    })
+}
+
+const shipFulfillmentRequest = async (id: string, orderId: string, deliveryAgentId: string) => {
+    return await request({
+        url: `${BASE_URL}/${orderId}/fulfillment-requests/${id}/ship?deliveryAgentId=${deliveryAgentId}`,
         method: 'POST'
     })
 }
@@ -63,6 +86,9 @@ export const orderService = {
     getMyFulfillmentRequests,
     getFulfillmentRequestDetail,
     markFulfillmentRequest,
-    getOrdersPaged
+    getOrdersPaged,
+    getAllFulfillmentRequests,
+    shipFulfillmentRequest,
+    getDeliveryAgentFulfillmentRequests
 }
 

@@ -1,5 +1,6 @@
 
 using Ramsha.Domain.Common;
+using Ramsha.Domain.DeliveryAgents;
 using Ramsha.Domain.Orders.Enums;
 using Ramsha.Domain.Suppliers;
 using Ramsha.Domain.Suppliers.Entities;
@@ -25,6 +26,8 @@ public class FulfillmentRequest : BaseEntity
     => new(new FulfillmentRequestId(Guid.NewGuid()), supplierId, items, deliveryFee);
 
     public FulfillmentRequestId Id { get; set; }
+    public DeliveryAgentId? DeliveryAgentId { get; set; }
+
     public SupplierId SupplierId { get; set; }
     public Supplier Supplier { get; set; }
     public OrderId OrderId { get; set; }
@@ -40,4 +43,12 @@ public class FulfillmentRequest : BaseEntity
     {
         Status = status;
     }
+
+    public void Ship(DeliveryAgentId deliveryAgentId)
+    {
+        DeliveryAgentId = deliveryAgentId;
+        Status = FulfillmentRequestStatus.Shipped;
+    }
+
+    
 }

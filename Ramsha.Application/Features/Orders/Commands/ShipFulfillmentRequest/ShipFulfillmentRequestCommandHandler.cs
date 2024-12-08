@@ -23,7 +23,9 @@ public class ShipFulfillmentRequestCommandHandler(
         if (order is null)
             return new Error(ErrorCode.RequestedDataNotExist, "no fulfillmentRequest found");
 
-        order.ShipFulfillmentRequest(new Domain.Orders.FulfillmentRequestId(request.FulfillmentRequestId));
+        order.ShipFulfillmentRequest(
+            new Domain.Orders.FulfillmentRequestId(request.FulfillmentRequestId),
+            new Domain.DeliveryAgents.DeliveryAgentId(request.DeliveryAgentId));
 
         await unitOfWork.SaveChangesAsync();
         return BaseResult.Ok();

@@ -12,6 +12,7 @@ using Ramsha.Domain.Orders.Entities;
 using MediatR;
 using Ramsha.Domain.Inventory;
 using Ramsha.Domain.Orders;
+using Ramsha.Domain.DeliveryAgents;
 
 
 namespace Ramsha.Persistence.Contexts;
@@ -20,6 +21,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 {
     public DbSet<Product> Products { get; set; }
     public DbSet<Customer> Customers { get; set; }
+    public DbSet<DeliveryAgent> DeliveryAgents { get; set; }
+
     public DbSet<Supplier> Suppliers { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<SupplyRequest> SupplyRequests { get; set; }
@@ -478,6 +481,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
            .OnDelete(DeleteBehavior.Restrict);
 
 
+
+
             builder.HasOne<FulfillmentRequest>()
           .WithMany(x => x.Items)
           .HasForeignKey(x => x.FulfillmentRequestId)
@@ -546,6 +551,10 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             entity.HasOne(x => x.Order)
             .WithMany(x => x.FulfillmentRequests)
             .HasForeignKey(x => x.OrderId);
+
+            entity.HasOne<DeliveryAgent>()
+           .WithMany()
+           .HasForeignKey(x => x.DeliveryAgentId);
 
             entity.HasOne(x => x.Supplier)
             .WithMany(x => x.FulfillmentRequests)

@@ -5,11 +5,10 @@ using System.Threading.Tasks;
 using MediatR;
 using Ramsha.Application.Wrappers;
 
-namespace Ramsha.Application.Features.Orders.Commands.ShipFulfillmentRequest;
+namespace Ramsha.Application.Features.Orders.Commands.AssignFulfillmentDeliveryAgent;
 
-public class ShipFulfillmentRequestCommand : IRequest<BaseResult>
+public class AssignFulfillmentDeliveryAgentCommand : IRequest<BaseResult>
 {
-    public Guid OrderId { get; set; }
     public Guid FulfillmentRequestId { get; set; }
     public Guid DeliveryAgentId { get; set; }
 

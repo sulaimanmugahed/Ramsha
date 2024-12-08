@@ -14,6 +14,7 @@ public static class OrdersExtensions
     public static FulfillmentRequestDetailDto AsFulfillmentRequestDetailDto(this FulfillmentRequest request)
     => new(request.Id.Value,
     request.OrderId.Value,
+    request.DeliveryAgentId?.Value,
     request.Subtotal,
     request.DeliveryFee,
     request.Status.ToString(),
@@ -26,6 +27,7 @@ public static class OrdersExtensions
     => new FulfillmentRequestDto(
         request.Id.Value,
         request.OrderId.Value,
+        request.DeliveryAgentId?.Value,
         request.Subtotal,
         request.DeliveryFee,
         request.Status.ToString(),

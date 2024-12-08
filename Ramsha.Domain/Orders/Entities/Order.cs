@@ -2,6 +2,7 @@
 using Ramsha.Domain.Common;
 using Ramsha.Domain.Customers;
 using Ramsha.Domain.Customers.Entities;
+using Ramsha.Domain.DeliveryAgents;
 using Ramsha.Domain.Orders.Enums;
 using Ramsha.Domain.Orders.Events;
 
@@ -81,7 +82,7 @@ public class Order : BaseEntity
         existFulfillment.SetStatus(FulfillmentRequestStatus.Delivered);
     }
 
-    public void ShipFulfillmentRequest(FulfillmentRequestId fulfillmentRequestId)
+    public void ShipFulfillmentRequest(FulfillmentRequestId fulfillmentRequestId, DeliveryAgentId deliveryAgentId)
     {
         var existFulfillment = FulfillmentRequests.FirstOrDefault(x => x.Id == fulfillmentRequestId);
         if (existFulfillment is null)
@@ -97,7 +98,7 @@ public class Order : BaseEntity
         {
             OrderStatus = OrderStatus.Processing;
         }
-        existFulfillment.SetStatus(FulfillmentRequestStatus.Shipped);
+        existFulfillment.Ship(deliveryAgentId);
     }
 
 

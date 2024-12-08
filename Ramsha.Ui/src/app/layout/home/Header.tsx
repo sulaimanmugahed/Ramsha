@@ -1,31 +1,31 @@
 
-import * as React from 'react';
-import { styled, alpha } from '@mui/material/styles';
-import Box from '@mui/material/Box';
+import { LightModeOutlined } from '@mui/icons-material';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import MenuIcon from '@mui/icons-material/Menu';
+import { Badge, BottomNavigation, BottomNavigationAction, Paper, Typography } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
 import Container from '@mui/material/Container';
 import Divider from '@mui/material/Divider';
-import MenuItem from '@mui/material/MenuItem';
 import Drawer from '@mui/material/Drawer';
-import MenuIcon from '@mui/icons-material/Menu';
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import { Badge, BottomNavigation, BottomNavigationAction, Paper, Typography } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
+import MenuItem from '@mui/material/MenuItem';
+import { alpha, styled } from '@mui/material/styles';
+import Toolbar from '@mui/material/Toolbar';
+import * as React from 'react';
+import { Moon, Search, SignInAlt } from 'react-flaticons';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { ThemeContext } from '../../providers/AppThemeProvider';
 import BasketDropdown from '../BasketDropdown';
 import SignedInMenu from '../SignedInMenu';
-import { Moon, Search, SignInAlt } from 'react-flaticons';
-import { LightModeOutlined } from '@mui/icons-material';
-import { ThemeContext } from '../../providers/AppThemeProvider';
 
-import AppBagIcon from '../../components/icons/AppBagIcon';
-import AppHomeIcon from '../../components/icons/AppHomeIcon';
-import AppGridIcon from '../../components/icons/AppGridIcon';
 import { useTranslation } from 'react-i18next';
-import { useBasket } from '../../hooks/basketHooks';
+import AppBagIcon from '../../components/icons/AppBagIcon';
+import AppGridIcon from '../../components/icons/AppGridIcon';
+import AppHomeIcon from '../../components/icons/AppHomeIcon';
 import { useAccount } from '../../hooks/accountHooks';
+import { useBasket } from '../../hooks/basketHooks';
 
 
 
@@ -210,6 +210,14 @@ export default function AppAppBar() {
                             {
                                 account?.role === 'Supplier' && (
                                     <Button component={NavLink} to={'/supplier/dashboard'} sx={navStyles} variant="text" size="small">
+                                        {t('dashboard')}
+                                    </Button>
+                                )
+                            }
+
+                            {
+                                account?.role === 'DeliveryAgent' && (
+                                    <Button component={NavLink} to={'/delivery-agent/dashboard'} sx={navStyles} variant="text" size="small">
                                         {t('dashboard')}
                                     </Button>
                                 )

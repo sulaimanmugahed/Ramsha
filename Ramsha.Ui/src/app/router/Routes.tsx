@@ -7,6 +7,7 @@ import RegisterPage from "../../features/account/register/RegisterPage";
 import ResetPasswordPage from "../../features/account/ResetPasswordPage";
 import SendResetPasswordEmail from "../../features/account/SendResetPasswordEmail";
 import AdminDashboard from "../../features/admin/AdminDashboard";
+import FulfillmentRequestsPage from "../../features/admin/fulfillmentRequests/FulfillmentRequestsPage";
 import InventoryPage from "../../features/admin/inventory/InventoryPage";
 import AdminOrdersPage from "../../features/admin/orders/AdminOrdersPage";
 import AdminProductPage from "../../features/admin/products/AdminProductPage";
@@ -17,6 +18,8 @@ import CatalogPage from "../../features/catalog/CatalogPage";
 import CatalogProductDetailsModal from "../../features/catalog/CatalogProductDetailsModal";
 import CheckoutPage from "../../features/checkout/CheckoutPage";
 import ContactPage from "../../features/contact/ContactPage";
+import DeliveryAgentDashboard from "../../features/deliveryAgents/DeliveryAgentDashboard";
+import DeliveryAgentFulfillmentsPage from "../../features/deliveryAgents/fulfillments/DeliveryAgentFulfillmentsPage";
 import MyOrdersPage from "../../features/orders/MyOrdersPage";
 import OrderDetailPage from "../../features/orders/OrderDetailPage";
 import CreateProductPage from "../../features/products/CreateProductPage";
@@ -167,6 +170,20 @@ export const router = createBrowserRouter([
                 element: <DashboardLayout />,
                 children: [
                     {
+                        element: <PrivateRoutes allowedRoles={['DeliveryAgent']} />,
+                        path: '/delivery-agent',
+                        children: [
+                            {
+                                element: <DeliveryAgentDashboard />,
+                                path: 'dashboard'
+                            },
+                            {
+                                element: <DeliveryAgentFulfillmentsPage />,
+                                path: 'fulfillments'
+                            }
+                        ]
+                    },
+                    {
                         element: <PrivateRoutes allowedRoles={['SuperAdmin', 'Admin']} />,
                         path: '/admin',
                         children: [
@@ -184,6 +201,11 @@ export const router = createBrowserRouter([
                                     }
                                 ]
                             },
+                            {
+                                element: <FulfillmentRequestsPage />,
+                                path: 'fulfillments'
+                            },
+
                             {
                                 element: <AdminSuppliesPage />,
                                 path: 'supplies',

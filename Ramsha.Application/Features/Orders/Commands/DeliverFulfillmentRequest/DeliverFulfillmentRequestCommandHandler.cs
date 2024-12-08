@@ -21,7 +21,7 @@ public class DeliverFulfillmentRequestCommandHandler(
         if (order is null)
             return new Error(ErrorCode.RequestedDataNotExist, "no fulfillmentRequest found");
 
-        order.ShipFulfillmentRequest(new Domain.Orders.FulfillmentRequestId(request.FulfillmentRequestId));
+        order.DeliverFulfillmentRequest(new Domain.Orders.FulfillmentRequestId(request.FulfillmentRequestId));
 
         await unitOfWork.SaveChangesAsync();
         return BaseResult.Ok();

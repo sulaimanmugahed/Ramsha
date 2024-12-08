@@ -115,6 +115,20 @@ export default function Header() {
         setOpen(false);
     };
 
+
+    const deliveryAgentNav = [
+        {
+            label: 'Dashboard',
+            value: '/delivery-agent/dashboard',
+            icon: <AppDashboardIcon />,
+        },
+        {
+            label: 'Fulfillments',
+            value: '/delivery-agent/fulfillments',
+            icon: <AppOrderIcon />,
+        },
+    ]
+
     const adminNav = [
         {
             label: 'Dashboard',
@@ -124,6 +138,11 @@ export default function Header() {
         {
             label: 'Orders',
             value: '/admin/orders',
+            icon: <AppOrderIcon />,
+        },
+        {
+            label: 'Fulfillments',
+            value: '/admin/fulfillments',
             icon: <AppOrderIcon />,
         },
         {
@@ -184,7 +203,11 @@ export default function Header() {
     ];
 
 
-    const sideNav = account?.role === 'Supplier' ? supplierNav : adminNav;
+    const sideNav = account?.role === 'Supplier' ?
+        supplierNav :
+        account?.role === "DeliveryAgent" ?
+            deliveryAgentNav :
+            adminNav;
 
     const activeNavStyles = {
         '&.active': {
