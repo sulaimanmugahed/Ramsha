@@ -70,15 +70,13 @@ const client = (() => {
             const pagination = response.headers['pagination'];
             if (pagination) {
                 response.data.data = new PaginationResponse(response.data.data, JSON.parse(pagination));
-                console.log('paginationMeta ', pagination);
             }
 
             return response;
         },
         async (error: AxiosError) => {
-            const { data, status } = error.response as AxiosResponse;
+            const { status } = error.response as AxiosResponse;
 
-            console.log("error data from client:  ", data);
             const originalRequest = error.config as CustomAxiosRequestConfig;
 
             if (status === 401 && !originalRequest._retry) {

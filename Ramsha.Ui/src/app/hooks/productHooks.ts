@@ -58,7 +58,6 @@ export const useProductTags = () => {
 }
 
 
-const initialBrands: BrandDto[] = []
 
 
 export const useProductBrands = () => {
@@ -112,6 +111,19 @@ export const useProductVariant = (productId: string, variantId: string) => {
     const { data, isLoading, isError } = useQuery<ProductVariantDto>({
         queryKey: [PRODUCT_VARIANTS_QUERY_KEY, productId, variantId],
         queryFn: async () => await productService.getProductVariant(productId, variantId),
+    })
+
+    return {
+        variant: data,
+        isVariantLoading: isLoading,
+        isVariantError: isError
+    }
+}
+
+export const useDefaultProductVariant = (productId: string) => {
+    const { data, isLoading, isError } = useQuery<ProductVariantDto>({
+        queryKey: [PRODUCT_VARIANTS_QUERY_KEY, 'default', productId],
+        queryFn: async () => await productService.getDefaultVariant(productId),
     })
 
     return {

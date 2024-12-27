@@ -1,5 +1,6 @@
 ﻿using Ramsha.Application.Dtos.Account.Responses;
 using Ramsha.Application.Dtos.Baskets;
+using Ramsha.Application.Dtos.Customers;
 using Ramsha.Application.DTOs.Account.Responses;
 using Ramsha.Domain.Customers.Entities;
 using System;
@@ -28,4 +29,8 @@ public static class CustomerExtensions
 		};
 
 	}
+
+
+	public static CustomerDto AsDto(this Customer customer) =>
+	 new CustomerDto(customer.Id.Value, customer.FirstName, customer.LastName, customer.Username);
 }

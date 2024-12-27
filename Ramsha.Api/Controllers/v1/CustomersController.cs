@@ -8,21 +8,24 @@ using Microsoft.AspNetCore.Authorization;
 using Ramsha.Domain.Constants;
 using Ramsha.Application.Features.Customers.Queries.GetCurrentCustomerAddress;
 using Ramsha.Domain.Customers.Entities;
+using Ramsha.Application.Dtos.Customers;
+using Ramsha.Application.Features.Customers.Queries.GetCustomersPaged;
 
 namespace Ramsha.Api.Controllers.v1;
 
 [ApiVersion("1.0")]
-[Authorize(Roles = Roles.Customer)]
+[Authorize]
 
 public class CustomersController : BaseApiController
 {
+
+	[HttpPost("paged")]
+	public async Task<BaseResult<List<CustomerDto>>> GetPaged(GetCustomersPagedQuery query)
+	=> await Mediator.Send(query);
+
 	[AllowAnonymous]
 	[HttpPost]
 	public async Task<ActionResult<BaseResult<string>>> Create(CreateCustomerCommand command)
 		=> await Mediator.Send(command);
-
-	[HttpGet("address")]
-	public async Task<ActionResult<BaseResult<CustomerAddress?>>> GetCurrentCustomerAddress()
-		=> await Mediator.Send(new GetCurrentCustomerAddressQuery());
 
 }

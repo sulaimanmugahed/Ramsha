@@ -26,6 +26,7 @@ namespace Ramsha.Api.Controllers.v1;
 [Authorize(Roles = Roles.Supplier)]
 public class SuppliersController : BaseApiController
 {
+
 	[HttpPost("products/{productId}/variants/{variantId}")]
 	public async Task<BaseResult> CreateProduct(Guid productId, Guid variantId, AddSupplierVariantCommand command)
 	{

@@ -23,7 +23,7 @@ internal class CreateCustomerCommandHandler(
 			Username = request.Username,
 			PreferredCurrency = request.PreferredCurrency
 
-		}, Roles.Customer);
+		}, roleName: Roles.Customer);
 
 		if (!registerResult.Success)
 		{

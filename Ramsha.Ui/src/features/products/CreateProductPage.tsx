@@ -53,7 +53,7 @@ const CreateProductPage = ({ }: Props) => {
             description: '',
             category: '',
             productImage: null,
-            options: [{ id: '', priority: 1 }],
+            options: [{ id: '', priority: '1' }],
             seoSettings: null,
             tags: [],
             defaultVariant: {}

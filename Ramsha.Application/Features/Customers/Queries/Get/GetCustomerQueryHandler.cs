@@ -7,7 +7,7 @@ using MediatR;
 
 
 namespace Ramsha.Application.Features.Customers.Queries.Get;
-public class GetCustomerQueryHandler(IUserService userService,ICustomerRepository customerRepository) : IRequestHandler<GetCustomerQuery, BaseResult<CustomerDto>>
+public class GetCustomerQueryHandler(IUserService userService, ICustomerRepository customerRepository) : IRequestHandler<GetCustomerQuery, BaseResult<CustomerDto>>
 {
 	public async Task<BaseResult<CustomerDto>> Handle(GetCustomerQuery request, CancellationToken cancellationToken)
 	{
@@ -16,19 +16,19 @@ public class GetCustomerQueryHandler(IUserService userService,ICustomerRepositor
 
 		if (customer is null)
 			return new Error(ErrorCode.RequestedDataNotExist);
-	
+
 
 		var customerAccount = await userService.GetAccount(customer.Username);
-		if(!customerAccount.Success)
+		if (!customerAccount.Success)
 			return new Error(ErrorCode.RequestedDataNotExist);
 
-		return new CustomerDto {
-			Id = customer.Id.Value,
-			FirstName = customer.FirstName,
-			LastName = customer.LastName,
-			Email= customerAccount.Data.Email
-		};
-		
+		return new CustomerDto(
+			customer.Id.Value,
+			 customer.FirstName,
+		 customer.LastName,
+			 customerAccount.Data.Username
+		);
+
 	}
 
 }

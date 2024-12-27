@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Mvc;
 using Ramsha.Domain.Products.Enums;
 using Ramsha.Application.Features.Products.Commands.UpdateProduct;
 using Ramsha.Application.Features.Products.Queries.GetProductVariantSelection;
+using Ramsha.Application.Features.Products.Queries.GetDefaultVariant;
 
 namespace Ramsha.Api.Controllers.v1;
 
@@ -85,6 +86,10 @@ public class ProductsController : BaseApiController
         command.ProductId = productId;
         return await Mediator.Send(command);
     }
+
+    [HttpGet("{productId}/variants/default")]
+    public async Task<BaseResult<ProductVariantDto?>> GetDefaultVariant(Guid productId)
+    => await Mediator.Send(new GetDefaultVariantQuery { ProductId = productId });
 
     [HttpGet("{productId}/variants")]
     public async Task<BaseResult<List<ProductVariantDto?>>> GetVariantsForProduct(Guid productId)

@@ -142,7 +142,9 @@ public static class ProductExtensions
          variant.Code,
          variant.ImageUrl,
          variant.VariantValues.Select(v => v.AsDto()).ToList(),
-         variant.Images.Select(x => new ProductImageDto(x.Url, x.IsHome)).ToList()
+         variant.Images.Select(x => new ProductImageDto(x.Url, x.IsHome)).ToList(),
+         variant.Dimensions,
+         variant.Weight
       );
    }
 

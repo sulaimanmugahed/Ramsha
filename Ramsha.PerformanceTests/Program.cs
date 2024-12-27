@@ -1,6 +1,7 @@
 ﻿
 
 
+using Ramsha.Application.Constants;
 using Ramsha.Application.Services;
 using Ramsha.Domain.Common;
 
@@ -10,16 +11,13 @@ const decimal WeightRate = 0.50m;
 const decimal ExpressSurcharge = 2.00m;
 
 
-List<Test> data = [
-    new() { TestPrice = new Price(100) },
-    new() { TestPrice = new Price(100,Ramsha.Domain.Products.Enums.Currency.SAR) },
 
-    ];
-
-foreach (var item in data)
+var permissions = ApplicationPermissions.All();
+foreach (var p in permissions)
 {
-    Console.WriteLine($"item Price: {item.TestPrice.ConvertTo(Ramsha.Domain.Products.Enums.Currency.SAR, 3.76m)}");
+    Console.WriteLine(p);
 }
+
 
 
 class Test

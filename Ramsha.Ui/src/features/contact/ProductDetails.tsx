@@ -1,33 +1,31 @@
-import React, { useState } from "react";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  Grid,
-  Typography,
-  Chip,
-  Breadcrumbs,
-  Link,
-  Box,
-  Divider,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  IconButton,
-  CardContent,
-  Card,
-  CardMedia,
-} from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import CloseIcon from "@mui/icons-material/Close";
-import { styled, useTheme } from "@mui/material/styles";
-import VariantSlider from "../products/variants/VariantSlider";
-import { ProductDetail, ProductStatus } from "../../app/models/products/product";
-import { useUpdateProduct } from "../../app/hooks/productHooks";
-import { AppEditIcon } from "../../app/components/icons/AppEditIcon";
-import { Outlet, useNavigate } from "react-router-dom";
 import { Add } from "@mui/icons-material";
+import CloseIcon from "@mui/icons-material/Close";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Box,
+  Card,
+  CardContent,
+  CardMedia,
+  Chip,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  Grid,
+  IconButton,
+  Typography
+} from "@mui/material";
+import { styled, useTheme } from "@mui/material/styles";
+import { useState } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 import AppDynamicBreadcrumb from "../../app/components/AppDynamicBreadcrumb";
+import { AppEditIcon } from "../../app/components/icons/AppEditIcon";
+import { useUpdateProduct } from "../../app/hooks/productHooks";
+import { ProductDetail, ProductStatus } from "../../app/models/products/product";
+import VariantSlider from "../products/variants/VariantSlider";
 
 // Styled Dialog with larger border radius and shadow
 const StyledDialog = styled(Dialog)(({ theme }) => ({
@@ -80,7 +78,7 @@ const ProductDetails = ({ product, onClose }: { product: ProductDetail, onClose:
   return (
     <StyledDialog open={open} onClose={handleClose} fullWidth maxWidth="lg">
       <DialogTitle sx={{ position: "relative", pb: 3 }}>
-       
+
         <AppDynamicBreadcrumb />
         <IconButton
           aria-label="close"
@@ -156,7 +154,7 @@ const ProductDetails = ({ product, onClose }: { product: ProductDetail, onClose:
                       {product.description}
                     </Typography>
 
-                    <Box sx={{ display: "flex", alignItems: "center", justifyContent: 'space-between', gap: 2 }}>
+                    {/* <Box sx={{ display: "flex", alignItems: "center", justifyContent: 'space-between', gap: 2 }}>
                       <Typography
                         variant="h5"
                         fontWeight="bold"
@@ -165,7 +163,7 @@ const ProductDetails = ({ product, onClose }: { product: ProductDetail, onClose:
                       >
                         ${product.basePrice.toFixed(2)}
                       </Typography>
-                    </Box>
+                    </Box> */}
 
                     <Divider sx={{ marginY: 2 }} />
                     <Typography variant="body2">

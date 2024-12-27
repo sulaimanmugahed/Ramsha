@@ -74,9 +74,13 @@ const getBrands = async () => {
 
 const getProductVariants = async (productId: string) => {
     return await request<ProductVariantDto[]>({
-        url: `${BASE_URL}/${productId}/variants`,
-        method: 'GET',
+        url: `${BASE_URL}/${productId}/variants`
+    })
+}
 
+const getDefaultVariant = async (productId: string) => {
+    return await request<ProductVariantDto>({
+        url: `${BASE_URL}/${productId}/variants/default`
     })
 }
 
@@ -159,5 +163,6 @@ export const productService = {
     updateVariant,
     changeProductStatus,
     getProductOptions,
-    getProductVariantSelection
+    getProductVariantSelection,
+    getDefaultVariant
 }

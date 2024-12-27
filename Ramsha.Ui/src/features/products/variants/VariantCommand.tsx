@@ -15,18 +15,41 @@ interface VariantValues {
 }
 
 
-const VariantCommand = ({ variant, onSubmit, availableOptions }: { variant?: ProductVariantDto, onSubmit: (data: any) => void, availableOptions: ProductOption[] }) => {
+const VariantCommand = ({ variant, onSubmit, availableOptions, defaultVariant }: { defaultVariant?: ProductVariantDto, variant?: ProductVariantDto, onSubmit: (data: any) => void, availableOptions: ProductOption[] }) => {
     const { options } = useOptions()
 
-    const form = useForm<VariantScheme>({
-        defaultValues:
-        {
-            file: null,
+    const defaultValues = !variant && defaultVariant ? {
+        file: {
+            preview: defaultVariant.imageUrl || null,
+            file: null
+        },
+        weight: defaultVariant.weight.toString(),
+        height: defaultVariant.dimensions.height.toString(),
+        width: defaultVariant.dimensions.width.toString(),
+        length: defaultVariant.dimensions.length.toString(),
+        variantValues: defaultVariant.variantValues.reduce((acc, { optionId, optionValueId }) => {
+            acc[optionId] = { value: optionValueId };
+            return acc;
+        }, {} as VariantValues)
+
+    }
+        : {
+            file: {
+                preview: variant?.imageUrl || null,
+                file: null
+            },
+            weight: variant?.weight?.toString() || '0',
+            height: variant?.dimensions?.height?.toString() || '0',
+            width: variant?.dimensions?.width?.toString() || '0',
+            length: variant?.dimensions?.length?.toString() || '0',
             variantValues: variant?.variantValues.reduce((acc, { optionId, optionValueId }) => {
                 acc[optionId] = { value: optionValueId };
                 return acc;
             }, {} as VariantValues)
-        },
+        }
+
+    const form = useForm<VariantScheme>({
+        defaultValues,
         resolver: zodResolver(variantSchema),
         mode: 'all'
     })
@@ -43,7 +66,7 @@ const VariantCommand = ({ variant, onSubmit, availableOptions }: { variant?: Pro
         <FormProvider {...form}>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <ProductVariantForm availableOptions={options.filter(o => availableOptions.some(x => x.id === o.id))} />
-                <LoadingButton type='submit' loading={isSubmitting}>Save</LoadingButton>
+                <LoadingButton sx={{ mt: 4 }} type='submit' loading={isSubmitting}>Save</LoadingButton>
             </form>
             <DevTool control={control} />
         </FormProvider>

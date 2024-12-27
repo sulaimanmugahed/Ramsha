@@ -8,9 +8,12 @@ using Ramsha.Domain.Constants;
 namespace Ramsha.Application.Contracts.Identity.UserInterfaces;
 public interface IUserService
 {
-	Task<BaseResult<RegisterResponse>> CreateAccount(RegisterRequest request, string? role = null);
+	Task<BaseResult<RegisterResponse>> CreateAccount(RegisterRequest request, string roleName = Roles.Customer, List<string>? permissions = null, bool emailConfirmed = false, bool phoneNumberConfirmed = false);
 	Task<BaseResult<AccountDto>> GetAccount(string username);
+	Task<BaseResult<List<AccountDto>>> GetAccounts(string? roleName = null);
 	Task<BaseResult> DeleteAccount(string username);
 	Task<Address?> GetUserAddress(string userName);
 	Task UpdateUserAddress(string userName, Address address);
+
+
 }

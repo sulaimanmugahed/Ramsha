@@ -142,6 +142,9 @@ namespace Ramsha.Identity.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -198,6 +201,21 @@ namespace Ramsha.Identity.Migrations
                     b.ToTable("Account", "Identity");
                 });
 
+            modelBuilder.Entity("Ramsha.Identity.Models.AccountPermission", b =>
+                {
+                    b.Property<Guid>("AccountId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PermissionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("AccountId", "PermissionId");
+
+                    b.HasIndex("PermissionId");
+
+                    b.ToTable("AccountPermission", "Identity");
+                });
+
             modelBuilder.Entity("Ramsha.Identity.Models.ApplicationRole", b =>
                 {
                     b.Property<Guid>("Id")
@@ -224,6 +242,36 @@ namespace Ramsha.Identity.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("Role", "Identity");
+                });
+
+            modelBuilder.Entity("Ramsha.Identity.Models.ApplicationRolePermission", b =>
+                {
+                    b.Property<Guid>("ApplicationRoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PermissionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("ApplicationRoleId", "PermissionId");
+
+                    b.HasIndex("PermissionId");
+
+                    b.ToTable("ApplicationRolePermission", "Identity");
+                });
+
+            modelBuilder.Entity("Ramsha.Identity.Models.Permission", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Permissions", "Identity");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -361,6 +409,45 @@ namespace Ramsha.Identity.Migrations
                     b.Navigation("Address");
 
                     b.Navigation("RefreshTokens");
+                });
+
+            modelBuilder.Entity("Ramsha.Identity.Models.AccountPermission", b =>
+                {
+                    b.HasOne("Ramsha.Identity.Models.Account", "Account")
+                        .WithMany("Permissions")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Ramsha.Identity.Models.Permission", "Permission")
+                        .WithMany()
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("Permission");
+                });
+
+            modelBuilder.Entity("Ramsha.Identity.Models.ApplicationRolePermission", b =>
+                {
+                    b.HasOne("Ramsha.Identity.Models.ApplicationRole", null)
+                        .WithMany()
+                        .HasForeignKey("ApplicationRoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Ramsha.Identity.Models.Permission", null)
+                        .WithMany()
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Ramsha.Identity.Models.Account", b =>
+                {
+                    b.Navigation("Permissions");
                 });
 #pragma warning restore 612, 618
         }

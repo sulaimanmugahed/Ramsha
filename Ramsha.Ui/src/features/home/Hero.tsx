@@ -1,14 +1,13 @@
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
-import InputLabel from '@mui/material/InputLabel';
-import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
-import { visuallyHidden } from '@mui/utils';
 import { styled } from '@mui/material/styles';
+import AppSlider from '../../app/components/ui/AppSlider';
+import { useCatalogCategories, useCatalogProducts } from '../../app/hooks/catalogHooks';
+import ProductCard from '../catalog/ProductCard';
+import CategoryCard from '../categories/CategoryCard';
 
 const StyledBox = styled('div')(({ theme }) => ({
   alignSelf: 'center',
@@ -25,7 +24,7 @@ const StyledBox = styled('div')(({ theme }) => ({
   backgroundSize: 'cover',
   [theme.breakpoints.up('sm')]: {
     marginTop: theme.spacing(10),
-    height: 700,
+    height: 'auto',
   },
   ...theme.applyStyles('dark', {
     boxShadow: '0 0 24px 12px hsla(210, 100%, 25%, 0.2)',
@@ -35,7 +34,38 @@ const StyledBox = styled('div')(({ theme }) => ({
   }),
 }));
 
+const StyledText = styled(Typography)(({ theme }) => ({
+  position: 'relative',
+  display: 'inline-block',
+  fontSize: '4rem',
+  fontWeight: 800,
+  color: theme.palette.primary.main,
+  textTransform: 'uppercase',
+  lineHeight: 1.2,
+  letterSpacing: '0.1em',
+  textShadow: '2px 4px 8px rgba(0, 0, 0, 0.2)',
+  padding: theme.spacing(3),
+  background: `linear-gradient(135deg, ${theme.palette.primary.light}, ${theme.palette.primary.main})`,
+  WebkitBackgroundClip: 'text',
+  WebkitTextFillColor: 'transparent',
+
+  [theme.breakpoints.up('sm')]: {
+    fontSize: '5rem',
+  },
+}));
+
 export default function Hero() {
+
+
+  const { products } = useCatalogProducts({
+    paginationParams: { pageNumber: 1, pageSize: 20 }
+
+  })
+
+
+  const { categories } = useCatalogCategories()
+
+
   return (
     <Box
       id="hero"
@@ -60,48 +90,132 @@ export default function Hero() {
           pb: { xs: 8, sm: 12 },
         }}
       >
-        <Stack
-          spacing={2}
-          useFlexGap
-          sx={{ alignItems: 'center', width: { xs: '100%', sm: '70%' } }}
+        <Container
+          sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', md: 'row' },
+            alignItems: 'center',
+            justifyContent: 'center',
+            pt: { xs: 5, sm: 6 },
+            pb: { xs: 3, sm: 4 },
+          }}
         >
-          <Typography
-            variant="h1"
+          {/* Left Section: Logo */}
+          <Box
             sx={{
+              width: { xs: '100%', md: '40%' },
               display: 'flex',
-              flexDirection: { xs: 'column', sm: 'row' },
+              justifyContent: 'center',
               alignItems: 'center',
-              fontSize: 'clamp(3rem, 10vw, 3.5rem)',
+              mb: { xs: 4, md: 0 },
             }}
           >
-            Our&nbsp;latest&nbsp;
-            <Typography
-              component="span"
-              variant="h1"
-              sx={(theme) => ({
-                fontSize: 'inherit',
-                color: 'primary.main',
-                ...theme.applyStyles('dark', {
-                  color: 'primary.light',
-                }),
-              })}
-            >
-              products
-            </Typography>
-          </Typography>
-          <Typography
+            <StyledText>Ramsha</StyledText>
+          </Box>
+
+          <Stack
+            spacing={3}
             sx={{
-              textAlign: 'center',
-              color: 'text.secondary',
-              width: { sm: '100%', md: '80%' },
+              width: { xs: '100%', md: '60%' },
+
+              px: { xs: 2, md: 4 },
+
             }}
           >
-            Explore our cutting-edge dashboard, delivering high-quality solutions
-            tailored to your needs. Elevate your experience with top-tier features
-            and services.
-          </Typography>
-        </Stack>
-        <StyledBox id="image" />
+            <Typography
+              variant="h3"
+              sx={{
+                textAlign: { xs: 'center', md: 'left' },
+                fontSize: 'clamp(2rem, 6vw, 3rem)',
+                fontWeight: 700,
+                lineHeight: 1.2,
+                color: 'text.primary',
+              }}
+            >
+              Marketplace&nbsp;of&nbsp;
+              <Typography
+                variant="h5"
+                component="span"
+                sx={{
+                  textAlign: { xs: 'center', md: 'left' },
+                  color: 'primary.main',
+                }}
+              >
+                Endless Opportunities
+              </Typography>
+            </Typography>
+
+            <Typography
+              variant="body1"
+              sx={{
+
+                color: 'text.secondary',
+                textAlign: { xs: 'center', md: 'left' },
+
+              }}
+            >
+              Your ultimate multi-category shopping destination, connecting you with trusted
+              suppliers and a world of unique products. Experience variety, quality, and
+              convenience—all in one place.
+            </Typography>
+          </Stack>
+        </Container>
+        <StyledBox sx={{ p: 2 }} id="image" >
+          <Box sx={{ mb: 4 }}>
+            <Typography color={'primary'} sx={{ mb: 2 }} variant='h5' fontWeight={'bold'}>Latest Products</Typography>
+
+            {
+              products &&
+              <AppSlider
+                infinite={products.length >= 3}
+                slidesToShow={3}
+                items={products}
+                centerMode
+                renderItem={(product) => (
+                  <Box sx={{ p: 2 }}>
+                    <ProductCard product={product} />
+                  </Box>
+                )}
+              />
+            }
+          </Box>
+
+          <Box>
+            <Typography color={'primary'} sx={{ mb: 2 }} variant='h5' fontWeight={'bold'}>Categories</Typography>
+
+            {
+              categories &&
+              categories.filter(x => !x.parentId).map(fatherCat => (
+                <Box sx={{ mb: 2 }}>
+                  <Typography sx={{ mb: 2 }} variant='h6' fontWeight={'bold'}>{fatherCat.label}</Typography>
+                  <AppSlider
+                    centerMode
+                    slidesToShow={4}
+                    infinite={categories.length >= 3}
+                    items={categories.filter(x => x.parentId === fatherCat.id)}
+                    renderItem={(category) => (
+                      <Box sx={{ p: 2 }}>
+                        <CategoryCard category={category} />
+                      </Box>
+                    )}
+                  />
+                </Box>
+              ))
+              // <AppSlider
+              //   centerMode
+              //   slidesToShow={4}
+              //   infinite={categories.length >= 3}
+              //   items={categories.filter(x => x.parentId)}
+              //   renderItem={(category) => (
+              //     <Box sx={{ p: 2 }}>
+              //       <CategoryCard category={category} />
+              //     </Box>
+              //   )}
+              // />
+            }
+
+          </Box>
+        </StyledBox>
       </Container>
     </Box>
   );

@@ -16,6 +16,7 @@ using Ramsha.Application.Contracts.Identity;
 using Ramsha.Application.DTOs.Account.Requests;
 using System.Security.Claims;
 using Ramsha.Application.Dtos.Account.Requests;
+using Ramsha.Application.Constants;
 
 
 namespace Ramsha.Api.Controllers.v1;
@@ -23,10 +24,10 @@ namespace Ramsha.Api.Controllers.v1;
 [ApiVersion("1.0")]
 public class AccountController(IStorageService storageService, IAuthenticatedUserService authenticatedUserService, IAccountServices accountServices) : BaseApiController
 {
-	[Authorize]
-	[HttpGet(nameof(Test))]
-	public string Test()
-	=> authenticatedUserService.UserId;
+	[Authorize(ApplicationPermissions.Users.View)]
+	[HttpGet(nameof(TestViewUserPermission))]
+	public string TestViewUserPermission()
+	=> "Test View User Permission";
 
 	[HttpPost(nameof(Login))]
 	public async Task<BaseResult<AuthenticatedUserDto?>> Login([FromBody] LoginCommand command)

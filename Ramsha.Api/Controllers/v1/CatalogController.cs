@@ -5,10 +5,10 @@ using Ramsha.Application.Dtos.Catalog;
 using Ramsha.Application.Features.Catalog.Queries.GetCatalogCategories;
 using Ramsha.Application.Features.Catalog.Queries.GetCatalogInventoryItems;
 using Ramsha.Application.Features.Catalog.Queries.GetCatalogProductDetail;
-using Ramsha.Application.Features.Products.Queries.GetCatalogProductsPaged;
 using Ramsha.Application.Wrappers;
 using Microsoft.AspNetCore.Authorization;
 using Ramsha.Application.Features.Catalog.Queries.GetCatalogProductVariant;
+using Ramsha.Application.Features.Catalog.Queries.GetCatalogProductsPaged;
 
 
 namespace Ramsha.Api.Controllers.v1;
@@ -37,7 +37,7 @@ public class CatalogController : BaseApiController
 
 
     [HttpPost("{productId}/inventoryItems/{productVariantId?}")]
-    public async Task<BaseResult<List<CatalogInventoryItemDetailDto>>> GetInventoryItems(Guid productId, [FromBody] GetCatalogInventoryItemsQuery query, [FromRoute]Guid? productVariantId = null)
+    public async Task<BaseResult<List<CatalogInventoryItemDetailDto>>> GetInventoryItems(Guid productId, [FromBody] GetCatalogInventoryItemsQuery query, [FromRoute] Guid? productVariantId = null)
     {
         query.ProductId = productId;
         query.ProductVariantId = productVariantId;

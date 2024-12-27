@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, CardMedia, Typography } from "@mui/material"
+import { Box, Card, CardContent, CardMedia, Typography } from "@mui/material";
 import { alpha } from '@mui/material/styles';
 import { Link } from "react-router-dom";
 import { CatalogCategory } from "../../app/models/catalog/catalogCategory";
@@ -27,7 +27,7 @@ const CategoryCard = ({ category }: Props) => {
 
             }}
         >
-            <Link to={`/catalog/products?category=${category.id}`}>
+            <Link to={`/catalog?cat=${category.id}`}>
 
                 <Box sx={{
                     height: { md: 180, sm: 180, xs: 180 },

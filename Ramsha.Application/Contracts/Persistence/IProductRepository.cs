@@ -1,4 +1,5 @@
-﻿using Ramsha.Application.Dtos.Catalog;
+﻿using System.Linq.Expressions;
+using Ramsha.Application.Dtos.Catalog;
 using Ramsha.Application.Dtos.Products;
 using Ramsha.Application.DTOs.Common;
 using Ramsha.Application.Wrappers;
@@ -11,7 +12,7 @@ public interface IProductRepository : IGenericRepository<Product, ProductId>
     Task<Product?> GetProductWithOptions(ProductId productId);
     Task<Product?> GetProductWithVariantsAndOptions(ProductId productId);
     Task<CatalogVariantDto?> GetCatalogProductVariant(ProductId productId, ProductVariantId? productVariantId = null);
-
+    Task<ProductVariant?> GetDefaultVariant(ProductId productId);
     Task<ProductVariantSelectionDto?> GetProductVariantSelection(ProductId productId, bool isCatalog = false);
 
     Task<PaginationResponseDto<ProductDto>> GetProductsPaged(PaginationParams paginationParams, FilterParams? filterParams = null, SortingParams? sortingParams = null);
@@ -28,7 +29,7 @@ public interface IProductRepository : IGenericRepository<Product, ProductId>
 
     Task RemoveVariant(ProductVariant variant);
     Task<List<ProductOption>> GetProductOptions(ProductId productId);
-    Task<PaginationResponseDto<CatalogProductDto>> GetCatalogProductsPaged(PaginationParams paginationParams, FilterParams filterParams, SortingParams sortingParams);
+    Task<PaginationResponseDto<CatalogProductDto>> GetCatalogProductsPaged(PagedParams pagedParams, Expression<Func<Product, bool>>? criteria = null);
     Task<ProductVariant?> GetVariant(ProductId productId, ProductVariantId productVariantId);
 
     Task<CatalogProductDetailDto?> GetProductCatalogDetail(ProductId productId);

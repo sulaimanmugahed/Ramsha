@@ -1,15 +1,18 @@
 
 
+using Ramsha.Domain.Products.Entities;
+
 namespace Ramsha.Application.Dtos.Products;
 
 public record ProductVariantDto(
     Guid Id,
     bool IsDefault,
-    string SKU,
+    string Code,
 string ImageUrl,
-
     List<VariantValuesDto> VariantValues,
-    List<ProductImageDto> VariantImages);
+    List<ProductImageDto> VariantImages,
+    DimensionalWeight Dimensions,
+    decimal Weight);
 
 public record VariantValuesDto(
 Guid OptionId,

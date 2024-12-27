@@ -17,6 +17,9 @@ using System.Security.Claims;
 using System.Text;
 using Ramsha.Application.Contracts.Identity.UserInterfaces;
 using Ramsha.Identity.Providers;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Ramsha.Identity.Common;
 
 namespace Ramsha.Identity;
 
@@ -63,11 +66,17 @@ public static class ServiceRegistration
             b => b.MigrationsAssembly(typeof(IdentityContext).Assembly.FullName)));
 
 
+        services.AddIdentityCookie(configuration);
+
         services.AddTransient<IUpdateUserServices, UpdateUserServices>();
         services.AddTransient<ITokenService, TokenService>();
         services.AddTransient<IAccountServices, AccountServices>();
 
         services.AddTransient<IUserService, UserService>();
+        services.AddTransient<IPermissionService, PermissionService>();
+        services.AddTransient<IClaimsTransformation, PermissionClaimsTransformation>();
+        services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
+        services.AddSingleton<IAuthorizationPolicyProvider, ApplicationAuthorizationPolicyProvider>();
 
         return services;
 
@@ -79,7 +88,7 @@ public static class ServiceRegistration
             ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
 
-        services.AddIdentity<Account, ApplicationRole>().AddEntityFrameworkStores<IdentityContext>().AddDefaultTokenProviders();
+        // services.AddIdentity<Account, ApplicationRole>().AddEntityFrameworkStores<IdentityContext>().AddDefaultTokenProviders();
 
         var jwtSettings = configuration.GetSection(nameof(JWTSettings)).Get<JWTSettings>();
         //services.AddSingleton(jwtSettings);

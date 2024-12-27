@@ -11,10 +11,10 @@ const schemaMultiImage = z.object({
 
 
 export const variantSchema = z.object({
-    length: z.string().transform(val => parseInt(val)),
-    width: z.string().transform(val => parseInt(val)),
-    height: z.string().transform(val => parseInt(val)),
-    weight: z.string().transform(val => parseInt(val)),
+    length: z.string(),
+    width: z.string(),
+    height: z.string(),
+    weight: z.string(),
     file: z.object({
         file: z.any(),
         preview: z.string().url({ message: "Invalid file format." }).nullable(),
@@ -66,8 +66,8 @@ const variantsSchema = z.object({
 });
 
 export const optionSchema = z.object({
-    id: z.string(),
-    priority: z.string().transform(val => parseInt(val)),
+    id: z.string().min(1, 'required'),
+    priority: z.string().min(1, 'required'),
 })
 
 

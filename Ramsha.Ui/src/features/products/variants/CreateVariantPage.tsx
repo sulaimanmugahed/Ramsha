@@ -1,7 +1,7 @@
 import { Close } from '@mui/icons-material';
 import { Box, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useAddVariant, useProductOptions } from '../../../app/hooks/productHooks';
+import { useAddVariant, useDefaultProductVariant, useProductOptions } from '../../../app/hooks/productHooks';
 import { useUploadFile } from '../../../app/hooks/storageHooks';
 import { VariantScheme } from '../productFormValidations';
 import VariantCommand from './VariantCommand';
@@ -16,6 +16,8 @@ const CreateVariantPage = () => {
     const { productOptions } = useProductOptions(productId)
 
     const { upload } = useUploadFile()
+
+    const { variant } = useDefaultProductVariant(productId)
 
 
     const navigate = useNavigate()
@@ -75,11 +77,11 @@ const CreateVariantPage = () => {
                     <Close />
                 </IconButton>
             </DialogTitle>
-            <DialogContent sx={{ paddingY: 4, }}>
+            <DialogContent sx={{ paddingY: 4 }}>
                 <Box sx={{ mt: 4, p: 2 }}>
                     {
                         productOptions &&
-                        <VariantCommand availableOptions={productOptions} onSubmit={onSubmit} />
+                        <VariantCommand defaultVariant={variant} availableOptions={productOptions} onSubmit={onSubmit} />
                     }
                 </Box>
             </DialogContent>

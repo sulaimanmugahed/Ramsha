@@ -5,10 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Ramsha.Application.Dtos.Customers;
-public class CustomerDto
-{
-    public Guid Id  { get; set; }
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public string Email { get; set; }
-}
+public record CustomerDto(
+    Guid Id,
+    string FirstName,
+     string LastName,
+     string Username
+);

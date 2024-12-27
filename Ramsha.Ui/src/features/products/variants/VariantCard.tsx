@@ -50,7 +50,7 @@ const VariantCard = ({ variant, onEdit, onDelete }: Props) => {
         >
             <CardContent sx={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
                 <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-                    {variant.sku}
+                    {variant.code}
                 </Typography>
 
                 <Stack

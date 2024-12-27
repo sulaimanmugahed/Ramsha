@@ -5,9 +5,13 @@ using Ramsha.Application.Wrappers;
 using Ramsha.Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using Ramsha.Domain.Common;
+using Ramsha.Application.Contracts.Identity;
+using Ramsha.Domain.Constants;
+using Ramsha.Identity.Contexts;
+using Microsoft.EntityFrameworkCore;
 
 namespace Ramsha.Identity.Services;
-public class UserService(UserManager<Account> userManager) : IUserService
+public class UserService(UserManager<Account> userManager, RoleManager<ApplicationRole> roleManager) : IUserService
 {
 	public async Task<BaseResult> DeleteAccount(string username)
 	{
@@ -43,20 +47,23 @@ public class UserService(UserManager<Account> userManager) : IUserService
 		if (account is null)
 			return new Error(ErrorCode.NotFound);
 
-		return new AccountDto
-		{
-			Username = username,
-			Email = account.Email
-		};
+		return new AccountDto(
+			account.Id,
+			username,
+			account.Email);
 	}
 
-	public async Task<BaseResult<RegisterResponse>> CreateAccount(RegisterRequest request, string? role = null)
+
+	public async Task<BaseResult<RegisterResponse>> CreateAccount(RegisterRequest request, string roleName = Roles.Customer, List<string>? permissions = null, bool emailConfirmed = false, bool phoneNumberConfirmed = false)
 	{
 		var account = new Account
 		{
 			Email = request.Email,
 			UserName = request.Username,
-			PreferredCurrency = request.PreferredCurrency
+			PreferredCurrency = request.PreferredCurrency,
+			Created = DateTime.UtcNow,
+			EmailConfirmed = emailConfirmed,
+			PhoneNumberConfirmed = phoneNumberConfirmed
 		};
 
 		var result = await userManager.CreateAsync(account, request.Password);
@@ -67,17 +74,39 @@ public class UserService(UserManager<Account> userManager) : IUserService
 			return new List<Error>(errors);
 		}
 
-		if (role is not null)
+
+		var role = await roleManager.Roles.Include(x => x.Permissions).FirstOrDefaultAsync(x => x.Name == roleName);
+		if (role is null)
+			return new Error(ErrorCode.EmptyData);
+
+		var addToRoleResult = await userManager.AddToRoleAsync(account, roleName);
+		if (!addToRoleResult.Succeeded)
 		{
-			var addToRoleResult = await userManager.AddToRoleAsync(account, role);
-			if (!addToRoleResult.Succeeded)
-			{
-				var addToRoleError = addToRoleResult.Errors.Select(e => new Error(ErrorCode.NotFound, e.Description)).ToList();
-				return new List<Error>(addToRoleError);
-			}
+			var addToRoleError = addToRoleResult.Errors.Select(e => new Error(ErrorCode.NotFound, e.Description)).ToList();
+			return new List<Error>(addToRoleError);
 		}
+
+		if (permissions is not null)
+		{
+			account.AddPermissions(role.Permissions.Where(x => permissions.Contains(x.Name)));
+		}
+		else
+		{
+			account.AddPermissions(role.Permissions);
+		}
+
+
+		await userManager.UpdateAsync(account);
 
 
 		return new RegisterResponse { Id = account.Id };
 	}
+
+	public async Task<BaseResult<List<AccountDto>>> GetAccounts(string? roleName = null)
+	{
+		var accounts = roleName is null ? await userManager.Users.ToListAsync() : await userManager.GetUsersInRoleAsync(roleName);
+		return accounts.Select(x => new AccountDto(x.Id, x.UserName, x.Email)).ToList();
+	}
+
+
 }

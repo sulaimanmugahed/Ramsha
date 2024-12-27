@@ -1,13 +1,12 @@
 import { Outlet, useNavigate, useParams } from "react-router-dom"
-import { useAddVariant, useDeleteVariant, useProductVariants } from "../../../app/hooks/productHooks";
+import {  useDeleteVariant, useProductVariants } from "../../../app/hooks/productHooks";
 import { Close } from "@mui/icons-material";
 import { Dialog, DialogTitle, IconButton, DialogContent } from "@mui/material";
 import ProductVariantList from "../../products/variants/ProductVariantList";
 import { VariantScheme } from "../../products/productFormValidations";
 
-import { PreviewVariantType, UploadResponse } from "../../../app/models/common/commonModels";
+import { PreviewVariantType } from "../../../app/models/common/commonModels";
 import { ProductVariantDto } from "../../../app/models/products/product";
-import VariantSlider from "../../products/variants/VariantSlider";
 import AppDynamicBreadcrumb from "../../../app/components/AppDynamicBreadcrumb";
 export type variantFormType = {
     variant: VariantScheme
@@ -52,16 +51,14 @@ const ProductVariantsPage = () => {
                     </IconButton>
                 </DialogTitle>
                 <DialogContent>
+                {
+                    variants &&
                     <ProductVariantList
                         onDeleteVariant={(variant) => deleteVariant({ productId, variantId: variant.id! })}
                         onAddVariant={handleAdd}
                         onUpdateVariant={handleUpdate}
                         cardPerRow={3} variants={variants} />
-                    {/* <VariantSlider
-                        variants={variants}
-                        onDelete={(variant) => deleteVariant({ productId, variantId: variant.id! })}
-                        onEdit={handleUpdate}
-                    /> */}
+                }
                 </DialogContent>
             </Dialog>
             <Outlet />

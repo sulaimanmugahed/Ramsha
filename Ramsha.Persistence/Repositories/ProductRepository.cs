@@ -15,6 +15,7 @@ using Ramsha.Domain.Products.Enums;
 using Ramsha.Domain.Common;
 using Microsoft.Extensions.Options;
 using Ramsha.Domain.Settings;
+using System.Linq.Expressions;
 
 
 
@@ -227,7 +228,7 @@ public class ProductRepository(ApplicationDbContext context, IOptionsSnapshot<Gl
       return await _variantValues.AnyAsync(x => x.OptionId == optionId);
    }
 
-   public async Task<PaginationResponseDto<CatalogProductDto>> GetCatalogProductsPaged(PaginationParams paginationParams, FilterParams filterParams, SortingParams sortingParams)
+   public async Task<PaginationResponseDto<CatalogProductDto>> GetCatalogProductsPaged(PagedParams pagedParams, Expression<Func<Product, bool>>? criteria)
    {
       var productsQuery = _product
       .Include(p => p.Tags)
@@ -237,11 +238,18 @@ public class ProductRepository(ApplicationDbContext context, IOptionsSnapshot<Gl
      .Include(x => x.Inventories)
      .AsQueryable();
 
-
+      var sortingParams = pagedParams.SortingParams;
       productsQuery = sortingParams is not null && sortingParams.ColumnsSort.Count > 0
        ? productsQuery.OrderByColumnName(sortingParams.ColumnsSort)
        : productsQuery.OrderBy(x => x.Created);
 
+
+      if (criteria is not null)
+      {
+         productsQuery = productsQuery.Where(criteria);
+      }
+
+      var filterParams = pagedParams.FilterParams;
       if (filterParams is not null)
       {
          var globalFilter = filterParams.GlobalFilterValue;
@@ -272,7 +280,7 @@ public class ProductRepository(ApplicationDbContext context, IOptionsSnapshot<Gl
 
       return await Paged(
        productsQuery.Select(p => p.AsProductCatalogDto()),
-       paginationParams
+       pagedParams.PaginationParams
        );
    }
 
@@ -369,5 +377,9 @@ public class ProductRepository(ApplicationDbContext context, IOptionsSnapshot<Gl
       .SingleOrDefaultAsync(x => x.Id == productId);
    }
 
+   public Task<ProductVariant?> GetDefaultVariant(ProductId productId)
+   {
+      return _productsVariants.Include(x => x.Dimensions).FirstOrDefaultAsync(x => x.ProductId == productId && x.IsDefault);
+   }
 }
 

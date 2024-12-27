@@ -23,13 +23,18 @@ export type ProductDto = {
 
 export interface ProductVariantDto {
     id: string;
-    name: string;
-    description: string;
-    basePrice: number;
-    sku: string;
+    code: string;
     imageUrl?: string;
     variantValues: VariantValuesDto[];
     variantImages: ProductImageDto[];
+    dimensions: Dimensions
+    weight: number
+}
+
+export type Dimensions = {
+    length: number
+    width: number
+    height: number
 }
 
 export type ProductImageDto = {

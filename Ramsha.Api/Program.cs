@@ -18,6 +18,7 @@ using Ramsha.Mail;
 using System.Text.Json.Serialization;
 using Ramsha.Domain.Settings;
 using Ramsha.PaymentService;
+using Ramsha.Identity.Contexts;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFile("appsettings.firebase.json", false, reloadOnChange: true);
@@ -100,10 +101,15 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     var logger = services.GetRequiredService<ILogger<DefaultData>>();
     var codeGenerator = services.GetRequiredService<Ramsha.Application.Contracts.ICodeGenerator>();
+    var roleManager = services.GetRequiredService<RoleManager<ApplicationRole>>();
+    var userManager = services.GetRequiredService<UserManager<Account>>();
+    var identityContext = services.GetRequiredService<IdentityContext>();
+
 
     await DefaultData.SeedAsync(services.GetRequiredService<ApplicationDbContext>(), logger, codeGenerator);
-    await DefaultRoles.SeedAsync(services.GetRequiredService<RoleManager<ApplicationRole>>());
-    await DefaultUser.SeedAsync(services.GetRequiredService<UserManager<Account>>());
+    await DefaultRoles.SeedAsync(roleManager);
+    await DefaultUser.SeedAsync(userManager);
+    await DefaultPermissions.SeedAsync(identityContext, roleManager, userManager);
 }
 
 

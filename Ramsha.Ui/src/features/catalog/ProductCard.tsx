@@ -30,7 +30,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ innerRef, product: { averageR
         <Card
             ref={innerRef}
             sx={{
-                width: { xs: '90%', sm: 250, md: 280 },
+                width: { xs: '90%', sm: 260, md: 280 },
                 border: "1px solid",
                 borderColor: (theme) => alpha(theme.palette.primary.main, 0.5),
                 borderRadius: "1rem",

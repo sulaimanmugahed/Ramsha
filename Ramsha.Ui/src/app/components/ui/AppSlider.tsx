@@ -27,6 +27,7 @@ type Props<T> = {
     dots?: boolean
     infinite?: boolean
     autoplay?: boolean
+    centerMode?: boolean
 
 
 };
@@ -68,7 +69,8 @@ const AppSlider = <T,>({
     arrows = false,
     dots = false,
     infinite,
-    autoplay
+    autoplay,
+    centerMode
 }: Props<T>) => {
     const sliderRef = useRef<Slider>(null);
 
@@ -116,6 +118,7 @@ const AppSlider = <T,>({
         slidesToScroll: 1,
         autoplay,
         arrows,
+        centerMode,
         autoplaySpeed: 3000,
         appendDots: (dots: React.ReactNode) => (
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>

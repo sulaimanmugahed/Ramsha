@@ -1,7 +1,7 @@
-import { useFormContext, useFieldArray } from 'react-hook-form';
 import { Box, Button, Typography } from '@mui/material';
-import ProductOptionFields from './ProductOptionFields';
+import { useFieldArray, useFormContext } from 'react-hook-form';
 import { useOptions } from '../../app/hooks/optionHooks';
+import ProductOptionFields from './ProductOptionFields';
 
 const ProductOptionsForm = () => {
     const { control } = useFormContext();
