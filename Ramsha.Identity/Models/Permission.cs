@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Ramsha.Application.Constants;
+using Ramsha.Application.Extensions;
 
 namespace Ramsha.Identity.Models;
 
@@ -9,19 +11,19 @@ public class Permission
 {
     public Guid Id { get; }
 
-    public string Name { get; }
+    public PermissionType Type { get; }
 
-    private Permission(Guid id, string name)
+    private Permission(Guid id, PermissionType type)
     {
         Id = id;
-        Name = name;
+        Type = type;
     }
 
     private Permission()
     { }
 
-    public static Permission Create(string name)
+    public static Permission Create(PermissionType type)
     {
-        return new Permission(Guid.NewGuid(), name);
+        return new Permission(Guid.NewGuid(), type);
     }
 }

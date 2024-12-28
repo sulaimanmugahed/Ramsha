@@ -17,7 +17,11 @@ public static class DefaultPermissions
     {
         if (!await context.Permissions.AnyAsync())
         {
-            await context.Permissions.AddRangeAsync(ApplicationPermissions.All().Select(p => Permission.Create(p)));
+            var initialPermissions = Enum.GetValues(typeof(PermissionType))
+            .Cast<PermissionType>()
+            .Select(Permission.Create)
+            .ToList();
+            await context.Permissions.AddRangeAsync(initialPermissions);
             await context.SaveChangesAsync();
         }
 

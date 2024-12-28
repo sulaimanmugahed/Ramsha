@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Ramsha.Application.Constants;
 using Ramsha.Application.Contracts.Identity;
 using Ramsha.Identity.Contexts;
 using Ramsha.Identity.Migrations;
@@ -16,10 +17,10 @@ namespace Ramsha.Identity.Services;
 public class PermissionService(IdentityContext context, RoleManager<ApplicationRole> _roleManager, UserManager<Account> userManager) : IPermissionService
 {
 
-    public async Task AddPermissionToRole(string roleName, string permissionName)
+    public async Task AddPermissionToRole(string roleName, PermissionType permissionType)
     {
         var role = await _roleManager.FindByNameAsync(roleName);
-        var permission = await context.Permissions.FirstOrDefaultAsync(x => x.Name == permissionName);
+        var permission = await context.Permissions.FirstOrDefaultAsync(x => x.Type == permissionType);
         if (role is not null && permission is not null)
         {
             role.AddPermission(permission);
@@ -27,10 +28,10 @@ public class PermissionService(IdentityContext context, RoleManager<ApplicationR
         }
     }
 
-    public async Task AddPermissionToUser(string username, string permissionName)
+    public async Task AddPermissionToUser(string username, PermissionType permissionType)
     {
         var user = await userManager.FindByNameAsync(username);
-        var permission = await context.Permissions.FirstOrDefaultAsync(x => x.Name == permissionName);
+        var permission = await context.Permissions.FirstOrDefaultAsync(x => x.Type == permissionType);
         if (user is not null && permission is not null)
         {
             user.AddPermission(permission);
@@ -38,13 +39,13 @@ public class PermissionService(IdentityContext context, RoleManager<ApplicationR
         }
     }
 
-    public async Task<IEnumerable<(Guid, string)>> GetPermissionsAsync()
+    public async Task<IEnumerable<(Guid, PermissionType)>> GetPermissionsAsync()
     {
         var permissions = await context.Permissions.ToListAsync();
-        return permissions.Select(x => (x.Id, x.Name));
+        return permissions.Select(x => (x.Id, x.Type));
     }
 
-    public async Task<IEnumerable<(Guid, string)>> GetRolePermissionsAsync(string roleName)
+    public async Task<IEnumerable<(Guid, PermissionType)>> GetRolePermissionsAsync(string roleName)
     {
         var role = await _roleManager.Roles
             .Include(r => r.Permissions)
@@ -55,11 +56,11 @@ public class PermissionService(IdentityContext context, RoleManager<ApplicationR
             return [];
         }
 
-        return role.Permissions.Select(x => (x.Id, x.Name));
+        return role.Permissions.Select(x => (x.Id, x.Type));
 
     }
 
-    public async Task<IEnumerable<(Guid, string)>> GetPermissionsForUserAsync(string userName)
+    public async Task<IEnumerable<(Guid, PermissionType)>> GetPermissionsForUserAsync(string userName)
     {
         var user = await userManager.Users
             .Include(r => r.Permissions)
@@ -71,7 +72,7 @@ public class PermissionService(IdentityContext context, RoleManager<ApplicationR
             return [];
         }
 
-        return user.Permissions.Select(x => (x.Permission.Id, x.Permission.Name));
+        return user.Permissions.Select(x => (x.Permission.Id, x.Permission.Type));
 
     }
 }

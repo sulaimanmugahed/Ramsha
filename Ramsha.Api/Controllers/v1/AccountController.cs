@@ -24,7 +24,6 @@ namespace Ramsha.Api.Controllers.v1;
 [ApiVersion("1.0")]
 public class AccountController(IStorageService storageService, IAuthenticatedUserService authenticatedUserService, IAccountServices accountServices) : BaseApiController
 {
-	[Authorize(ApplicationPermissions.Users.View)]
 	[HttpGet(nameof(TestViewUserPermission))]
 	public string TestViewUserPermission()
 	=> "Test View User Permission";

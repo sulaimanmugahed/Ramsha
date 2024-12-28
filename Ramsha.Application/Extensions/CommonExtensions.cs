@@ -1,4 +1,5 @@
 
+using System.Runtime.Serialization;
 using Ramsha.Application.Dtos.Common;
 using Ramsha.Domain.Products.Entities;
 
@@ -6,6 +7,13 @@ namespace Ramsha.Application.Extensions;
 
 public static class CommonExtensions
 {
+
+    public static string GetEnumMemberValue<TEnum>(this TEnum enumValue) where TEnum : struct, Enum
+    {
+        var field = enumValue.GetType().GetField(enumValue.ToString());
+        var attribute = Attribute.GetCustomAttribute(field, typeof(EnumMemberAttribute)) as EnumMemberAttribute;
+        return attribute?.Value ?? enumValue.ToString();
+    }
 
     public static OptionDto AsDto(this ProductOption option)
     =>

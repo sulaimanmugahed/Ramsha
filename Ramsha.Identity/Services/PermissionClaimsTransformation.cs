@@ -27,7 +27,7 @@ public class PermissionClaimsTransformation(IServiceScopeFactory serviceScopeFac
             var permissions = await permissionService.GetPermissionsForUserAsync(principal.Identity.Name);
 
 
-            var claims = permissions.Select(permission => new Claim(ApplicationClaims.Permission, permission.Item2));
+            var claims = permissions.Select(permission => new Claim(ApplicationClaims.Permission, ((int)permission.Item2).ToString()));
             var claimsIdentity = new ClaimsIdentity();
             claimsIdentity.AddClaims(claims);
             principal.AddIdentity(claimsIdentity);

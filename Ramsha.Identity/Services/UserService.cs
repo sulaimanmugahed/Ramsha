@@ -9,6 +9,7 @@ using Ramsha.Application.Contracts.Identity;
 using Ramsha.Domain.Constants;
 using Ramsha.Identity.Contexts;
 using Microsoft.EntityFrameworkCore;
+using Ramsha.Application.Constants;
 
 namespace Ramsha.Identity.Services;
 public class UserService(UserManager<Account> userManager, RoleManager<ApplicationRole> roleManager) : IUserService
@@ -54,7 +55,7 @@ public class UserService(UserManager<Account> userManager, RoleManager<Applicati
 	}
 
 
-	public async Task<BaseResult<RegisterResponse>> CreateAccount(RegisterRequest request, string roleName = Roles.Customer, List<string>? permissions = null, bool emailConfirmed = false, bool phoneNumberConfirmed = false)
+	public async Task<BaseResult<RegisterResponse>> CreateAccount(RegisterRequest request, string roleName = Roles.Customer, List<PermissionType>? permissions = null, bool emailConfirmed = false, bool phoneNumberConfirmed = false)
 	{
 		var account = new Account
 		{
@@ -88,7 +89,7 @@ public class UserService(UserManager<Account> userManager, RoleManager<Applicati
 
 		if (permissions is not null)
 		{
-			account.AddPermissions(role.Permissions.Where(x => permissions.Contains(x.Name)));
+			account.AddPermissions(role.Permissions.Where(x => permissions.Contains(x.Type)));
 		}
 		else
 		{

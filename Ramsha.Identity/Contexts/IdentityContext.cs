@@ -43,7 +43,7 @@ public class IdentityContext : IdentityDbContext<Account, ApplicationRole, Guid>
         {
             entity.ToTable("Permissions");
             entity.HasKey(p => p.Id);
-            entity.Property(p => p.Name).IsRequired();
+            entity.Property(p => p.Type).IsRequired();
         });
 
         builder.Entity<ApplicationRole>(entity =>

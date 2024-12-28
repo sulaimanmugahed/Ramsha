@@ -11,6 +11,7 @@ using Ramsha.Application.Features.Admin.Commands.CreateAdmin;
 using Ramsha.Application.Features.Admin.Queries.GetAdmins;
 using Ramsha.Application.Wrappers;
 using Ramsha.Domain.Constants;
+using Ramsha.Identity.Attributes;
 
 namespace Ramsha.Api.Controllers.v1;
 
@@ -18,7 +19,7 @@ namespace Ramsha.Api.Controllers.v1;
 
 public class AdminsController : BaseApiController
 {
-    [Authorize(policy: ApplicationPermissions.Users.Create)]
+    [HasPermission(PermissionType.RolesView)]
     [HttpGet(nameof(Test))]
     public string Test()
  => "hello";

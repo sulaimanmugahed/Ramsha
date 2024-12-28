@@ -19,9 +19,9 @@ public class ApplicationAuthorizationPolicyProvider(IOptions<AuthorizationOption
     {
         var policy = await base.GetPolicyAsync(policyName);
 
-        if (policy is null)
+        if (policy is null && int.TryParse(policyName, out int policyValue))
         {
-            if (ApplicationPermissions.All().Contains(policyName))
+            if (Enum.IsDefined(typeof(PermissionType), policyValue))
             {
                 policy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
                     .AddRequirements(new PermissionAuthorizationRequirement(policyName))
