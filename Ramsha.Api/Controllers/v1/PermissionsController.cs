@@ -31,7 +31,7 @@ public class PermissionsController(IPermissionService permissionService) : BaseA
     public async Task<List<string>> GetUserPermissions(string username)
     {
         var permissions = await permissionService.GetPermissionsForUserAsync(username);
-        return permissions.Select(x => x.Item2.ToString()).ToList();
+        return permissions.Select(x => x.PermissionType.ToString()).ToList();
     }
 
     [HttpPost("role")]

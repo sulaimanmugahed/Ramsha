@@ -1,5 +1,7 @@
 
 using System.Runtime.Serialization;
+using System.Security.Cryptography;
+using System.Text;
 using Ramsha.Application.Dtos.Common;
 using Ramsha.Domain.Products.Entities;
 
@@ -7,6 +9,13 @@ namespace Ramsha.Application.Extensions;
 
 public static class CommonExtensions
 {
+
+    public static string ComputeHash(this string input)
+    {
+        using var sha256 = SHA256.Create();
+        var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(input));
+        return Convert.ToHexString(bytes);
+    }
 
     public static string GetEnumMemberValue<TEnum>(this TEnum enumValue) where TEnum : struct, Enum
     {

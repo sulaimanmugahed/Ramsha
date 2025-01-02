@@ -19,6 +19,7 @@ using System.Text.Json.Serialization;
 using Ramsha.Domain.Settings;
 using Ramsha.PaymentService;
 using Ramsha.Identity.Contexts;
+using Ramsha.CacheService;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFile("appsettings.firebase.json", false, reloadOnChange: true);
@@ -40,14 +41,13 @@ builder.Services.AddControllers().AddJsonOptions(o =>
 builder.Services.AddAuthorization();
 
 
-
-
 builder.Services
     .AddApplicationLayer(appConfiguration)
 .AddPersistenceInfrastructure(appConfiguration)
 .AddIdentityInfrastructure(appConfiguration)
 .AddFileStorage(appConfiguration)
 .AddEmialServices(appConfiguration)
+.AddRedisCache(appConfiguration)
 .AddAppPaymentServices(appConfiguration);
 
 builder.Services.Configure<DeliveryFeeSettings>(appConfiguration.GetSection(nameof(DeliveryFeeSettings)));

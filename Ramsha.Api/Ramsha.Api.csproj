@@ -34,6 +34,7 @@
     <ProjectReference Include="..\Ramsha.Mail\Ramsha.Mail.csproj" />
     <ProjectReference Include="..\Ramsha.Persistence\Ramsha.Persistence.csproj" />
     <ProjectReference Include="..\Ramsha.PaymentService\Ramsha.PaymentService.csproj" />
+    <ProjectReference Include="..\Ramsha.CacheService\Ramsha.CacheService.csproj" />
   </ItemGroup>
 
 </Project>

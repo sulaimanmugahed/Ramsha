@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Ramsha.Application.Constants;
 using Ramsha.Application.Contracts.Identity;
+using Ramsha.Application.Dtos.Permissions;
 using Ramsha.Identity.Contexts;
 using Ramsha.Identity.Migrations;
 using Ramsha.Identity.Models;
@@ -60,7 +61,7 @@ public class PermissionService(IdentityContext context, RoleManager<ApplicationR
 
     }
 
-    public async Task<IEnumerable<(Guid, PermissionType)>> GetPermissionsForUserAsync(string userName)
+    public async Task<IEnumerable<PermissionDto>> GetPermissionsForUserAsync(string userName)
     {
         var user = await userManager.Users
             .Include(r => r.Permissions)
@@ -72,7 +73,7 @@ public class PermissionService(IdentityContext context, RoleManager<ApplicationR
             return [];
         }
 
-        return user.Permissions.Select(x => (x.Permission.Id, x.Permission.Type));
+        return user.Permissions.Select(x => new PermissionDto(x.Permission.Id, x.Permission.Type));
 
     }
 }

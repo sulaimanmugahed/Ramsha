@@ -6,12 +6,13 @@ namespace Ramsha.Domain.Orders.Entities;
 
 public class OrderItem
 {
-    public OrderItem(OrderId orderId,ProductItemOrdered itemOrdered, decimal price, int quantity)
+    public OrderItem(OrderId orderId, ProductItemOrdered itemOrdered, decimal price, int quantity, decimal markup)
     {
         ItemOrdered = itemOrdered;
         Price = price;
         Quantity = quantity;
         OrderId = orderId;
+        Markup = markup;
     }
 
     public OrderItem()
@@ -25,5 +26,7 @@ public class OrderItem
     public FulfillmentRequestId FulfillmentRequestId { get; set; }
 
     public decimal Price { get; set; }
+    public decimal Markup { get; set; }
+
     public int Quantity { get; set; }
 }

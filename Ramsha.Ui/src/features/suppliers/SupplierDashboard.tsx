@@ -1,12 +1,12 @@
-import React from 'react';
-import { Box, Grid, Paper, Typography, useTheme } from '@mui/material';
-import { PieChart, LineChart } from '@mui/x-charts';
-import './SupplierDashboard.css';
+import { FavoriteBorder } from '@mui/icons-material';
 import MoneyOffIcon from '@mui/icons-material/MoneyOff';
-import { Favorite, FavoriteBorder } from '@mui/icons-material';
+import { Box, Grid, Paper, Typography, useTheme } from '@mui/material';
+import { alpha } from '@mui/material/styles';
+import { LineChart, PieChart } from '@mui/x-charts';
+import React from 'react';
 import AppHomeIcon from '../../app/components/icons/AppHomeIcon';
 import { AppOrderIcon } from '../../app/components/icons/AppOrderIcon';
-import { alpha } from '@mui/material/styles';
+import './SupplierDashboard.css';
 
 
 const SupplierDashboard: React.FC = () => {
@@ -15,13 +15,13 @@ const SupplierDashboard: React.FC = () => {
     return (
         <Box sx={{ flexGrow: 1 }}>
 
-            <Grid container spacing={2} sx={{ }}>
+            <Grid container spacing={2} sx={{}}>
                 <Grid item xs={12} md={3}>
                     <Paper elevation={3} className="card" sx={{ border: '1px solid', borderColor: (theme) => alpha(theme.palette.primary.main, 0.5) }}>
                         <div className="card-container">
                             <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
                                 <AppOrderIcon width={35} height={35} />
-                                <Typography variant="h6">Total Orders</Typography>
+                                <Typography variant="h6">Total Fulfillments</Typography>
                             </Box>
                             <Typography color={'primary'} fontWeight={'bold'} variant="h4">150</Typography>
                         </div>
@@ -46,7 +46,7 @@ const SupplierDashboard: React.FC = () => {
                         <div className="card-container">
                             <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
                                 <AppHomeIcon size={35} />
-                                <Typography variant="h6">Total Products</Typography>
+                                <Typography variant="h6">Total Supplied Products</Typography>
                             </Box>
                             <Typography color={'primary'} fontWeight={'bold'} variant="h4">80</Typography>
                         </div>

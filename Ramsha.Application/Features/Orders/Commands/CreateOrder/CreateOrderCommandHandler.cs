@@ -95,7 +95,7 @@ public class CreateOrderCommandHandler(
                     inventoryItem.ImageUrl
                 );
 
-                var orderItem = new OrderItem(order.Id, itemOrdered, inventoryItem.FinalPrice.Amount, supplierItem.Quantity);
+                var orderItem = new OrderItem(order.Id, itemOrdered, inventoryItem.FinalPrice.Amount, supplierItem.Quantity, inventoryItem.RetailPrice.Amount - inventoryItem.WholesalePrice.Amount);
                 orderItems.Add(orderItem);
                 inventoryItem.DecreaseQuantity(supplierItem.Quantity);
 
