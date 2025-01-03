@@ -20,6 +20,8 @@ using Ramsha.Domain.Settings;
 using Ramsha.PaymentService;
 using Ramsha.Identity.Contexts;
 using Ramsha.CacheService;
+using Ramsha.BackgroundJobs;
+using Hangfire;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFile("appsettings.firebase.json", false, reloadOnChange: true);
@@ -46,8 +48,9 @@ builder.Services
 .AddPersistenceInfrastructure(appConfiguration)
 .AddIdentityInfrastructure(appConfiguration)
 .AddFileStorage(appConfiguration)
-.AddEmialServices(appConfiguration)
+.AddEmailServices(appConfiguration)
 .AddRedisCache(appConfiguration)
+.AddBackgroundJobsServices(appConfiguration)
 .AddAppPaymentServices(appConfiguration);
 
 builder.Services.Configure<DeliveryFeeSettings>(appConfiguration.GetSection(nameof(DeliveryFeeSettings)));
@@ -112,7 +115,6 @@ using (var scope = app.Services.CreateScope())
     await DefaultPermissions.SeedAsync(identityContext, roleManager, userManager);
 }
 
-
 app.UseCors("WebClient");
 
 
@@ -139,6 +141,8 @@ if (app.Environment.IsDevelopment())
     });
 
 }
+app.UseHangfireDashboard("/jobs");
+
 
 app.Run();
 

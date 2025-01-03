@@ -1,5 +1,6 @@
 
 using MediatR;
+using Ramsha.Application.Contracts.BackgroundJobs;
 using Ramsha.Application.Contracts.Caching;
 using Ramsha.Application.Contracts.Persistence;
 using Ramsha.Application.Dtos.Catalog;
@@ -11,7 +12,8 @@ namespace Ramsha.Application.Features.Catalog.Queries.GetCatalogProductDetail;
 
 public class GetCatalogProductDetailQueryHandler(
     IProductRepository productRepository,
-    IRedisCacheService redisCacheService
+    IRedisCacheService redisCacheService,
+    IBackgroundJobService backgroundJobService
 ) : IRequestHandler<GetCatalogProductDetailQuery, BaseResult<CatalogProductDetailDto>>
 {
     public async Task<BaseResult<CatalogProductDetailDto>> Handle(GetCatalogProductDetailQuery request, CancellationToken cancellationToken)
@@ -25,7 +27,7 @@ public class GetCatalogProductDetailQueryHandler(
             if (productDto is null)
                 return new Error(ErrorCode.RequestedDataNotExist);
 
-            await redisCacheService.SetObject(key, productDto, TimeSpan.FromHours(1));
+            backgroundJobService.Enqueue(() => redisCacheService.SetObject(key, productDto, TimeSpan.FromHours(1)));
         }
 
         return productDto;

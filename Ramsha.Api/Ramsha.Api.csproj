@@ -35,6 +35,7 @@
     <ProjectReference Include="..\Ramsha.Persistence\Ramsha.Persistence.csproj" />
     <ProjectReference Include="..\Ramsha.PaymentService\Ramsha.PaymentService.csproj" />
     <ProjectReference Include="..\Ramsha.CacheService\Ramsha.CacheService.csproj" />
+    <ProjectReference Include="..\Ramsha.BackgroundJobs\Ramsha.BackgroundJobs.csproj" />
   </ItemGroup>
 
 </Project>

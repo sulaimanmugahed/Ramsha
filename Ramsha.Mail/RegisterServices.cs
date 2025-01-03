@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Ramsha.Mail;
 public static class RegisterServices
 {
-	public static IServiceCollection AddEmialServices(this IServiceCollection services,IConfiguration configuration)
+	public static IServiceCollection AddEmailServices(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.Configure<EmailSettings>(configuration.GetSection(nameof(EmailSettings)));
 
