@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Ramsha.Application.Constants;
 using Ramsha.Application.Extensions;
+using Ramsha.Application.Features.Catalog.Queries.GetCatalogInventoryItems;
 using Ramsha.Application.Wrappers;
 using Ramsha.Domain.Products;
 
@@ -20,9 +21,27 @@ public static class CacheKeysHelper
         {
             return $"{Prefix}:Paged:{Uri.EscapeDataString(JsonSerializer.Serialize(pagedParams))}";
         }
+
+        public static string GetCategoriesKey()
+        {
+            return $"{Prefix}:Categories";
+        }
+
+        public static string GetCatalogVariantKey(string productId, string? variantId = null)
+        => $"{Prefix}:{productId}:{variantId}";
+
+        public static string GetProductDetailKey(string productId)
+        {
+            return $"{Prefix}:{productId}:Detail";
+        }
+
+        public static string GetInventoryItemsKey(PagedParams pagedParams, string productId, string? variantId = null)
+        {
+            return $"{Prefix}:InventoryItems:{productId}:{variantId}:{Uri.EscapeDataString(JsonSerializer.Serialize(pagedParams))}";
+        }
     }
 
-    
+
     public static class ProductCacheKeys
     {
         public const string Prefix = "Products";

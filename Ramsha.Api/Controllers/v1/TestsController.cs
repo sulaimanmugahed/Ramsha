@@ -18,7 +18,7 @@ public class TestsController(IRedisCacheService redisCacheService, IAuthenticate
     [HttpDelete]
     public async Task<IActionResult> RemoveCache()
     {
-        await redisCacheService.RemoveKey(CacheKeysHelper.PermissionsCacheKeys.GetUserPermissionsKey(authenticatedUserService.UserName));
+        await redisCacheService.RemoveAllByPrefix(CacheKeysHelper.CatalogCacheKeys.Prefix);
         return Ok();
     }
 

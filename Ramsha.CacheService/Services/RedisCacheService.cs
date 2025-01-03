@@ -135,7 +135,7 @@ public class RedisCacheService : IRedisCacheService
         }
     }
 
-    public async Task<BaseResult> RemoveKey(string key)
+    public async Task<BaseResult> RemoveByKey(string key)
     {
         try
         {
@@ -174,5 +174,47 @@ public class RedisCacheService : IRedisCacheService
             return new Error(ErrorCode.EmptyData, "null or empty data");
 
         return JsonSerializer.Deserialize<T>(value!);
+    }
+
+    public async Task<BaseResult> RemoveAllByPrefix(string prefix)
+    {
+        try
+        {
+            foreach (var endpoint in _database.Multiplexer.GetEndPoints())
+            {
+                var server = _database.Multiplexer.GetServer(endpoint);
+                var keys = server.Keys(pattern: $"{prefix}:*");
+
+                foreach (var key in keys)
+                {
+                    var result = await _database.KeyDeleteAsync(key);
+                    if (!result)
+                    {
+                        return new Error(ErrorCode.Exception, $"Failed to remove the key: {key} .");
+                    }
+                }
+            }
+
+            return BaseResult.Ok();
+        }
+
+        catch
+        {
+            return new Error(ErrorCode.Exception, "Failed to remove key.");
+        }
+    }
+
+    public async Task DeleteKeysByPattern(string pattern)
+    {
+        var server = _database.Multiplexer.GetServer(_database.Multiplexer.GetEndPoints().First());
+
+        // Use SCAN to find keys matching the pattern
+        var keys = server.Keys(pattern: pattern);
+
+        // Delete each key
+        foreach (var key in keys)
+        {
+            await _database.KeyDeleteAsync(key);
+        }
     }
 }
