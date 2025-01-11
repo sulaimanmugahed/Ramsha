@@ -13,7 +13,6 @@ public abstract class BaseEntity
    public void RaiseDomainEvent(IDomainEvent domainEvent)
    {
       _domainEvents.Add(domainEvent);
-
    }
 
    public void RemoveDomainEvent(IDomainEvent domainEvent)

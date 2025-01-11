@@ -1,5 +1,5 @@
 import { PagedParams, PaginationResponse } from "../../models/common/commonModels";
-import { BrandDto, ProductDetail, ProductDto, ProductOption, ProductVariantDto, ProductVariantSelection } from "../../models/products/product";
+import { ProductDetail, ProductDto, ProductOption, ProductVariantDto, ProductVariantSelection } from "../../models/products/product";
 
 import request from "../Request";
 
@@ -37,19 +37,9 @@ const createProduct = async (data: any) => {
 }
 
 
-
-
-
-const addVariants = async (data: any, productId: string) => {
-    return await request({
-        url: `${BASE_URL}/${productId}/variants`,
-        method: 'POST',
-        data
-    })
-}
 const addVariant = async (data: any, productId: string) => {
     return await request({
-        url: `${BASE_URL}/${productId}/variant`,
+        url: `${BASE_URL}/${productId}/variants`,
         method: 'POST',
         data
     })
@@ -59,18 +49,10 @@ const addVariant = async (data: any, productId: string) => {
 const getTags = async () => {
     return await request<string[]>({
         url: `${BASE_URL}/tags`,
-        method: 'GET',
-
+        method: 'GET'
     })
 }
 
-const getBrands = async () => {
-    return await request<BrandDto[]>({
-        url: `${BASE_URL}/brands`,
-        method: 'GET',
-
-    })
-}
 
 const getProductVariants = async (productId: string) => {
     return await request<ProductVariantDto[]>({
@@ -152,10 +134,8 @@ export const productService = {
     updateProduct,
     getProductDetail,
     getProductsPaged,
-    addVariants,
     addVariant,
     getTags,
-    getBrands,
     removeRange,
     getProductVariants,
     removeVariant,

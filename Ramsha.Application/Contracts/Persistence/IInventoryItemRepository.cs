@@ -19,7 +19,7 @@ public interface IInventoryItemRepository : IGenericRepository<InventoryItem, In
 
     Task<InventoryItem?> GetInventoryItemBySku(string sku);
 
-
+    Task<InventoryItem?> MaxBy(Expression<Func<InventoryItem, object>> prop);
     Task<IEnumerable<InventoryItem>> GetItemListDetails();
     Task<int> GetVariantQuantity(ProductVariantId productVariantId);
 

@@ -4,6 +4,10 @@ using Ramsha.Application.Extensions;
 using Ramsha.Application.Wrappers;
 using Ramsha.Domain.Products.Entities;
 using MediatR;
+using Ramsha.Application.Contracts.Caching;
+using Ramsha.Application.Contracts.BackgroundJobs;
+using Ramsha.Application.Helpers;
+using Ramsha.Application.Services;
 
 namespace Ramsha.Application.Features.Products.Commands.CreateProduct;
 
@@ -15,7 +19,10 @@ public class CreateProductCommandHandler(
     IVariantService variantService,
     IOptionRepository optionRepository,
     IUnitOfWork unitOfWork,
-    ICodeGenerator codeGenerator
+    ICodeGenerator codeGenerator,
+    ICacheService cacheService,
+    ProductService productService,
+    IBackgroundJobService backgroundJobService
 ) : IRequestHandler<CreateProductCommand, BaseResult<string?>>
 {
     public async Task<BaseResult<string?>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
@@ -115,6 +122,10 @@ public class CreateProductCommandHandler(
 
         await unitOfWork.SaveChangesAsync();
 
+        backgroundJobService.Enqueue(() => productService.InvalidateRelatedCachedData(cacheService));
+
         return product.Id.Value.ToString();
     }
+
+
 }

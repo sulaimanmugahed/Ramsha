@@ -5,10 +5,10 @@ import AppDivider from '../../app/components/AppDivider';
 import AppRating from '../../app/components/AppRating';
 import AppSelector, { Option } from '../../app/components/AppSelector';
 import { CATALOG_FILTER_COLUMNS } from '../../app/constants/filterColumnNames';
+import { useBrands } from '../../app/hooks/brandHooks';
 import { useCategories } from '../../app/hooks/categoryHooks';
 import { useCurrencies } from '../../app/hooks/currencyHooks';
 import { useFiltering } from '../../app/hooks/filteringHooks';
-import { useProductBrands } from '../../app/hooks/productHooks';
 import { useSorting } from '../../app/hooks/sortingHooks';
 import { BrandFilter, CategoryFilter, FilterParams } from '../../app/models/common/commonModels';
 import { CurrencyCode } from '../../app/models/common/currency';
@@ -24,7 +24,7 @@ const CatalogFilter: React.FC<FilterComponentProps> = ({ type, expanded, setExpa
   const [currencyCode, setCurrencyCode] = useState<CurrencyCode>('USD')
   const { filterParams, updateFilterParams, clearFilterParams } = useFiltering();
   const { categories } = useCategories();
-  const { brands } = useProductBrands();
+  const { brands } = useBrands();
   const { currencies } = useCurrencies()
 
   const [selectedCategories, setSelectedCategories] = useState<CategoryFilter[]>(filterParams.categories || []);

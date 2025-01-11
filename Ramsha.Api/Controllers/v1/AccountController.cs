@@ -24,9 +24,7 @@ namespace Ramsha.Api.Controllers.v1;
 [ApiVersion("1.0")]
 public class AccountController(IStorageService storageService, IAuthenticatedUserService authenticatedUserService, IAccountServices accountServices) : BaseApiController
 {
-	[HttpGet(nameof(TestViewUserPermission))]
-	public string TestViewUserPermission()
-	=> "Test View User Permission";
+	
 
 	[HttpPost(nameof(Login))]
 	public async Task<BaseResult<AuthenticatedUserDto?>> Login([FromBody] LoginCommand command)
@@ -92,8 +90,6 @@ public class AccountController(IStorageService storageService, IAuthenticatedUse
 		}
 		return BaseResult.Ok();
 	}
-
-
 
 
 	[HttpPost("send-reset-password-email")]

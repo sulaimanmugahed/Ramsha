@@ -11,7 +11,7 @@ namespace Ramsha.Application.Features.Products.Queries.GetProductVariants;
 
 public class GetProductVariantsQueryHandler(
     IProductRepository productRepository,
-    IRedisCacheService redisCacheService
+    ICacheService redisCacheService
 
 ) : IRequestHandler<GetProductVariantsQuery, BaseResult<List<ProductVariantDto?>>>
 {

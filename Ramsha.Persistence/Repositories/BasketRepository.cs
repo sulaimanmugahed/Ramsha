@@ -40,6 +40,9 @@ public class BasketRepository(ApplicationDbContext context)
 			.Include(b => b.Items)
 			.ThenInclude(i => i.InventoryItem)
 			.ThenInclude(i => i.Stocks)
+			.Include(b => b.Items)
+			.ThenInclude(i => i.InventoryItem)
+			.ThenInclude(i => i.SupplierVariant)
 			.FirstOrDefaultAsync(b => b.Buyer == buyer);
 	}
 

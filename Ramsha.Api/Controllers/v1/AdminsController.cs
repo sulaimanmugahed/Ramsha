@@ -16,36 +16,10 @@ using Ramsha.Application.Wrappers;
 namespace Ramsha.Api.Controllers.v1;
 
 
-class Test
-{
-    public int Id { get; set; }
-    public string Name { get; set; }
-
-}
-
 [ApiVersion("1.0")]
 
-public class AdminsController(IRedisCacheService redisCacheService) : BaseApiController
+public class AdminsController : BaseApiController
 {
-    [HttpGet(nameof(Test))]
-    public async Task<IActionResult> Test()
-    {
-        var hashKey = "hash";
-        var testData = new List<Test>([
-            new Test{
-                Id=1,
-                Name="Test 1"
-            },
-             new Test{
-                Id=2,
-                Name="Test 2"
-            },
-            ]);
-
-        await redisCacheService.SetHash(hashKey, testData, x => x.Id, TimeSpan.FromMinutes(10));
-        var cached = await redisCacheService.GetHash<Test>(hashKey);
-        return Ok(cached);
-    }
 
     [HttpGet]
     public async Task<BaseResult<List<AdminDto>>> Get()

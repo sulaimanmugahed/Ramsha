@@ -8,7 +8,7 @@ using Ramsha.Application.Extensions;
 using Ramsha.Application.Wrappers;
 using MediatR;
 
-namespace Ramsha.Application.Features.Products.Queries.GetBrands;
+namespace Ramsha.Application.Features.Brands.Queries.GetBrands;
 
 public class GetBrandsQueryHandler(
     IBrandRepository brandRepository

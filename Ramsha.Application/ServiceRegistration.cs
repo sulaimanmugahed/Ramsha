@@ -23,6 +23,8 @@ public static class ServiceRegistration
         services.Configure<GlobalAppSettings>(configuration.GetSection(nameof(GlobalAppSettings)));
         services.AddScoped<DeliveryFeeService>();
         services.AddScoped<BasketService>();
+        services.AddScoped<ProductService>();
+
 
 
         return services;

@@ -1,5 +1,6 @@
 
 using MediatR;
+using Ramsha.Application.Contracts.BackgroundJobs;
 using Ramsha.Application.Contracts.Caching;
 using Ramsha.Application.Contracts.Persistence;
 using Ramsha.Application.Dtos.Catalog;
@@ -10,7 +11,8 @@ namespace Ramsha.Application.Features.Catalog.Queries.GetCatalogCategories;
 
 public class GetCatalogCategoriesQueryHandler(
     ICategoryRepository categoryRepository,
-    IRedisCacheService redisCacheService
+    ICacheService redisCacheService,
+    IBackgroundJobService backgroundJobService
 ) : IRequestHandler<GetCatalogCategoriesQuery, BaseResult<List<CatalogCategoryDto>>>
 {
     public async Task<BaseResult<List<CatalogCategoryDto>>> Handle(GetCatalogCategoriesQuery request, CancellationToken cancellationToken)
@@ -20,7 +22,7 @@ public class GetCatalogCategoriesQueryHandler(
         if (categoriesDTOs is null)
         {
             categoriesDTOs = await categoryRepository.GetCatalogCategories();
-            await redisCacheService.SetObject(key, categoriesDTOs, TimeSpan.FromDays(1));
+            backgroundJobService.Enqueue(()=>  redisCacheService.SetObject(key, categoriesDTOs, TimeSpan.FromDays(1)));
         }
 
         return categoriesDTOs;

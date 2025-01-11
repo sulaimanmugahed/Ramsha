@@ -61,7 +61,7 @@ public class UpdateProductVariantCommandHandler(
             }
         }
 
-
+        product.Update();
         await unitOfWork.SaveChangesAsync();
 
         return BaseResult.Ok();

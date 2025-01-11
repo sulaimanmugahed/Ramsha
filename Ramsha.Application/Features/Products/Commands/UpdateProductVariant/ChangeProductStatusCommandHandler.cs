@@ -21,6 +21,8 @@ IUnitOfWork unitOfWork
             return new Error(ErrorCode.RequestedDataNotExist);
 
         product.SetStatus(request.Status);
+        product.Update();
+        
         await unitOfWork.SaveChangesAsync();
 
         return BaseResult.Ok();

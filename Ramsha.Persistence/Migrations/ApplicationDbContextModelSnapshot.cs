@@ -263,6 +263,9 @@ namespace Ramsha.Persistence.Migrations
                     b.Property<int>("TotalQuantity")
                         .HasColumnType("int");
 
+                    b.Property<int>("TotalSales")
+                        .HasColumnType("int");
+
                     b.ComplexProperty<Dictionary<string, object>>("FinalPrice", "Ramsha.Domain.Inventory.Entities.InventoryItem.FinalPrice#Price", b1 =>
                         {
                             b1.IsRequired();

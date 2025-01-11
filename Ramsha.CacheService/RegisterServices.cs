@@ -38,7 +38,7 @@ namespace Ramsha.CacheService
                 return ConnectionMultiplexer.Connect(config);
             });
 
-            services.AddScoped<IRedisCacheService, RedisCacheService>();
+            services.AddScoped<ICacheService, RedisCacheService>();
 
             return services;
         }
@@ -56,7 +56,7 @@ namespace Ramsha.CacheService
                 return ConnectionMultiplexer.Connect(connectionString);
             });
 
-            services.AddScoped<IRedisCacheService, RedisCacheService>();
+            services.AddScoped<ICacheService, RedisCacheService>();
 
             return services;
         }
@@ -82,7 +82,7 @@ namespace Ramsha.CacheService
                 return ConnectionMultiplexer.Connect(config);
             });
 
-            services.AddScoped<IRedisCacheService, RedisCacheService>();
+            services.AddScoped<ICacheService, RedisCacheService>();
 
             return services;
         }

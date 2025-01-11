@@ -16,7 +16,7 @@ namespace Ramsha.Application.Features.Products.Queries.GetProductsPaged;
 public class GetProductsPagedQueryHandler(
     IProductRepository productRepository,
     IHttpService httpService,
-    IRedisCacheService redisCacheService
+    ICacheService redisCacheService
 ) : IRequestHandler<GetProductsPagedQuery, BaseResult<List<ProductDto>>>
 {
     public async Task<BaseResult<List<ProductDto>>> Handle(GetProductsPagedQuery request, CancellationToken cancellationToken)

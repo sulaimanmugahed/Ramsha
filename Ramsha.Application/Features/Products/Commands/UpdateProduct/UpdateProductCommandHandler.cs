@@ -1,7 +1,10 @@
 using MediatR;
 using Ramsha.Application.Contracts;
+using Ramsha.Application.Contracts.BackgroundJobs;
+using Ramsha.Application.Contracts.Caching;
 using Ramsha.Application.Contracts.Persistence;
 using Ramsha.Application.Extensions;
+using Ramsha.Application.Services;
 using Ramsha.Application.Wrappers;
 using Ramsha.Domain.Products.Entities;
 
@@ -47,6 +50,7 @@ public class UpdateProductCommandHandler(
 
             if (basicData.ImageUrl is not null)
                 productToEdit.SetImage(basicData.ImageUrl);
+
         }
 
 
@@ -75,8 +79,10 @@ public class UpdateProductCommandHandler(
                 productToEdit.RemoveTags(additionalData.TagsToRemove!);
             }
         }
+        productToEdit.Update();
 
         await unitOfWork.SaveChangesAsync();
+
 
         return BaseResult.Ok();
     }

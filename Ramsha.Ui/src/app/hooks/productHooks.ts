@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { productService } from "../api/services/productService"
-import { BRANDS_QUERY_KEY, PRODUCT_OPTIONS_QUERY_KEY, PRODUCT_SELECTION_QUERY_KEY, PRODUCT_TAGS_QUERY_KEY, PRODUCT_VARIANTS_QUERY_KEY, PRODUCTS_QUERY_KEY } from "../constants/queriesKey"
+import { PRODUCT_OPTIONS_QUERY_KEY, PRODUCT_SELECTION_QUERY_KEY, PRODUCT_VARIANTS_QUERY_KEY, PRODUCTS_QUERY_KEY } from "../constants/queriesKey"
 import { PagedParams, PaginationResponse } from "../models/common/commonModels"
-import { BrandDto, ProductDetail, ProductDto, ProductOption, ProductStatus, ProductVariantDto } from "../models/products/product"
+import { ProductDetail, ProductDto, ProductOption, ProductStatus, ProductVariantDto } from "../models/products/product"
 
 
 
@@ -40,40 +40,6 @@ export const useProductDetails = (productId: string) => {
         isProductDetailsError: isError
     }
 }
-
-const initialTags: string[] = []
-
-export const useProductTags = () => {
-    const { data, isLoading, isError } = useQuery<string[]>({
-        queryKey: [PRODUCT_TAGS_QUERY_KEY],
-        queryFn: async () => await productService.getTags(),
-        initialData: initialTags
-    })
-
-    return {
-        tags: data,
-        isTagsLoading: isLoading,
-        isTagsError: isError
-    }
-}
-
-
-
-
-export const useProductBrands = () => {
-    const { data, isLoading, isError } = useQuery<BrandDto[]>({
-        queryKey: [BRANDS_QUERY_KEY],
-        queryFn: async () => await productService.getBrands(),
-
-    })
-
-    return {
-        brands: data,
-        isBrandsLoading: isLoading,
-        isBrandsError: isError
-    }
-}
-
 
 
 export const useProductVariants = (productId?: string) => {
@@ -225,18 +191,6 @@ export const useDeleteProducts = () => {
     }
 }
 
-
-
-export const useAddVariants = () => {
-    const { mutateAsync } = useMutation({
-        mutationFn: async ({ data, productId }: { data: any, productId: string }) => {
-            return await productService.addVariants(data, productId)
-        },
-    })
-    return {
-        addProductVariants: mutateAsync
-    }
-}
 
 export const useAddVariant = () => {
     const queryClient = useQueryClient()

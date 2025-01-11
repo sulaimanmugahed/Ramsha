@@ -6,16 +6,22 @@ using Ramsha.Application.Dtos.Products;
 using Ramsha.Application.Wrappers;
 using Ramsha.Domain.Products.Entities;
 using MediatR;
+using Ramsha.Application.Contracts.BackgroundJobs;
+using Ramsha.Application.Services;
+using Ramsha.Application.Contracts.Caching;
+using Ramsha.Application.Helpers;
 
 namespace Ramsha.Application.Features.Products.Commands.AddProductVariant;
 
 public class AddProductVariantCommandHandler(
     IProductRepository productRepository,
     IUnitOfWork unitOfWork,
-    IStorageService storageService,
     IOptionRepository optionRepository,
     IVariantService variantService,
-    ICodeGenerator codeGenerator
+    ICodeGenerator codeGenerator,
+    IBackgroundJobService backgroundJobService,
+   ICacheService cacheService,
+   ProductService productService
 
 ) : IRequestHandler<AddProductVariantCommand, BaseResult>
 {
@@ -30,7 +36,7 @@ public class AddProductVariantCommandHandler(
             return new Error(ErrorCode.ThisDataAlreadyExist, "this variant is already exist");
 
         var productVariant = ProductVariant.Create(product.Id,
-                new DimensionalWeight(request.Length,request.Width,request.Height),
+                new DimensionalWeight(request.Length, request.Width, request.Height),
                 request.Weight);
 
         if (!string.IsNullOrEmpty(request.ImageUrl))
@@ -63,7 +69,11 @@ public class AddProductVariantCommandHandler(
 
         product.AddVariant(productVariant);
 
+        product.Update();
+
         await unitOfWork.SaveChangesAsync();
+
+        backgroundJobService.Enqueue(() => productService.InvalidateRelatedCachedData(request.ProductId.ToString(), cacheService));
 
         return BaseResult.Ok();
     }

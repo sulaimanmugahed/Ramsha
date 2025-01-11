@@ -46,12 +46,12 @@ const BasketDropdown = () => {
                 onClick={handleClick}
                 size='large'
                 edge='start'
-                color='inherit'
+
                 aria-label="Shopping Basket"
-                sx={{ mr: 2 }}
+                sx={{ mr: 2, color: 'text.primary' }}
             >
                 <Badge badgeContent={basket?.items?.length || 0} color='primary'>
-                    <AppBagIcon />
+                    <AppBagIcon color='' />
                 </Badge>
             </IconButton>
 

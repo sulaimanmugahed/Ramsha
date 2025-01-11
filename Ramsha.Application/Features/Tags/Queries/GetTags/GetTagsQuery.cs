@@ -6,9 +6,9 @@ using Ramsha.Application.Dtos.Products;
 using Ramsha.Application.Wrappers;
 using MediatR;
 
-namespace Ramsha.Application.Features.Products.Queries.GetTags;
+namespace Ramsha.Application.Features.Tags.Queries.GetTags;
 
-public class GetTagsQuery : IRequest<BaseResult<List<string>>>
+public class GetTagsQuery : IRequest<BaseResult<List<TagDto>>>
 {
 
 }

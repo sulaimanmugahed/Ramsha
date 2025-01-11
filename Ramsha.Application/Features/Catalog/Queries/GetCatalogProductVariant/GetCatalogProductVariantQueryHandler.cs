@@ -1,5 +1,6 @@
 
 using MediatR;
+using Ramsha.Application.Contracts.BackgroundJobs;
 using Ramsha.Application.Contracts.Caching;
 using Ramsha.Application.Contracts.Persistence;
 using Ramsha.Application.Dtos.Catalog;
@@ -10,7 +11,8 @@ namespace Ramsha.Application.Features.Catalog.Queries.GetCatalogProductVariant;
 
 public class GetCatalogProductVariantQueryHandler(
     IProductRepository productRepository,
-    IRedisCacheService redisCacheService
+    ICacheService redisCacheService,
+    IBackgroundJobService backgroundJobService
 ) : IRequestHandler<GetCatalogProductVariantQuery, BaseResult<CatalogVariantDto?>>
 {
     public async Task<BaseResult<CatalogVariantDto?>> Handle(GetCatalogProductVariantQuery request, CancellationToken cancellationToken)
@@ -24,7 +26,7 @@ public class GetCatalogProductVariantQueryHandler(
                         request.ProductVariantId.HasValue ? new Domain.Products.ProductVariantId(request.ProductVariantId.Value) : null
                         );
 
-            await redisCacheService.SetObject(key, catalogVariantDto, TimeSpan.FromHours(1));
+            backgroundJobService.Enqueue(() => redisCacheService.SetObject(key, catalogVariantDto, TimeSpan.FromHours(1)));
         }
         return catalogVariantDto;
     }

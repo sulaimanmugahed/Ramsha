@@ -1,9 +1,13 @@
 //products
 export const PRODUCT_SELECTION_QUERY_KEY = "product-selection"
 export const PRODUCTS_QUERY_KEY = 'products'
-export const PRODUCT_TAGS_QUERY_KEY = 'productTags'
 export const PRODUCT_VARIANTS_QUERY_KEY = 'productVariants'
 export const PRODUCT_OPTIONS_QUERY_KEY = 'productOptions'
+
+
+//tags
+export const TAGS_QUERY_KEY = 'tags'
+
 
 
 
@@ -46,6 +50,12 @@ export const ORDERS_FULFILLMENT_REQUESTS = "orders-FulfillmentRequests"
 
 //currency
 export const CURRENCIES_QUERY_KEY = "currencies"
+
+
+//Statistics
+export const STATISTICS_SUPPLIER_QUERY_KEY = "statistics:supplier"
+export const STATISTICS_ADMIN_QUERY_KEY = "statistics:admin"
+
 
 
 

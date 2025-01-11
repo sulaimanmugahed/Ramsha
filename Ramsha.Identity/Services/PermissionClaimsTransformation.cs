@@ -14,7 +14,7 @@ using Ramsha.Identity.Extensions;
 
 namespace Ramsha.Identity.Services;
 
-public class PermissionClaimsTransformation(IServiceScopeFactory serviceScopeFactory, IRedisCacheService redisCacheService)
+public class PermissionClaimsTransformation(IServiceScopeFactory serviceScopeFactory, ICacheService redisCacheService)
     : IClaimsTransformation
 {
 

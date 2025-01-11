@@ -5,9 +5,9 @@ import { Outlet } from "react-router-dom";
 import AppSearch from '../../app/components/AppSearch';
 import { AppFilterIcon } from "../../app/components/icons/AppFilterIcon";
 import { AppSortDesIcon } from "../../app/components/icons/AppSortIcon";
+import { useBrands } from "../../app/hooks/brandHooks";
 import { useCatalogCategories } from "../../app/hooks/catalogHooks";
 import { useFiltering } from "../../app/hooks/filteringHooks";
-import { useProductBrands } from "../../app/hooks/productHooks";
 import CatalogFilter from "./CatalogFilter";
 import ProductList from "./ProductList";
 
@@ -16,7 +16,7 @@ const CatalogPage = () => {
     const { filterParams, updateFilterParams } = useFiltering();
 
     const { categories } = useCatalogCategories();
-    const { brands } = useProductBrands();
+    const { brands } = useBrands();
 
     const filters = useMemo(() => {
         const categoryFilters = categories?.filter(c => filterParams.categories?.some(x => x.value === c.id)).map(x => ({
@@ -95,7 +95,7 @@ const CatalogPage = () => {
                                 display: 'flex',
                                 flexWrap: 'nowrap',
                                 overflowX: 'auto',
-                                
+
                                 gap: 1,
                                 width: 250,
                                 padding: '8px 0',

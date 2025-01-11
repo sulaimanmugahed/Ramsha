@@ -26,6 +26,14 @@ IInventoryItemRepository
 {
     private readonly DbSet<InventoryItem> _items = context.Set<InventoryItem>();
 
+
+
+    public async Task<InventoryItem?> MaxBy(Expression<Func<InventoryItem, object>> prop)
+    {
+        return await _items.OrderByDescending(prop).FirstOrDefaultAsync();
+    }
+
+
     public async Task<InventoryItem?> GetWithDetails(Expression<Func<InventoryItem, bool>> criteria)
     {
         return await _items
@@ -179,7 +187,7 @@ IInventoryItemRepository
         return pricingStrategy switch
         {
             ProductPricingStrategy.MinPrice => await variantQuery
-                .OrderBy(group => group.Min(x => x.FinalPrice.Amount)) 
+                .OrderBy(group => group.Min(x => x.FinalPrice.Amount))
                 .Select(group => group.Key)
                 .FirstOrDefaultAsync(),
 

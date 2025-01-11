@@ -3,7 +3,7 @@ using Ramsha.Application.Wrappers;
 
 namespace Ramsha.Application.Contracts.Caching;
 
-public interface IRedisCacheService
+public interface ICacheService
 {
 	Task<BaseResult> SetValue(string key, string value, TimeSpan? expiration = null);
 	Task<BaseResult<string>> GetValue(string key);

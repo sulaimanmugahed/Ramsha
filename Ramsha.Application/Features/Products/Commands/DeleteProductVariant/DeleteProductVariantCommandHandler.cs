@@ -16,17 +16,23 @@ public class DeleteProductVariantCommandHandler(
 {
     public async Task<BaseResult> Handle(DeleteProductVariantCommand request, CancellationToken cancellationToken)
     {
-        var variant = await productRepository.GetVariant(
-            new Domain.Products.ProductId(request.ProductId),
-            new Domain.Products.ProductVariantId(request.VariantId)
+        var productId = new Domain.Products.ProductId(request.ProductId);
+        var product = await productRepository.GetAsync(x => x.Id == productId, x => x.Variants);
+        if (product is null)
+            return new Error(ErrorCode.RequestedDataNotExist);
+
+        var variant = product.Variants.FirstOrDefault(
+            x => x.Id == new Domain.Products.ProductVariantId(request.VariantId)
         );
 
         if (variant is null)
             return new Error(ErrorCode.RequestedDataNotExist);
 
-        await productRepository.RemoveVariant(variant);
-        await unitOfWork.SaveChangesAsync();
+        product.Variants.Remove(variant);
 
+        product.Update();
+        
+        await unitOfWork.SaveChangesAsync();
         return BaseResult.Ok();
     }
 }

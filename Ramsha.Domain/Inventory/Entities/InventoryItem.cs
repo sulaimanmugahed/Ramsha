@@ -67,6 +67,9 @@ public class InventoryItem : BaseEntity, IAuditable
     public Guid? LastModifiedBy { get; set; }
     public DateTime? LastModified { get; set; }
     public StockSelectionType StockSelectionType { get; private set; }
+    public int TotalSales { get; private set; }
+
+
 
     public List<Stock> Stocks { get; private set; } = [];
 
@@ -123,6 +126,7 @@ public class InventoryItem : BaseEntity, IAuditable
     {
         TotalQuantity -= quantity;
         AvailableQuantity -= quantity;
+        TotalSales += quantity;
     }
 
 

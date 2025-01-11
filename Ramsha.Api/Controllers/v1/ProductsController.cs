@@ -8,13 +8,11 @@ using Ramsha.Application.Features.Products.Commands.DeleteProductOption;
 using Ramsha.Application.Features.Products.Commands.DeleteProductRange;
 using Ramsha.Application.Features.Products.Commands.DeleteProductVariant;
 using Ramsha.Application.Features.Products.Commands.UpdateProductVariant;
-using Ramsha.Application.Features.Products.Queries.GetBrands;
 using Ramsha.Application.Features.Products.Queries.GetProductById;
 using Ramsha.Application.Features.Products.Queries.GetProductOptions;
 using Ramsha.Application.Features.Products.Queries.GetProductsDetails;
 using Ramsha.Application.Features.Products.Queries.GetProductsPaged;
 using Ramsha.Application.Features.Products.Queries.GetProductVariants;
-using Ramsha.Application.Features.Products.Queries.GetTags;
 using Ramsha.Application.Features.Products.Queries.GetVariantDetails;
 using Ramsha.Application.Wrappers;
 using Microsoft.AspNetCore.Mvc;
@@ -72,15 +70,7 @@ public class ProductsController : BaseApiController
     public async Task<BaseResult> RemoveOption(Guid productId, Guid optionId)
     => await Mediator.Send(new DeleteProductOptionCommand { ProductId = productId, OptionId = optionId });
 
-
     [HttpPost("{productId}/variants")]
-    public async Task<BaseResult> AddProductVariantRange(Guid productId, AddProductVariantRangeCommand command)
-    {
-        command.ProductId = productId;
-        return await Mediator.Send(command);
-    }
-
-    [HttpPost("{productId}/variant")]
     public async Task<BaseResult> AddProductVariant(Guid productId, AddProductVariantCommand command)
     {
         command.ProductId = productId;
@@ -104,33 +94,10 @@ public class ProductsController : BaseApiController
     => await Mediator.Send(new DeleteProductVariantCommand { ProductId = productId, VariantId = variantId });
 
 
-    [HttpGet("brands")]
-    public async Task<BaseResult<List<BrandDto>>> GetBrands()
-    => await Mediator.Send(new GetBrandsQuery());
 
-    [HttpGet("tags")]
-    public async Task<BaseResult<List<string>>> GetTags()
-    => await Mediator.Send(new GetTagsQuery());
-
-    // [HttpGet("{productId}/variants/{variantId/details}")]
-    // public async Task<BaseResult<VariantDetailDto?>> GetVariantForProduct(Guid productId, Guid variantId)
-    // => await Mediator.Send(new GetVariantDetailsQuery { ProductId = productId, ProductVariantId = variantId });
-
-
-    //     [HttpGet("details")]
-    //     public async Task<BaseResult<List<ProductDetailsDto>>> GetProductsDetails()
-    //    => await Mediator.Send(new GetProductsDetailsQuery());
-
-    // [HttpPost("{productId}/variants/{variantId}/discount")]
-    // public async Task<BaseResult> ApplyProductVariantDiscount(Guid productId, Guid variantId, ApplyProductVariantDiscountCommand command)
-    // {
-    //     command.ProductVariantId = variantId;
-    //     command.ProductId = productId;
-    //     return await Mediator.Send(command);
-    // }
 
     [HttpPut("{productId}")]
-    public async Task<BaseResult> UpdateVariant(Guid productId, UpdateProductCommand command)
+    public async Task<BaseResult> UpdateProduct(Guid productId, UpdateProductCommand command)
     {
         command.ProductId = productId;
         return await Mediator.Send(command);

@@ -10,9 +10,9 @@ public class Tag : BaseEntity
 {
     public Tag()
     {
-        
+
     }
-    public TagId Id { get;  set; }
+    public TagId Id { get; set; }
 
     private Tag(TagId id, string name)
     {
@@ -20,7 +20,12 @@ public class Tag : BaseEntity
         Name = name;
     }
 
-    public string Name { get;  set; }
+    public void Update(string name)
+    {
+        Name = name;
+    }
+
+    public string Name { get; set; }
 
     public List<ProductTag> ProductTags { get; private set; } = [];
 

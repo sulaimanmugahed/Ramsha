@@ -3,6 +3,7 @@ using Ramsha.Domain.Common;
 using Ramsha.Domain.Inventory;
 using Ramsha.Domain.Inventory.Entities;
 using Ramsha.Domain.Products.Enums;
+using Ramsha.Domain.Products.Events;
 using Ramsha.Domain.Suppliers.Entities;
 
 
@@ -45,6 +46,12 @@ public sealed class Product : BaseEntity, IAuditable, ISoftDeletable
     public void SetSeoSettings(SeoSettings seoSettings)
     {
         SeoSettings = seoSettings;
+    }
+
+
+    public void Update()
+    {
+        RaiseDomainEvent(new ProductDataChangedEvent(Id));
     }
 
 

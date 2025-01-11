@@ -6,9 +6,9 @@ using Ramsha.Application.Dtos.Products;
 using Ramsha.Application.Wrappers;
 using MediatR;
 
-namespace Ramsha.Application.Features.Products.Queries.GetBrands;
+namespace Ramsha.Application.Features.Brands.Queries.GetBrand;
 
-public class GetBrandsQuery : IRequest<BaseResult<List<BrandDto>>>
+public class GetBrandQuery : IRequest<BaseResult<BrandDto>>
 {
-
+    public Guid Id { get; set; }
 }

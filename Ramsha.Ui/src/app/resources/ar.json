@@ -8,6 +8,7 @@
         "Purple": "Purple",
         "Crimson": "Crimson",
         "selectedColor": "Selected Color:",
-        "selectColor": "Select a Color"
+        "selectColor": "Select a Color",
+        "have_an_account_message": "You already have an account?"
     }
 }

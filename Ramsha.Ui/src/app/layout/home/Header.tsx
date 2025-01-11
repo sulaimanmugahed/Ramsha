@@ -157,7 +157,7 @@ export default function AppAppBar() {
     ]
 
     const navStyles = {
-        color: 'inherit',
+        color: 'text.primary',
         '&:hover': {
             color: 'primary.main',
 

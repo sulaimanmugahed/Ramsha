@@ -1,21 +1,22 @@
 // src/pages/LoginPage.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import { Box, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import AppModal from '../../../app/components/AppModal';
 import { LoginForm } from './LoginForm';
-import { useTranslation } from 'react-i18next';
-import { Box, Typography } from '@mui/material';
 
 const LoginPage: React.FC = () => {
     const [open, setOpen] = useState(false);
     const location = useLocation();
     const navigate = useNavigate()
-    const { t } = useTranslation()
+    const { t, i18n } = useTranslation()
 
     useEffect(() => {
         if (location.pathname === '/login') {
             setOpen(true);
+            console.log('lang: ', i18n.resolvedLanguage)
         }
     }, [location.pathname]);
 
@@ -32,7 +33,7 @@ const LoginPage: React.FC = () => {
         >
             <Box sx={{ p: 2 }}>
                 <LoginForm />
-                <Typography color={'text.secondary'} variant="body2">{t('have_an_account_message')}
+                <Typography color={'text.secondary'} variant="body2">{t('you-not-have-account')}
                     <Typography onClick={() => navigate('/register')} color={'primary'} component={'span'}> {t('signUp')}</Typography></Typography>
             </Box>
         </AppModal>

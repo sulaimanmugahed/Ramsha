@@ -5,5 +5,5 @@ using System.Threading.Tasks;
 
 namespace Ramsha.Application.Dtos.Products;
 
-public record TagDto(string Value);
+public record TagDto(Guid Id, string Name);
 

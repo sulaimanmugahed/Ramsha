@@ -51,7 +51,7 @@ public static class ProductExtensions
 
    public static TagDto AsDto(this Tag tag)
    {
-      return new TagDto(tag.Name);
+      return new TagDto(tag.Id.Value, tag.Name);
    }
 
 

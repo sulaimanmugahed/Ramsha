@@ -163,6 +163,7 @@ const CatalogProductDetail = ({ product }: Props) => {
                                     items={[{ url: '/p1.png' }, { url: '/p2.png' }, { url: '/p3.png' }, { url: '/p4.png' }]}
                                     slidesToShow={1}
                                     arrows
+                                    centerMode
                                     renderItem={(img) => (
                                         < AppImage src={img.url} sx={{
                                             width: '100%',

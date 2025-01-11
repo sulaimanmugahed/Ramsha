@@ -12,7 +12,7 @@ namespace Ramsha.Application.Features.Catalog.Queries.GetCatalogProductDetail;
 
 public class GetCatalogProductDetailQueryHandler(
     IProductRepository productRepository,
-    IRedisCacheService redisCacheService,
+    ICacheService redisCacheService,
     IBackgroundJobService backgroundJobService
 ) : IRequestHandler<GetCatalogProductDetailQuery, BaseResult<CatalogProductDetailDto>>
 {

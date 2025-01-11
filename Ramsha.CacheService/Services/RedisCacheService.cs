@@ -6,7 +6,7 @@ using StackExchange.Redis;
 
 namespace Ramsha.CacheService.Services;
 
-public class RedisCacheService : IRedisCacheService
+public class RedisCacheService : ICacheService
 {
     private readonly IDatabase _database;
 

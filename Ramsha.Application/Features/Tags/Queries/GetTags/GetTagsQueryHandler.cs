@@ -8,15 +8,15 @@ using Ramsha.Application.Extensions;
 using Ramsha.Application.Wrappers;
 using MediatR;
 
-namespace Ramsha.Application.Features.Products.Queries.GetTags;
+namespace Ramsha.Application.Features.Tags.Queries.GetTags;
 
 public class GetTagsQueryHandler(
     ITagRepository tagRepository
-) : IRequestHandler<GetTagsQuery, BaseResult<List<string>>>
+) : IRequestHandler<GetTagsQuery, BaseResult<List<TagDto>>>
 {
-    public async Task<BaseResult<List<string>>> Handle(GetTagsQuery request, CancellationToken cancellationToken)
+    public async Task<BaseResult<List<TagDto>>> Handle(GetTagsQuery request, CancellationToken cancellationToken)
     {
         var result = await tagRepository.GetAllAsync();
-        return result.Select(t => t.Name).ToList();
+        return result.Select(t => t.AsDto()).ToList();
     }
 }

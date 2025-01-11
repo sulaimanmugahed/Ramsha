@@ -6,7 +6,7 @@ namespace Ramsha.Domain.Inventory.Events;
 
 public record StockUpdatedEvent(
      ProductId ProductId,
-     ProductVariantId? ProductVariantId
+     ProductVariantId ProductVariantId
 ) : IDomainEvent
 { }
 

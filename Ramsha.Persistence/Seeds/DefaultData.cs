@@ -37,37 +37,38 @@ public class DefaultData
 
         if (!context.Brand.Any())
         {
-            var brands = new List<Brand>([
+            List<string> brands = [
+                "Nike",
+"Adidas",
+"Puma",
+"Reebok",
+"Under Armour",
+"New Balance",
+"ASICS",
+"Converse",
+"Vans",
+"Skechers",
+"Fila",
+"Hoka One One",
+"Lululemon",
+"Salomon",
+"Brooks",
+"Saucony",
+"Timberland",
+"Columbia Sportswear",
+"Patagonia",
+"North Face",
+"Merrell",
+"Arc'teryx",
+"Helly Hansen",
+"Mizuno"
+            ];
 
-    new Brand { Id = new BrandId(Guid.NewGuid()), Name = "Nike" },
-    new Brand { Id = new BrandId(Guid.NewGuid()), Name = "Adidas" },
-    new Brand { Id = new BrandId(Guid.NewGuid()), Name = "Puma" },
-    new Brand { Id = new BrandId(Guid.NewGuid()), Name = "Reebok" },
-    new Brand { Id = new BrandId(Guid.NewGuid()), Name = "Under Armour" },
-    new Brand { Id = new BrandId(Guid.NewGuid()), Name = "New Balance" },
-    new Brand { Id = new BrandId(Guid.NewGuid()), Name = "ASICS" },
-    new Brand { Id = new BrandId(Guid.NewGuid()), Name = "Converse" },
-    new Brand { Id = new BrandId(Guid.NewGuid()), Name = "Vans" },
-    new Brand { Id = new BrandId(Guid.NewGuid()), Name = "Skechers" },
-    new Brand { Id = new BrandId(Guid.NewGuid()), Name = "Fila" },
-    new Brand { Id = new BrandId(Guid.NewGuid()), Name = "Hoka One One" },
-    new Brand { Id = new BrandId(Guid.NewGuid()), Name = "Lululemon" },
-    new Brand { Id = new BrandId(Guid.NewGuid()), Name = "Salomon" },
-    new Brand { Id = new BrandId(Guid.NewGuid()), Name = "Brooks" },
-    new Brand { Id = new BrandId(Guid.NewGuid()), Name = "Saucony" },
-    new Brand { Id = new BrandId(Guid.NewGuid()), Name = "Timberland" },
-    new Brand { Id = new BrandId(Guid.NewGuid()), Name = "Columbia Sportswear" },
-    new Brand { Id = new BrandId(Guid.NewGuid()), Name = "Patagonia" },
-    new Brand { Id = new BrandId(Guid.NewGuid()), Name = "North Face" },
-    new Brand { Id = new BrandId(Guid.NewGuid()), Name = "Merrell" },
-    new Brand { Id = new BrandId(Guid.NewGuid()), Name = "Arc'teryx" },
-    new Brand { Id = new BrandId(Guid.NewGuid()), Name = "Helly Hansen" },
-    new Brand { Id = new BrandId(Guid.NewGuid()), Name = "Mizuno" }
 
-
-            ]);
-
-            await context.Brand.AddRangeAsync(brands);
+            foreach (var brand in brands)
+            {
+                await context.Brand.AddAsync(Brand.Create(brand));
+            }
         }
 
 

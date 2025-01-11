@@ -23,6 +23,7 @@ public class AddProductOptionCommandHandler(
             return new Error(ErrorCode.EmptyData, nameof(request.OptionId));
 
         product.AddOption(option, request.Priority);
+        product.Update();
         await unitOfWork.SaveChangesAsync();
 
         return BaseResult.Ok();

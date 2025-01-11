@@ -1,19 +1,19 @@
-import { Box, Grid, InputAdornment } from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
+import { Grid } from '@mui/material';
 import { useFormContext } from 'react-hook-form';
-import AppTextInput from '../../app/components/AppTextInput';
 import { useTranslation } from 'react-i18next';
 import AppDropzone from '../../app/components/AppDropzone';
-import AppControlCategorySelector from '../categories/AppControlCategorySelector';
 import AppSelector from '../../app/components/AppSelector';
+import AppTextInput from '../../app/components/AppTextInput';
+import { useBrands } from '../../app/hooks/brandHooks';
 import { useCategories } from '../../app/hooks/categoryHooks';
-import { useProductBrands } from '../../app/hooks/productHooks';
-import LoadingButton from '@mui/lab/LoadingButton';
+import AppControlCategorySelector from '../categories/AppControlCategorySelector';
 
 
 
 const ProductBasicForm = ({ onSubmit }: { onSubmit?: (data: any) => void }) => {
     const { categories } = useCategories()
-    const { brands } = useProductBrands()
+    const { brands } = useBrands()
     const { control, handleSubmit, formState: { isSubmitting } } = useFormContext();
     const { t } = useTranslation();
 

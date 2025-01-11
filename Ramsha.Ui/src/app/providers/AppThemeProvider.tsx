@@ -1,4 +1,4 @@
-import { GlobalStyles, colors } from "@mui/material";
+import { GlobalStyles } from "@mui/material";
 import {
   StyledEngineProvider,
   ThemeProvider,
@@ -29,6 +29,18 @@ export function AppThemeProvider({ children }: ThemeProviderProps) {
   };
 
 
+  //E64833   --orange
+  //D8BFD8   --pink
+  //3aafa9   --modern
+  //e57373   --modern-secondary
+
+  //802bb1   --purple
+  //c50900   --red
+  //ffe400   --yellow
+  //86c232    --green
+
+  //efc100   --gold
+  //f4a460   --gold-secondary
 
 
 
@@ -54,40 +66,40 @@ export function AppThemeProvider({ children }: ThemeProviderProps) {
           mode,
           ...(mode === 'light'
             ? {
-                // palette values for light mode
-                primary: {
-                  main: '#D8BFD8',  // Teal Green
-                },
-                secondary: {
-                  main: '#546E7A',  // Cool Slate
-                },
-                divider: '#ECEFF1',  // Light Grey Blue
-                text: {
-                  primary: '#1C1C1C',  // Soft Black
-                  secondary: '#607D8B',  // Blue Grey
-                },
-              }
+              // palette values for light mode
+              primary: {
+                main: '#3aafa9',  // Teal Green
+              },
+              secondary: {
+                main: '#e57373',  // Cool Slate
+              },
+              divider: '#ECEFF1',  // Light Grey Blue
+              text: {
+                primary: '#1C1C1C',  // Soft Black
+                secondary: '#607D8B',  // Blue Grey
+              },
+            }
             : {
-                // palette values for dark mode
-                primary: {
-                  main: '#D8BFD8',  // Neon Green
-                },
-                secondary: {
-                  main: '#9F8CFF',  // Deep Aqua Blue
-                },
-                divider: '#37474F',  // Dark Blue Grey
-                background: {
-                  default: '#232730',
+              // palette values for dark mode
+              primary: {
+                main: '#3aafa9',  // Neon Green
+              },
+              secondary: {
+                main: '#e57373',  // Deep Aqua Blue
+              },
+              divider: '#37474F',  // Dark Blue Grey
+              background: {
+                default: '#232730',
                 paper: '#232730',
-                },
-                text: {
-                  primary: '#fff',  // Cool Light Grey
-                  secondary: '#B0BEC5',  // Pale Blue Grey
-                },
-              }),
+              },
+              text: {
+                primary: '#fff',  // Cool Light Grey
+                secondary: '#B0BEC5',  // Pale Blue Grey
+              },
+            }),
         },
-        
-        
+
+
 
         // palette: {
         //   mode,

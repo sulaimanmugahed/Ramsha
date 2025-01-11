@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Ramsha.Application.Contracts;
+using Ramsha.Application.Contracts.BackgroundJobs;
 using Ramsha.Application.Contracts.Caching;
 using Ramsha.Application.Contracts.Persistence;
 using Ramsha.Application.Dtos.Catalog;
@@ -16,7 +17,8 @@ namespace Ramsha.Application.Features.Catalog.Queries.GetCatalogProductsPaged;
 public class GetCatalogProductsPagedQueryHandler(
     IProductRepository productRepository,
     IHttpService httpService,
-    IRedisCacheService redisCacheService
+    ICacheService redisCacheService,
+    IBackgroundJobService backgroundJobService
 ) : IRequestHandler<GetCatalogProductsPagedQuery, BaseResult<List<CatalogProductDto>>>
 {
     public async Task<BaseResult<List<CatalogProductDto>>> Handle(GetCatalogProductsPagedQuery request, CancellationToken cancellationToken)
@@ -27,7 +29,7 @@ public class GetCatalogProductsPagedQueryHandler(
         if (result is null)
         {
             result = await productRepository.GetCatalogProductsPaged(request, p => p.Status == Domain.Products.Enums.ProductStatus.Active);
-            await redisCacheService.SetObject(key, result, TimeSpan.FromMinutes(10));
+            backgroundJobService.Enqueue(() => redisCacheService.SetObject(key, result, TimeSpan.FromMinutes(10)));
         }
 
         result.AddFilterMetaData(request.FilterParams);

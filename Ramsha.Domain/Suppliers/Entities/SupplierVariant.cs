@@ -33,7 +33,7 @@ public class SupplierVariant : BaseEntity
     public string Description { get; private set; }
     public decimal WholesalePrice { get; private set; }
     public decimal RetailPrice { get; private set; }
-
+   
 
     public void SetVariant(ProductVariantId productVariantId)
     {
