@@ -21,32 +21,75 @@ using Ramsha.Application.Constants;
 
 namespace Ramsha.Api.Controllers.v1;
 
+/// <summary>
+/// Manages account-related operations.
+/// </summary>
 [ApiVersion("1.0")]
 public class AccountController(IStorageService storageService, IAuthenticatedUserService authenticatedUserService, IAccountServices accountServices) : BaseApiController
 {
-	
 
-	[HttpPost(nameof(Login))]
+	/// <summary>
+	/// Authenticates the user
+	/// </summary>
+	/// <remarks>
+	/// This endpoint authenticates the user and provides an access token for subsequent requests.
+	/// </remarks>
+	[HttpPost("login")]
 	public async Task<BaseResult<AuthenticatedUserDto?>> Login([FromBody] LoginCommand command)
 	=> await Mediator.Send(command);
 
-	[HttpPost(nameof(Refresh))]
+	/// <summary>
+	/// Refresh the token
+	/// </summary>
+	/// <remarks>
+	/// This endpoint issues a new access token using a valid refresh token to maintain session continuity.
+	/// </remarks>
+
+	[HttpPost("refresh")]
 	public async Task<BaseResult<AuthenticatedUserDto?>> Refresh([FromBody] RefreshCommand command)
 		=> await Mediator.Send(command);
 
-	[HttpDelete(nameof(Revoke))]
+
+
+	/// <summary>
+	/// Revoke the token
+	/// </summary>
+	/// <remarks>
+	/// This endpoint invalidates the refresh token, terminating the session and preventing further token generation.
+	/// </remarks>
+	[HttpDelete("revoke")]
 	public async Task<BaseResult> Revoke(RevokeCommand command)
 		=> await Mediator.Send(command);
 
+
+	/// <summary>
+	/// Logout the user
+	/// </summary>
+	/// <remarks>
+	/// This endpoint ends the user session by invalidating both the access and refresh tokens.
+	/// </remarks>
 	[HttpPost("logout")]
 	public async Task<BaseResult> LogoutUser(LogoutCommand command)
 	=> await Mediator.Send(command);
 
+
+	/// <summary>
+	/// Update the address
+	/// </summary>
+	/// <remarks>
+	/// This endpoint create or update the user address.
+	/// </remarks>
 	[HttpPut("address")]
 	public async Task<BaseResult> UpdateAddress(UpdateAddressCommand command)
 	=> await Mediator.Send(command);
 
 
+	/// <summary>
+	/// Send Confirm Email
+	/// </summary>
+	/// <remarks>
+	/// This endpoint send confirm email link to email provided.
+	/// </remarks>
 	[HttpPost("send-confirm-email")]
 	public async Task<BaseResult> SendConfirmEmail([FromQuery] string email)
 	{
@@ -57,6 +100,12 @@ public class AccountController(IStorageService storageService, IAuthenticatedUse
 		return BaseResult.Ok();
 	}
 
+	/// <summary>
+	/// Verify Email
+	/// </summary>
+	/// <remarks>
+	/// This endpoint verify and confirm the email by providing the confirm email token
+	/// </remarks>
 	[HttpGet("verify-email")]
 	public async Task<BaseResult<string>> VerifyEmail(string email, string token)
 	{
@@ -67,6 +116,12 @@ public class AccountController(IStorageService storageService, IAuthenticatedUse
 		return email;
 	}
 
+	/// <summary>
+	/// Change Password
+	/// </summary>
+	/// <remarks>
+	/// This endpoint allows changing the password by providing the old password.
+	/// </remarks>
 	[Authorize]
 	[HttpPost("change-password")]
 	public async Task<BaseResult> ChangePassword(ChangePasswordRequest request)
@@ -79,6 +134,12 @@ public class AccountController(IStorageService storageService, IAuthenticatedUse
 		return BaseResult.Ok();
 	}
 
+	/// <summary>
+	/// Change Password
+	/// </summary>
+	/// <remarks>
+	/// This endpoint allows changing the password by providing the reset password token.
+	/// </remarks>
 	[Authorize]
 	[HttpPost("reset-password")]
 	public async Task<BaseResult> ResetPassword(ResetPasswordRequest request)
@@ -91,7 +152,12 @@ public class AccountController(IStorageService storageService, IAuthenticatedUse
 		return BaseResult.Ok();
 	}
 
-
+	/// <summary>
+	/// Send Reset Password Email
+	/// </summary>
+	/// <remarks>
+	/// This endpoint sends a password reset link to the email provided.
+	/// </remarks>
 	[HttpPost("send-reset-password-email")]
 	public async Task<BaseResult> SendResetPasswordEmail()
 	{

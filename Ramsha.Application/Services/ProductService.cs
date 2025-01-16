@@ -9,10 +9,16 @@ using Ramsha.Domain.Products;
 
 namespace Ramsha.Application.Services;
 
-public class ProductService()
+public class ProductService(ICacheService cacheService)
 {
 
     public void InvalidateRelatedCachedData(ICacheService cacheService)
+    {
+        cacheService.RemoveAllByPrefix(CacheKeysHelper.CatalogCacheKeys.Prefix);
+        cacheService.RemoveAllByPrefix(CacheKeysHelper.ProductCacheKeys.Prefix);
+    }
+
+    public void InvalidateRelatedCachedData()
     {
         cacheService.RemoveAllByPrefix(CacheKeysHelper.CatalogCacheKeys.Prefix);
         cacheService.RemoveAllByPrefix(CacheKeysHelper.ProductCacheKeys.Prefix);

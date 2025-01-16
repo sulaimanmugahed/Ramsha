@@ -19,6 +19,9 @@ public enum PermissionType
     UsersView,
 
     UsersCreate,
+    AdminsView,
+
+    AdminsCreate,
 
     UsersUpdate,
 

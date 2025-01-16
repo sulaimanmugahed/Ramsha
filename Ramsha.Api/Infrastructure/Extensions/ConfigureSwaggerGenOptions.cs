@@ -16,14 +16,19 @@ public class ConfigureSwaggerGenOptions(IApiVersionDescriptionProvider provider)
         {
             OpenApiInfo openApiInfo = new()
             {
-                Title = $"Ramsha.Api v{description.ApiVersion}",
+                Title = $"Ramsha Api v{description.ApiVersion}",
                 Version = description.ApiVersion.ToString(),
+                Description = $"Welcome to the Ramsha API v{description.ApiVersion}! Ramsha is a fully functional e-commerce platform designed with a comprehensive set of features to mimic real-world e-commerce operations. This API is publicly accessible, making it a perfect resource for developers, especially frontend developers, to practice and learn by building real-world applications. Ramsha offers a large collection of endpoints, covering all aspects of an e-commerce ecosystem, from product management to order processing ."
             };
 
             if (description.IsDeprecated)
-                openApiInfo.Description += " This API version has been deprecated.";
+                openApiInfo.Description += "\n\nNote: This API version has been deprecated.";
 
             options.SwaggerDoc(description.GroupName, openApiInfo);
+
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            options.IncludeXmlComments(xmlPath);
         }
     }
 

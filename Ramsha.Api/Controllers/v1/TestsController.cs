@@ -15,6 +15,10 @@ namespace Ramsha.Api.Controllers.v1;
 [ApiVersion("1.0")]
 public class TestsController : BaseApiController
 {
+    /// <summary>
+    /// Test desc
+    /// </summary>
+    /// <returns>test return</returns>
     [HttpGet]
     public IActionResult Test() => Ok("Welcome");
 }

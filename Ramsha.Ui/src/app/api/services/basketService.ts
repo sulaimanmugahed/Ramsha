@@ -21,14 +21,14 @@ const removeBasket = async () =>
 
 const addBasketItem = async (data: { inventoryItemId: string, quantity: number }) =>
     await request<BasketItem>({
-        url: `${BASE_URL}/addItemToBasket`,
+        url: `${BASE_URL}/items`,
         method: 'POST',
         data
     })
 
 const removeBasketItem = async (data: { inventoryItemId: string, quantity: number }) =>
     await request({
-        url: `${BASE_URL}/removeItemFromBasket`,
+        url: `${BASE_URL}/items`,
         method: 'DELETE',
         data
     })
